@@ -1,5 +1,4 @@
 # DEV
-tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -90,3 +89,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+.idea/inspectionProfiles/
+.idea/workspace.xml
+tmp/
+!/tmp/repository_test.py
