@@ -91,6 +91,5 @@ ENV/
 .ropeproject
 .idea/inspectionProfiles/
 .idea/workspace.xml
-tmp/
-!/tmp/repository_test.py
-!/tmp/usermanager_test.py
+
+/tmp/Repositories/
