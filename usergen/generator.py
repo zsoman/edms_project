@@ -106,7 +106,7 @@ class UserGenerator(object):
             email = email + str(random.randint(1, 1000))
         if email == '':
             email = ''.join(random.sample(string.ascii_lowercase, random.randint(4, 10)))
-        email += '.' + random.choice(email_domains)
+        email += '@' + random.choice(email_domains)
         return email
 
 

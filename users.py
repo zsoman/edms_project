@@ -16,7 +16,9 @@ The fields of a user object stored in the text file line-by-line as:
 
 """
 
-import os
+from datetime import date
+from os import path, remove
+from re import match
 
 import storage_utils
 
@@ -24,36 +26,96 @@ import storage_utils
 class User(object):
     """User of the document repository"""
 
+
     def __init__(self, first_name, family_name, birth, email, password):
-        self._first_name = first_name
-        self._family_name = family_name
-        self._birth = birth
-        self._email = email
-        self._password = password
+        if User.is_valid_name(first_name):
+            self._first_name = first_name
+        else:
+            raise TypeError("The {} first name is not a valid name!".format(first_name))
+
+        if User.is_valid_name(family_name):
+            self._family_name = family_name
+        else:
+            raise TypeError("The {} family name is not a valid name!".format(family_name))
+
+        if User.is_valid_date(birth):
+            self._birth = birth
+        else:
+            raise TypeError("The {} birt date is not a valid date!".format(birth))
+
+        if User.is_valid_email(email):
+            self._email = email
+        else:
+            raise TypeError(
+                    "The {} email address is not a valid email address!".format(email))
+
+        if User.is_valid_password(password):
+            self._password = password
+        else:
+            raise TypeError("The {} password is not a valid string!".format(password))
+
+
+    @classmethod
+    def is_valid_name(cls, name):
+        return name.isalpha()
+
+
+    @classmethod
+    def is_valid_date(cls, date_obj):
+        return isinstance(date_obj, date)
+
+
+    @classmethod
+    def is_valid_email(cls, email):
+        return match(
+                '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
+                email)
+
+
+    @classmethod
+    def is_valid_password(cls, password):
+        for char in password:
+            if not isinstance(char, str):
+                return False
+        return True
 
     @property
     def first_name(self):
         return self._first_name
 
+
     @property
     def family_name(self):
         return self._family_name
+
+
+    @property
+    def full_name(self):
+        return self._first_name + ' ' + self._family_name
+
 
     @property
     def birth(self):
         return self._birth
 
+
     @property
     def email(self):
         return self._email
+
 
     @property
     def password(self):
         return self._password
 
 
+    def __str__(self):
+        return '{} {} {} {}'.format(self.full_name, self.birth, self.email, self.password)
+
+
 class Role(object):
     """Represents the roles of the users"""
+
 
     def __init__(self, role):
         if role in ['admin', 'manager', 'author', 'reviewer', 'visitor']:
@@ -65,12 +127,15 @@ class Role(object):
 class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
+
     def __init__(self):
         pass
+
 
     def read_roles(self, path):
         """Read roles from the file."""
         pass
+
 
     def write_roles(self):
         """Write roles to the file."""
@@ -80,21 +145,24 @@ class RoleManager(object):
 class UserManager(object):
     """Manage user objects"""
 
+
     def __init__(self, storage_location):
         self._storage_location = storage_location
 
+
     def save_user(self, user_id, user):
         """Save user to file"""
-        with open('{}/{}'.format(self._storage_location, user_id), 'w') as user_file:
+        with open(path.join(self._storage_location, user_id), 'w') as user_file:
             user_file.write(user.first_name + '\n')
             user_file.write(user.last_name + '\n')
             user_file.write(str(user.birth) + '\n')
             user_file.write(user.email + '\n')
             user_file.write(user.password + '\n')
 
+
     def load_user(self, user_id):
         """Load user from file"""
-        with open('{}/{}'.format(self._storage_location, user_id)) as user_file:
+        with open(path.join(self._storage_location, user_id)) as user_file:
             first_name = user_file.readline().rstrip('\n')
             family_name = user_file.readline().rstrip('\n')
             birth = user_file.readline().rstrip('\n')
@@ -103,34 +171,41 @@ class UserManager(object):
         user = User(first_name, family_name, birth, email, password)
         return user
 
+
     def add_user(self, user):
         user_id = storage_utils.get_next_id(self._storage_location)
         self.save_user(user_id, user)
+
 
     def update_user(self, user_id, user):
         self.remove_user(user_id)
         self.save_user(user_id, user)
 
+
     def remove_user(self, user_id):
-        user_file_path = '{}/{}'.format(self._storage_location, user_id)
-        if os.path.exists(user_file_path):
-            os.remove(user_file_path)
+        user_file_path = path.join(self._storage_location, user_id)
+        if path.exists(user_file_path):
+            remove(user_file_path)
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
 
+
     def find_user_by_id(self, user_id):
-        user_file_path = '{}/{}'.format(self._storage_location, user_id)
-        if os.path.exists(user_file_path):
+        user_file_path = path.join(self._storage_location, user_id)
+        if path.exists(user_file_path):
             user = self.load_user(user_id)
             return user
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
 
+
     def find_users_by_name(self, name):
         pass
 
+
     def find_users_by_email(self, email):
         pass
+
 
     def find_users_by_role(self, role):
         pass
