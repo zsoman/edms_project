@@ -26,6 +26,8 @@ from iniformat.writer import write_ini_file
 
 ROLES_FILE = 'roles.txt'
 PATHS_FILE = 'paths.ini'
+FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects',
+                'reports': 'reports', 'users': 'users'}
 
 
 class Repository(object):
@@ -36,7 +38,8 @@ class Repository(object):
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location,
-                                        '{}_metadata.ini'.format(self._name))
+                                        '{}_metadata.ini'.format(
+                                                path.basename(self._location)))
         self.load()
 
 
@@ -73,12 +76,8 @@ class Repository(object):
 
     def create_default_path_file(self):
         data = {
-            'directories': {
-                'documents': 'documents',
-                'logs': 'logs',
-                'projects': 'projects',
-                'users': 'users'
-            }
+            'directories': FOLDERS_PATH,
+            'files': {'repo_metadata': path.basename(self._location), 'paths': PATHS_FILE}
         }
         write_ini_file(path.join(self._location, PATHS_FILE), data)
 

@@ -79,6 +79,7 @@ class User(object):
                 return False
         return True
 
+
     @property
     def first_name(self):
         return self._first_name
@@ -130,16 +131,19 @@ class RoleManager(object):
 
     def __init__(self):
         pass
+        # TODO: Role manager __init__
 
 
     def read_roles(self, path):
         """Read roles from the file."""
         pass
+        # TODO Role manager read roles from file
 
 
     def write_roles(self):
         """Write roles to the file."""
         pass
+        # TODO Role manager write roles to file
 
 
 class UserManager(object):
@@ -201,11 +205,14 @@ class UserManager(object):
 
     def find_users_by_name(self, name):
         pass
+        # TODO
 
 
     def find_users_by_email(self, email):
         pass
+        # TODO
 
 
     def find_users_by_role(self, role):
         pass
+        # TODO
