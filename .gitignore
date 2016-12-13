@@ -93,3 +93,4 @@ ENV/
 .idea/workspace.xml
 tmp/
 !/tmp/repository_test.py
+!/tmp/usermanager_test.py

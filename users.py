@@ -150,10 +150,10 @@ class UserManager(object):
         """Save user to file"""
         with open(path.join(self._storage_location, user_id), 'w') as user_file:
             user_file.write(user.first_name + '\n')
-            user_file.write(user.last_name + '\n')
+            user_file.write(user.family_name + '\n')
             user_file.write(str(user.birth) + '\n')
             user_file.write(user.email + '\n')
-            user_file.write(user.password + '\n')
+            user_file.write(''.join(user.password) + '\n')
 
     def load_user(self, user_id):
         """Load user from file"""
@@ -193,7 +193,7 @@ class UserManager(object):
         all_files = UserManager.all_files_in_folder(self._storage_location)
         found_users = []
         for user_file in all_files:
-            with open(user_file) as file_obj:
+            with open(path.join(self._storage_location, user_file)) as file_obj:
                 first_name = file_obj.readline().strip()
                 family_name = file_obj.readline().strip()
                 if first_name + ' ' + family_name == name:
@@ -207,9 +207,9 @@ class UserManager(object):
         all_files = UserManager.all_files_in_folder(self._storage_location)
         found_users = []
         for user_file in all_files:
-            with open(user_file) as file_obj:
+            with open(path.join(self._storage_location, user_file)) as file_obj:
                 for i, line in enumerate(file_obj):
-                    if i == 3 - 1 and line.strip() == email:
+                    if i + 1 == 4 and line.strip() == email:
                         found_users.append(user_file)
         if len(found_users) == 0:
             raise UserNotFoundError("No user found with the {} email in the repository!".format(email))
@@ -218,6 +218,7 @@ class UserManager(object):
 
     def find_users_by_role(self, role):
         number_of_role_files = 0
+        roles_file = ''
         for file in listdir(self._storage_location):
             if file.startswith('roles'):
                 if number_of_role_files > 0:
@@ -227,7 +228,7 @@ class UserManager(object):
                         "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(file))
                 else:
                     roles_file = file
-        users_roles = UserManager.parse_roles_file(roles_file)
+        users_roles = UserManager.parse_roles_file(path.join(self._storage_location, roles_file))
         found_users = []
         for id_key, roles_value in users_roles.iteritems():
             if role in roles_value:
@@ -238,11 +239,11 @@ class UserManager(object):
             return found_users
 
     @classmethod
-    def all_files_in_folder(cls, path, file_format = ''):
-        files_and_folders = listdir(path)
+    def all_files_in_folder(cls, file_path, file_format = ''):
+        files_and_folders = listdir(file_path)
         all_files = []
         for item in files_and_folders:
-            if path.isfile(item):
+            if path.isfile(path.join(file_path, item)) and item.split('.')[0] != 'roles':
                 if len(file_format) != 0:
                     if item.endswith(file_format):
                         all_files.append(item)
