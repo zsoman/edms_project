@@ -16,16 +16,25 @@ The fields of a user object stored in the text file line-by-line as:
 
 """
 
+import xml.etree.ElementTree as ET
 from datetime import date
-from os import path, remove
+from json import load
+from os import path, remove, listdir
 from re import match
 
 import storage_utils
 
 
+class UserNotFoundError(Exception):
+    pass
+
+
+class WrongFileTypeError(Exception):
+    pass
+
+
 class User(object):
     """User of the document repository"""
-
 
     def __init__(self, first_name, family_name, birth, email, password):
         if User.is_valid_name(first_name):
@@ -47,30 +56,26 @@ class User(object):
             self._email = email
         else:
             raise TypeError(
-                    "The {} email address is not a valid email address!".format(email))
+                "The {} email address is not a valid email address!".format(email))
 
         if User.is_valid_password(password):
             self._password = password
         else:
             raise TypeError("The {} password is not a valid string!".format(password))
 
-
     @classmethod
     def is_valid_name(cls, name):
         return name.isalpha()
-
 
     @classmethod
     def is_valid_date(cls, date_obj):
         return isinstance(date_obj, date)
 
-
     @classmethod
     def is_valid_email(cls, email):
         return match(
-                '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
-                email)
-
+            '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
+            email)
 
     @classmethod
     def is_valid_password(cls, password):
@@ -79,36 +84,29 @@ class User(object):
                 return False
         return True
 
-
     @property
     def first_name(self):
         return self._first_name
-
 
     @property
     def family_name(self):
         return self._family_name
 
-
     @property
     def full_name(self):
         return self._first_name + ' ' + self._family_name
-
 
     @property
     def birth(self):
         return self._birth
 
-
     @property
     def email(self):
         return self._email
 
-
     @property
     def password(self):
         return self._password
-
 
     def __str__(self):
         return '{} {} {} {}'.format(self.full_name, self.birth, self.email, self.password)
@@ -116,7 +114,6 @@ class User(object):
 
 class Role(object):
     """Represents the roles of the users"""
-
 
     def __init__(self, role):
         if role in ['admin', 'manager', 'author', 'reviewer', 'visitor']:
@@ -128,17 +125,14 @@ class Role(object):
 class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
-
     def __init__(self):
         pass
         # TODO: Role manager __init__
-
 
     def read_roles(self, path):
         """Read roles from the file."""
         pass
         # TODO Role manager read roles from file
-
 
     def write_roles(self):
         """Write roles to the file."""
@@ -149,10 +143,8 @@ class RoleManager(object):
 class UserManager(object):
     """Manage user objects"""
 
-
     def __init__(self, storage_location):
         self._storage_location = storage_location
-
 
     def save_user(self, user_id, user):
         """Save user to file"""
@@ -162,7 +154,6 @@ class UserManager(object):
             user_file.write(str(user.birth) + '\n')
             user_file.write(user.email + '\n')
             user_file.write(user.password + '\n')
-
 
     def load_user(self, user_id):
         """Load user from file"""
@@ -175,16 +166,13 @@ class UserManager(object):
         user = User(first_name, family_name, birth, email, password)
         return user
 
-
     def add_user(self, user):
         user_id = storage_utils.get_next_id(self._storage_location)
         self.save_user(user_id, user)
 
-
     def update_user(self, user_id, user):
         self.remove_user(user_id)
         self.save_user(user_id, user)
-
 
     def remove_user(self, user_id):
         user_file_path = path.join(self._storage_location, user_id)
@@ -192,7 +180,6 @@ class UserManager(object):
             remove(user_file_path)
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
-
 
     def find_user_by_id(self, user_id):
         user_file_path = path.join(self._storage_location, user_id)
@@ -202,17 +189,102 @@ class UserManager(object):
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
 
-
     def find_users_by_name(self, name):
-        pass
-        # TODO
-
+        all_files = UserManager.all_files_in_folder(self._storage_location)
+        found_users = []
+        for user_file in all_files:
+            with open(user_file) as file_obj:
+                first_name = file_obj.readline().strip()
+                family_name = file_obj.readline().strip()
+                if first_name + ' ' + family_name == name:
+                    found_users.append(user_file)
+        if len(found_users) == 0:
+            raise UserNotFoundError("No user found with the {} name in the repository!".format(name))
+        else:
+            return found_users
 
     def find_users_by_email(self, email):
-        pass
-        # TODO
-
+        all_files = UserManager.all_files_in_folder(self._storage_location)
+        found_users = []
+        for user_file in all_files:
+            with open(user_file) as file_obj:
+                for i, line in enumerate(file_obj):
+                    if i == 3 - 1 and line.strip() == email:
+                        found_users.append(user_file)
+        if len(found_users) == 0:
+            raise UserNotFoundError("No user found with the {} email in the repository!".format(email))
+        else:
+            return found_users
 
     def find_users_by_role(self, role):
-        pass
-        # TODO
+        number_of_role_files = 0
+        for file in listdir(self._storage_location):
+            if file.startswith('roles'):
+                if number_of_role_files > 0:
+                    raise RuntimeError("Multiple roles file in the repository!")
+                elif file.split('.')[1] not in ['txt', 'json', 'xml']:
+                    raise TypeError(
+                        "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(file))
+                else:
+                    roles_file = file
+        users_roles = UserManager.parse_roles_file(roles_file)
+        found_users = []
+        for id_key, roles_value in users_roles.iteritems():
+            if role in roles_value:
+                found_users.append(id_key)
+        if len(found_users) == 0:
+            raise UserNotFoundError("No user found with the {} role in the repository!".format(role))
+        else:
+            return found_users
+
+    @classmethod
+    def all_files_in_folder(cls, path, file_format = ''):
+        files_and_folders = listdir(path)
+        all_files = []
+        for item in files_and_folders:
+            if path.isfile(item):
+                if len(file_format) != 0:
+                    if item.endswith(file_format):
+                        all_files.append(item)
+                else:
+                    all_files.append(item)
+        return all_files
+
+    @classmethod
+    def parse_roles_file(cls, roles_file):
+        if roles_file.endswith('txt'):
+            with open(roles_file) as file_obj:
+                users_roles = dict()
+                for line in file_obj:
+                    row = line.split(':')
+                    user_id = int(row[0].strip())
+                    raw_roles = row[1].strip().split(',')
+                    user_roles = []
+                    for role in raw_roles:
+                        user_roles.append(role.strip())
+                    users_roles[user_id] = user_roles
+            return users_roles
+
+        elif roles_file.endswith('json'):
+            users_roles = dict()
+            with open(roles_file) as file_obj:
+                data = load(file_obj)
+            for id_key, roles_value in data.iteritems():
+                users_roles[int(id_key)] = roles_value
+            return users_roles
+
+        elif roles_file.endswith('xml'):
+            tree = ET.parse(roles_file)
+            users_root = tree.getroot()
+            users_roles = dict()
+            for user in users_root:
+                user_id = int(user.attrib['id'])
+                user_roles = []
+                for role in user:
+                    user_roles.append(role.text)
+                users_roles[user_id] = user_roles
+            return users_roles
+
+        else:
+            raise WrongFileTypeError(
+                "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
