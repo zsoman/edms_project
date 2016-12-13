@@ -24,7 +24,6 @@ import storage_utils
 class User(object):
     """User of the document repository"""
 
-
     def __init__(self, first_name, family_name, birth, email, password):
         self._first_name = first_name
         self._family_name = family_name
@@ -32,26 +31,21 @@ class User(object):
         self._email = email
         self._password = password
 
-
     @property
     def first_name(self):
         return self._first_name
-
 
     @property
     def family_name(self):
         return self._family_name
 
-
     @property
     def birth(self):
         return self._birth
 
-
     @property
     def email(self):
         return self._email
-
 
     @property
     def password(self):
@@ -60,7 +54,6 @@ class User(object):
 
 class Role(object):
     """Represents the roles of the users"""
-
 
     def __init__(self, role):
         if role in ['admin', 'manager', 'author', 'reviewer', 'visitor']:
@@ -72,15 +65,12 @@ class Role(object):
 class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
-
     def __init__(self):
         pass
-
 
     def read_roles(self, path):
         """Read roles from the file."""
         pass
-
 
     def write_roles(self):
         """Write roles to the file."""
@@ -90,10 +80,8 @@ class RoleManager(object):
 class UserManager(object):
     """Manage user objects"""
 
-
     def __init__(self, storage_location):
         self._storage_location = storage_location
-
 
     def save_user(self, user_id, user):
         """Save user to file"""
@@ -103,7 +91,6 @@ class UserManager(object):
             user_file.write(str(user.birth) + '\n')
             user_file.write(user.email + '\n')
             user_file.write(user.password + '\n')
-
 
     def load_user(self, user_id):
         """Load user from file"""
@@ -116,16 +103,13 @@ class UserManager(object):
         user = User(first_name, family_name, birth, email, password)
         return user
 
-
     def add_user(self, user):
         user_id = storage_utils.get_next_id(self._storage_location)
         self.save_user(user_id, user)
 
-
     def update_user(self, user_id, user):
         self.remove_user(user_id)
         self.save_user(user_id, user)
-
 
     def remove_user(self, user_id):
         user_file_path = '{}/{}'.format(self._storage_location, user_id)
@@ -133,7 +117,6 @@ class UserManager(object):
             os.remove(user_file_path)
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
-
 
     def find_user_by_id(self, user_id):
         user_file_path = '{}/{}'.format(self._storage_location, user_id)
@@ -143,14 +126,11 @@ class UserManager(object):
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
 
-
     def find_users_by_name(self, name):
         pass
 
-
     def find_users_by_email(self, email):
         pass
-
 
     def find_users_by_role(self, role):
         pass
