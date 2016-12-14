@@ -3,6 +3,10 @@ from os import path
 
 from iniformat.reader import read_ini_file
 
+VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
+AFTER_NEW_STATE = ['pending']
+AFTER_PENDING_STATE = ['accepted', 'rejected']
+
 
 class Document(object):
     """Document of the repository"""
@@ -67,7 +71,7 @@ class Document(object):
 
     @state.setter
     def state(self, value):
-        if value in ['new', 'pending', 'accepted', 'rejected']:
+        if value in VALID_DOCUMENT_STATES:
             self._state = value
         else:
             raise ValueError('The "{}" is an invalid document state!'.format(value))
@@ -96,9 +100,24 @@ class Document(object):
 
 
     def change_state(self, new_state):
-        pass
-        # TODO: needs to check if it is a valid state and if the state is reachable
-
+        if new_state not in VALID_DOCUMENT_STATES:
+            raise ValueError("The {} state is not a valid state!".format(new_state))
+        else:
+            if self.state == 'new' and new_state in AFTER_NEW_STATE:
+                self.state = new_state
+            elif self.state == 'pending' and new_state in AFTER_PENDING_STATE:
+                self.state = new_state
+            else:
+                if self.state == 'new':
+                    raise ValueError(
+                            "Because the current state is 'new' the new state must be "
+                            "{}, can't be {}!".format(', '.join(AFTER_NEW_STATE),
+                                                      new_state))
+                elif self.state == 'pending':
+                    raise ValueError(
+                            "Because the current state is 'pending' the new state must "
+                            "be {}, can't be {}!".format(', '.join(AFTER_PENDING_STATE),
+                                                         new_state))
 
 class DocumentManager(object):
     """Manage documents"""
@@ -121,7 +140,7 @@ class DocumentManager(object):
         # TODO: loads a document by ID into an object, but it reads only the name of the file and not the path
 
 
-    def add_document(self, document):
+    def add_document(self, documenlt):
         pass
         # TODO: add document to the repository
 
