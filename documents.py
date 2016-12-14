@@ -1,5 +1,7 @@
+import ConfigParser
 from datetime import datetime
-from os import path, makedirs, utime
+from os import path, makedirs
+from shutil import move
 
 from iniformat.reader import read_ini_file
 from storage_utils import get_next_id
@@ -54,6 +56,23 @@ class Document(object):
     @files.setter
     def files(self, value):
         self._files = value
+
+    @property
+    def creation_date(self):
+        d = self._creation_date
+        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
+
+    @property
+    def modification_date(self):
+        d = self._modification_date
+        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
+
+    @modification_date.setter
+    def modification_date(self, new_datetime):
+        if isinstance(new_datetime, datetime):
+            self._modification_date = new_datetime
+        else:
+            raise TypeError("The new date must be a datetime object and not {}!".format(type(new_datetime).__name__))
 
     @property
     def state(self):
@@ -112,9 +131,31 @@ class DocumentManager(object):
         metadata_data = read_ini_file(self._repository._paths_file)
         self._location = path.join(self._repository._location, metadata_data['directories']['documents'])
 
-    def save_document(self):
-        pass
-        # TODO: save the document object to the repository, and copy the original file to the repository
+    def save_document(self, new_document_folder, new_document_id, document):
+        basename_files_list = []
+        for path_file in document.files:
+            basename_files_list.append(path.basename(path_file))
+            move(path_file, new_document_folder)
+        data = {
+            'title': document.title,
+            'description': document.description,
+            'author': document.author,
+            'files': basename_files_list,
+            'doc_format': document.doc_format,
+            'creation_date': document.creation_date,
+            'modification_date': document.modification_date,
+            'state': document.state,
+            'is_public': document.is_public()
+        }
+        parser = ConfigParser.ConfigParser()
+
+        parser.add_section('document')
+        for key in data.keys():
+            parser.set('document', key, data[key])
+
+        with open(path.join(new_document_folder, '{}_document_metadata.ini'.format(new_document_id)), 'w') as file_obj:
+            parser.write(file_obj)
+
 
     def load_document(self):
         pass
@@ -123,17 +164,12 @@ class DocumentManager(object):
     def add_document(self, document):
         new_document_id = get_next_id(self._location)
         new_document_folder = self.create_structure_for_document(new_document_id)
-        self.save_document(new_document_folder, document)
+        self.save_document(new_document_folder, new_document_id, document)
 
     def create_structure_for_document(self, new_document_id):
         new_document_folder = path.join(self._location, str(new_document_id))
         makedirs(new_document_folder)
-        document_metadata_file = reduce(path.join, [self._location, str(new_document_id),
-                                                    '{}_document_metadata.ini'.format(new_document_id)])
-        with open(document_metadata_file, 'w'):
-            utime(document_metadata_file, None)
         return new_document_folder
-
 
     def update_document(self, document_id, document):
         pass
