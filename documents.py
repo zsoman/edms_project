@@ -1,3 +1,9 @@
+from datetime import datetime
+from os import path
+
+from iniformat.reader import read_ini_file
+
+
 class Document(object):
     """Document of the repository"""
 
@@ -8,6 +14,8 @@ class Document(object):
         self._author = author
         self._files = files
         self._doc_format = doc_format
+        self._creation_date = datetime.utcnow()
+        self._modification_date = self._creation_date
         self._state = 'new'
         self._is_public = False
 
@@ -87,21 +95,72 @@ class Document(object):
         self._is_public = False
 
 
+    def change_state(self, new_state):
+        pass
+        # TODO: needs to check if it is a valid state and if the state is reachable
+
+
 class DocumentManager(object):
     """Manage documents"""
 
 
-    def __init__(self):
+    def __init__(self, repository):
+        self._repository = repository
+        metadata_data = read_ini_file(self._repository._paths_file)
+        self._location = path.join(self._repository._location,
+                                   metadata_data['directories']['documents'])
+
+
+    def save_document(self):
         pass
+        # TODO: save the document object to the repository, and copy the original file to the repository
+
+
+    def load_document(self):
+        pass
+        # TODO: loads a document by ID into an object, but it reads only the name of the file and not the path
 
 
     def add_document(self, document):
         pass
+        # TODO: add document to the repository
+
+
+    def create_structure_for_document(self):
+        pass
+        # TODO: it creates the folder structure and the metadata
 
 
     def update_document(self, document_id, document):
         pass
+        # TODO: updates the document in the memory
 
 
     def remove_document(self, document_id):
         pass
+        # TODO: remove document from the repository
+
+
+    def all_available_doocuments(self):
+        pass
+        # TODO
+
+
+    def find_document_by_id(self):
+        pass
+        # TODO
+
+
+    def find_document_by_title(self):
+        pass
+        # TODO
+
+
+    def find_document_by_author(self):
+        pass
+        # TODO
+
+
+    def find_document_by_format(self):
+        pass
+        # TODO
