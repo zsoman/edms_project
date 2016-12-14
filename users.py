@@ -65,8 +65,6 @@ class DuplicatedRoles(Exception):
 class User(object):
     """User of the document repository"""
 
-
-    # TODO a userernek kell legyen egyedi azonositoja? mert az user nem kell tudja onmagarol h mi az azonositoja
     def __init__(self, first_name, family_name, birth, email, password):
         if User.is_valid_name(first_name):
             self._first_name = first_name
