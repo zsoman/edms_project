@@ -10,7 +10,7 @@ author_role = Role('author')
 reviewer_role = Role('reviewer')
 visitor_role = Role('visitor')
 
-repo = Repository(roles_file_type='json')
+repo = Repository(location='./tmp/edms/users', roles_file_type='json')
 gen = UserGenerator()
 fname = gen.generate_first_name()
 lname = gen.generate_family_name()

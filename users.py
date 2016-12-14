@@ -85,7 +85,7 @@ class User(object):
         if User.is_valid_email(email):
             self._email = email
         else:
-            raise TypeError(
+            raise ValueError(
                     "The {} email address is not a valid email address!".format(email))
 
         if User.is_valid_password(password):

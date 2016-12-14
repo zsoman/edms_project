@@ -128,7 +128,7 @@ class DocumentManager(object):
 
     def create_structure_for_document(self):
         pass
-        # TODO: it creates the folder structure and the metadata
+        # TODO: it creates the folder structure and the metadata file
 
 
     def update_document(self, document_id, document):
