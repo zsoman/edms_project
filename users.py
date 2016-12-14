@@ -17,7 +17,7 @@ The fields of a user object stored in the text file line-by-line as:
 """
 
 import xml.etree.ElementTree as ET
-from collections import defaultdict
+from collections import defaultdict, Counter
 from datetime import date
 from json import load, dump
 from os import path, remove, listdir
@@ -25,12 +25,38 @@ from re import match
 
 import storage_utils
 
+DELIMITER_CHAR = ':'
+ROLE_DELIMITER_CHAR = ','
 
 class UserNotFoundError(Exception):
     pass
 
 
 class WrongFileTypeError(Exception):
+    pass
+
+
+class MissingUserIdentifier(Exception):
+    pass
+
+
+class MissingDelimiterCharacter(Exception):
+    pass
+
+
+class InvalidRoleName(Exception):
+    pass
+
+
+class InconsistentUseOfRoleDelimiter(Exception):
+    pass
+
+
+class DuplicateUserIdentifier(Exception):
+    pass
+
+
+class DuplicatedRoles(Exception):
     pass
 
 
@@ -366,6 +392,52 @@ class UserManager(object):
             for role in roles_values:
                 users_by_roles[role.role].append(id_key)
         return dict(users_by_roles)
+
+    def check_role_file(self):
+        role_manager = RoleManager(self._storage_location)
+        roles_file = role_manager.read_roles()
+        if roles_file.endswith('txt'):
+            with open(roles_file) as file_obj:
+                user_ids = []
+                for i, line in enumerate(file_obj):
+                    if line.split(DELIMITER_CHAR)[0] == '':
+                        raise MissingUserIdentifier(
+                            "In the {} role file the {}th line has no user identifier!".format(roles_file, i + 1))
+                    elif DELIMITER_CHAR not in line or line.count(DELIMITER_CHAR) > 1:
+                        raise MissingDelimiterCharacter(
+                            "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
+                    elif ROLE_DELIMITER_CHAR not in line:
+                        raise InconsistentUseOfRoleDelimiter(
+                            "Missing '{}' character in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
+                    try:
+                        roles = line.split(DELIMITER_CHAR)[1].split(ROLE_DELIMITER_CHAR)
+                        roles_count = Counter(roles)
+                        for key, value in roles_count.iteritems():
+                            if value > 1:
+                                raise DuplicatedRoles("The {} role is duplicated in the {}th line!".format(key, i + 1))
+                        for role in roles:
+                            if role.isspace():
+                                raise InconsistentUseOfRoleDelimiter(
+                                    "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
+                            Role(role)
+                    except ValueError:
+                        raise InvalidRoleName("The {} role name is invalid in the {}th line!".format(role, i + 1))
+
+                    user_ids.append(line.split(DELIMITER_CHAR)[0])
+                user_ids_counter = Counter(user_ids)
+                for key, value in user_ids_counter.iteritems():
+                    if value > 1:
+                        raise DuplicatedRoles("The {} user id is duplicated!".format(key))
+
+
+        elif roles_file.endswith('json'):
+
+        elif roles_file.endswith('xml'):
+
+        else:
+            raise WrongFileTypeError(
+                "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
+
 
     @classmethod
     def all_files_in_folder(cls, file_path, file_format = ''):
