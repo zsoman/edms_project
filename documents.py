@@ -2,6 +2,7 @@ from datetime import datetime
 from os import path
 
 from iniformat.reader import read_ini_file
+from storage_utils import get_next_id
 
 VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
 AFTER_NEW_STATE = ['pending']
@@ -126,8 +127,7 @@ class DocumentManager(object):
     def __init__(self, repository):
         self._repository = repository
         metadata_data = read_ini_file(self._repository._paths_file)
-        self._location = path.join(self._repository._location,
-                                   metadata_data['directories']['documents'])
+        self._location = path.join(self._repository._location, metadata_data['directories']['documents'])
 
 
     def save_document(self):
@@ -146,7 +146,7 @@ class DocumentManager(object):
 
 
     def create_structure_for_document(self):
-        pass
+        print(get_next_id(self._location))
         # TODO: it creates the folder structure and the metadata file
 
 

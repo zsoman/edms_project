@@ -24,6 +24,7 @@ from os import path, remove, listdir
 from re import match
 
 import storage_utils
+from iniformat.reader import read_ini_file
 
 DELIMITER_CHAR = ':'
 ROLE_DELIMITER_CHAR = ','
@@ -182,23 +183,25 @@ class Role(object):
 class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
-
-    def __init__(self, storage_location):
-        self._storage_location = storage_location
+    def __init__(self, repository):
+        self._repository = repository
+        metadata_data = read_ini_file(self._repository._paths_file)
+        self._location = path.join(self._repository._location,
+                                   metadata_data['directories']['users'])
 
 
     def read_roles(self):
         """Read roles from the file."""
         return RoleManager.parse_roles_file(
-                path.join(self._storage_location,
-                          RoleManager.get_roles_file(self._storage_location)))
+            path.join(self._location,
+                      RoleManager.get_roles_file(self._location)))
 
 
     def write_roles(self, users_roles):
         """Write roles to the file."""
 
-        roles_file = path.join(self._storage_location,
-                               RoleManager.get_roles_file(self._storage_location))
+        roles_file = path.join(self._location,
+                               RoleManager.get_roles_file(self._location))
         if roles_file.endswith('txt'):
             with open(roles_file, 'w') as file_obj:
                 for id_key, roles_value in users_roles.iteritems():
@@ -298,14 +301,16 @@ class RoleManager(object):
 class UserManager(object):
     """Manage user objects"""
 
-
-    def __init__(self, storage_location):
-        self._storage_location = storage_location
+    def __init__(self, repository):
+        self._repository = repository
+        metadata_data = read_ini_file(self._repository._paths_file)
+        self._location = path.join(self._repository._location,
+                                   metadata_data['directories']['users'])
 
 
     def save_user(self, user_id, user):
         """Save user to file"""
-        with open(path.join(self._storage_location, user_id), 'w') as user_file:
+        with open(path.join(self._location, user_id), 'w') as user_file:
             user_file.write(user.first_name + '\n')
             user_file.write(user.family_name + '\n')
             user_file.write(str(user.birth) + '\n')
@@ -315,7 +320,7 @@ class UserManager(object):
 
     def load_user(self, user_id):
         """Load user from file"""
-        with open(path.join(self._storage_location, user_id)) as user_file:
+        with open(path.join(self._location, user_id)) as user_file:
             first_name = user_file.readline().rstrip('\n')
             family_name = user_file.readline().rstrip('\n')
             birth = user_file.readline().rstrip('\n')
@@ -326,7 +331,7 @@ class UserManager(object):
 
 
     def add_user(self, user):
-        user_id = storage_utils.get_next_id(self._storage_location)
+        user_id = storage_utils.get_next_id(self._location)
         self.save_user(user_id, user)
 
 
@@ -336,7 +341,7 @@ class UserManager(object):
 
 
     def remove_user(self, user_id):
-        user_file_path = path.join(self._storage_location, user_id)
+        user_file_path = path.join(self._location, user_id)
         if path.exists(user_file_path):
             remove(user_file_path)
         else:
@@ -344,7 +349,7 @@ class UserManager(object):
 
 
     def find_user_by_id(self, user_id):
-        user_file_path = path.join(self._storage_location, user_id)
+        user_file_path = path.join(self._location, user_id)
         if path.exists(user_file_path):
             user = self.load_user(user_id)
             return user
@@ -353,10 +358,10 @@ class UserManager(object):
 
 
     def find_users_by_name(self, name):
-        all_files = UserManager.all_files_in_folder(self._storage_location)
+        all_files = UserManager.all_files_in_folder(self._location)
         found_users = []
         for user_file in all_files:
-            with open(path.join(self._storage_location, user_file)) as file_obj:
+            with open(path.join(self._location, user_file)) as file_obj:
                 first_name = file_obj.readline().strip()
                 family_name = file_obj.readline().strip()
                 if name.lower() in '{} {}'.format(first_name.lower(),
@@ -370,10 +375,10 @@ class UserManager(object):
 
 
     def find_users_by_email(self, email):
-        all_files = UserManager.all_files_in_folder(self._storage_location)
+        all_files = UserManager.all_files_in_folder(self._location)
         found_users = []
         for user_file in all_files:
-            with open(path.join(self._storage_location, user_file)) as file_obj:
+            with open(path.join(self._location, user_file)) as file_obj:
                 for i, line in enumerate(file_obj):
                     if i + 1 == 4 and email.lower() in line.strip().lower():
                         found_users.append(user_file)
@@ -385,7 +390,7 @@ class UserManager(object):
 
 
     def find_users_by_role(self, role):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         users_roles = role_manager.read_roles()
         found_users = []
         for id_key, roles_value in users_roles.iteritems():
@@ -400,7 +405,7 @@ class UserManager(object):
 
 
     def add_role_to_user(self, user_id, role):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
             users_roles[user_id] = [role]
@@ -411,7 +416,7 @@ class UserManager(object):
 
 
     def remove_role_from_user(self, user_id, role):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
             raise RuntimeError(
@@ -425,7 +430,7 @@ class UserManager(object):
 
 
     def user_has_specific_role(self, user_id, role):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
             raise RuntimeError("No user with {} ID!".format(user_id))
@@ -434,7 +439,7 @@ class UserManager(object):
 
 
     def list_users_by_role(self):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         users_roles = role_manager.read_roles()
         users_by_roles = defaultdict(list)
         for id_key, roles_values in users_roles.iteritems():
@@ -444,11 +449,11 @@ class UserManager(object):
 
 
     def check_role_file(self):
-        role_manager = RoleManager(self._storage_location)
+        role_manager = RoleManager(self._repository)
         user_roles = role_manager.read_roles()
-        roles_file = path.join(self._storage_location, RoleManager.get_roles_file(
-                self._storage_location))
-        if RoleManager.get_roles_file(self._storage_location).endswith('txt'):
+        roles_file = path.join(self._location, RoleManager.get_roles_file(
+            self._location))
+        if RoleManager.get_roles_file(self._location).endswith('txt'):
             with open(roles_file) as file_obj:
                 user_ids = []
                 for i, line in enumerate(file_obj):
@@ -474,7 +479,6 @@ class UserManager(object):
                                 raise InconsistentUseOfRoleDelimiter(
                                         "Too many '{}' characters in the {}th line!".format(
                                                 ROLE_DELIMITER_CHAR, i + 1))
-                            print('role: {}'.format(role))
                             Role(role)
                     except ValueError:
                         raise InvalidRoleName(
@@ -489,7 +493,7 @@ class UserManager(object):
             return True
 
 
-        elif RoleManager.get_roles_file(self._storage_location).endswith('json'):
+        elif RoleManager.get_roles_file(self._location).endswith('json'):
             with open(roles_file) as file_obj:
                 data = load(file_obj)
             for id_key, roles_value in data.iteritems():
@@ -522,7 +526,7 @@ class UserManager(object):
             return True
 
 
-        elif RoleManager.get_roles_file(self._storage_location).endswith('xml'):
+        elif RoleManager.get_roles_file(self._location).endswith('xml'):
             tree = ET.parse(roles_file)
             users_root = tree.getroot()
             users_list = []

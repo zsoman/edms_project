@@ -13,5 +13,7 @@ def get_next_id(storage_path):
             integer_ids.append(current_id)
         except:
             pass
+    if len(integer_ids) == 0:
+        integer_ids.append(0)
     last_id = max(integer_ids)
     return last_id + 1

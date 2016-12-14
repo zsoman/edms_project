@@ -38,9 +38,7 @@ class Repository(object):
                  roles_file_type='txt'):
         self._name = name
         self._location = location
-        self._metadata_file = path.join(self._location,
-                                        '{}_metadata.ini'.format(
-                                            path.basename(self._location)))
+        self._metadata_file = path.join(self._location, '{}_metadata.ini'.format(path.basename(self._location)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
         self.load()
@@ -87,7 +85,7 @@ class Repository(object):
             'files': {'repo_main_folder': path.basename(self._location),
                       'paths': self._paths_file}
         }
-        write_ini_file(path.join(self._location, self._paths_file), data)
+        write_ini_file(self._paths_file, data)
 
 
     def create_repo_metadata_file(self, date_obj):
