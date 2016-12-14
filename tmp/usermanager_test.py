@@ -29,3 +29,14 @@ role_manager = RoleManager(path.join(repo._location, 'users'))
 print(role_manager.read_roles())
 role_manager.write_roles({999: [author_role, visitor_role], 998: [reviewer_role]})
 print(role_manager.read_roles())
+
+user_manager.add_role_to_user(999, admin_role)
+user_manager.add_role_to_user(997, admin_role)
+user_manager.remove_role_from_user(998, reviewer_role)
+
+user_manager.user_has_specific_role(999, admin_role)
+user_manager.user_has_specific_role(998, reviewer_role)
+# user_manager.user_has_specific_role(996, reviewer_role)
+
+for key, value in user_manager.list_users_by_role().iteritems():
+    print("{}: {}".format(key, value))

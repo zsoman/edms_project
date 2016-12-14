@@ -17,6 +17,7 @@ The fields of a user object stored in the text file line-by-line as:
 """
 
 import xml.etree.ElementTree as ET
+from collections import defaultdict
 from datetime import date
 from json import load, dump
 from os import path, remove, listdir
@@ -36,6 +37,7 @@ class WrongFileTypeError(Exception):
 class User(object):
     """User of the document repository"""
 
+    # TODO a userernek kell legyen egyedi azonositoja? mert az user nem kell tudja onmagarol h mi az azonositoja
     def __init__(self, first_name, family_name, birth, email, password):
         if User.is_valid_name(first_name):
             self._first_name = first_name
@@ -124,6 +126,11 @@ class Role(object):
     @property
     def role(self):
         return self._role
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._role == other._role
+        return False
 
     def __str__(self):
         return self._role
@@ -321,6 +328,44 @@ class UserManager(object):
             raise UserNotFoundError("No user found with the {} role in the repository!".format(role.role))
         else:
             return found_users
+
+    def add_role_to_user(self, user_id, role):
+        role_manager = RoleManager(self._storage_location)
+        users_roles = role_manager.read_roles()
+        if user_id not in users_roles:
+            users_roles[user_id] = [role]
+        else:
+            if role not in users_roles[user_id]:
+                users_roles[user_id].append(role)
+        role_manager.write_roles(users_roles)
+
+    def remove_role_from_user(self, user_id, role):
+        role_manager = RoleManager(self._storage_location)
+        users_roles = role_manager.read_roles()
+        if user_id not in users_roles:
+            raise RuntimeError("The user with {} user ID has no roles, can't remove {} role!".format(user_id, role))
+        else:
+            users_roles[user_id] = users_roles[user_id].remove(role)
+            if not users_roles[user_id]:
+                users_roles[user_id] = []
+        role_manager.write_roles(users_roles)
+
+    def user_has_specific_role(self, user_id, role):
+        role_manager = RoleManager(self._storage_location)
+        users_roles = role_manager.read_roles()
+        if user_id not in users_roles:
+            raise RuntimeError("No user with {} ID!".format(user_id))
+        else:
+            return role in users_roles[user_id]
+
+    def list_users_by_role(self):
+        role_manager = RoleManager(self._storage_location)
+        users_roles = role_manager.read_roles()
+        users_by_roles = defaultdict(list)
+        for id_key, roles_values in users_roles.iteritems():
+            for role in roles_values:
+                users_by_roles[role.role].append(id_key)
+        return dict(users_by_roles)
 
     @classmethod
     def all_files_in_folder(cls, file_path, file_format = ''):
