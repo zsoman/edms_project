@@ -251,7 +251,7 @@ class RoleManager(object):
     @classmethod
     def parse_roles_file(cls, roles_file):
         with open(roles_file) as file_obj:
-            if file_obj.readline == '':
+            if file_obj.readline() == '':
                 return dict()
         if roles_file.endswith('txt'):
             with open(roles_file) as file_obj:
@@ -445,9 +445,10 @@ class UserManager(object):
     def check_role_file(self):
         role_manager = RoleManager(self._storage_location)
         user_roles = role_manager.read_roles()
+        roles_file = path.join(self._storage_location, RoleManager.get_roles_file(
+                self._storage_location))
         if RoleManager.get_roles_file(self._storage_location).endswith('txt'):
-            with open(path.join(self._storage_location, RoleManager.get_roles_file(
-                    self._storage_location))) as file_obj:
+            with open(roles_file) as file_obj:
                 user_ids = []
                 for i, line in enumerate(file_obj):
                     if line.split(DELIMITER_CHAR)[0] == '':
@@ -484,15 +485,78 @@ class UserManager(object):
                 for key, value in user_ids_counter.iteritems():
                     if value > 1:
                         raise DuplicatedRoles("The {} user id is duplicated!".format(key))
+            return True
 
 
         elif RoleManager.get_roles_file(self._storage_location).endswith('json'):
-            pass
-            # TODO
+            with open(roles_file) as file_obj:
+                data = load(file_obj)
+            for id_key, roles_value in data.iteritems():
+                if not isinstance(id_key, unicode):
+                    raise MissingUserIdentifier(
+                        "In the role file has no user identifier!")
+                else:
+                    try:
+                        int(id_key)
+                    except ValueError:
+                        MissingUserIdentifier(
+                            "In the role file the {} key should be a number!".format(
+                                id_key))
+                if not isinstance(roles_value, list):
+                    raise InvalidRoleName(
+                        "The roles should be stored in a list, not in a {}!".format(
+                            type(roles_value).__name__))
+                else:
+                    for role in roles_value:
+                        try:
+                            Role(role)
+                        except ValueError:
+                            raise InvalidRoleName(
+                                "The {} role name is invalid!".format(role))
+                    roles_count = Counter(roles_value)
+                    for key, value in roles_count.iteritems():
+                        if value > 1:
+                            raise DuplicatedRoles(
+                                "The {} role is duplicated!".format(key))
+            return True
+
 
         elif RoleManager.get_roles_file(self._storage_location).endswith('xml'):
-            pass
-            # TODO
+            tree = ET.parse(roles_file)
+            users_root = tree.getroot()
+            users_list = []
+            if users_root.tag != 'users':
+                raise MissingUserIdentifier(
+                    "In the role file the root tag must be 'users' not {}!".format(
+                        users_root.tag))
+            for user in users_root:
+                if user.tag != 'user':
+                    raise MissingUserIdentifier(
+                        "In the role file the root's child tags must be 'user' not {}!".format(
+                            user.tag))
+                try:
+                    users_list.append(int(user.attrib['id']))
+                except KeyError:
+                    raise MissingUserIdentifier(
+                        "The user tag must have an 'id' attribute!")
+                except ValueError:
+                    raise MissingUserIdentifier(
+                        "The user tag must have an 'id' attribute which is a number, not a {}!".format(
+                            type(user.attrib['id']).__name__))
+                user_roles = []
+                for role in user:
+                    try:
+                        user_roles.append(Role(role.text))
+                    except ValueError:
+                        raise InvalidRoleName("The {} role name is invalid!".format(role))
+                roles_count = Counter(user_roles)
+                for key, value in roles_count.iteritems():
+                    if value > 1:
+                        raise DuplicatedRoles("The {} role is duplicated!".format(key))
+            users_list = Counter(user_roles)
+            for key, value in users_list.iteritems():
+                if value > 1:
+                    raise DuplicatedRoles("The {} user ID is duplicated!".format(key))
         else:
             raise WrongFileTypeError(
                     "The roles file's type is inappropriate it should be TXT, JSON or XML!")
