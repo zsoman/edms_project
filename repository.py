@@ -55,10 +55,13 @@ class Repository(object):
     def initialize(self):
         """Initialize a new repository"""
         makedirs(self._location)
-        for dir_name in ['documents', 'logs', 'projects', 'users', 'reports']:
-            makedirs(path.join(self._location, dir_name))
-        role_file_path = path.join(path.join(self._location, 'users'),
-                                   '{}.{}'.format(ROLES_FILE, self._roles_file_type))
+        for name_key, dir_name_value in FOLDERS_PATH.iteritems():
+            makedirs(path.join(self._location, dir_name_value))
+        # role_file_path = path.join(path.join(self._location, 'users'),
+        #                            '{}.{}'.format(ROLES_FILE, self._roles_file_type))
+        role_file_path = reduce(path.join, [self._location, 'users',
+                                            '{}.{}'.format(ROLES_FILE,
+                                                           self._roles_file_type)])
         with open(role_file_path, 'w') as role_file:
             utime(role_file_path, None)
         self.create_default_path_file()
