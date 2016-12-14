@@ -120,17 +120,19 @@ class DocumentManager(object):
         pass
         # TODO: loads a document by ID into an object, but it reads only the name of the file and not the path
 
-    def add_document(self, documenlt):
-        pass
-        # TODO: add document to the repository
-
-    def create_structure_for_document(self):
+    def add_document(self, document):
         new_document_id = get_next_id(self._location)
-        makedirs(path.join(self._location, str(new_document_id)))
+        new_document_folder = self.create_structure_for_document(new_document_id)
+        self.save_document(new_document_folder, document)
+
+    def create_structure_for_document(self, new_document_id):
+        new_document_folder = path.join(self._location, str(new_document_id))
+        makedirs(new_document_folder)
         document_metadata_file = reduce(path.join, [self._location, str(new_document_id),
                                                     '{}_document_metadata.ini'.format(new_document_id)])
         with open(document_metadata_file, 'w'):
             utime(document_metadata_file, None)
+        return new_document_folder
 
 
     def update_document(self, document_id, document):
