@@ -93,3 +93,5 @@ ENV/
 .idea/workspace.xml
 
 /tmp/Repositories/
+/tmp/Documents/
+tmp/Documents/
