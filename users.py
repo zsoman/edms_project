@@ -18,7 +18,7 @@ The fields of a user object stored in the text file line-by-line as:
 
 import xml.etree.ElementTree as ET
 from datetime import date
-from json import load
+from json import load, dump
 from os import path, remove, listdir
 from re import match
 
@@ -121,23 +121,116 @@ class Role(object):
         else:
             raise ValueError('The "{}" is an invalid role!'.format(role))
 
+    @property
+    def role(self):
+        return self._role
+
+    def __str__(self):
+        return self._role
+
 
 class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
-    def __init__(self):
-        pass
-        # TODO: Role manager __init__
+    def __init__(self, storage_location):
+        self._storage_location = storage_location
 
-    def read_roles(self, path):
+    def read_roles(self):
         """Read roles from the file."""
-        pass
-        # TODO Role manager read roles from file
+        return RoleManager.parse_roles_file(
+            path.join(self._storage_location, RoleManager.get_roles_file(self._storage_location)))
 
-    def write_roles(self):
+    def write_roles(self, users_roles):
         """Write roles to the file."""
-        pass
-        # TODO Role manager write roles to file
+
+        roles_file = path.join(self._storage_location, RoleManager.get_roles_file(self._storage_location))
+        if roles_file.endswith('txt'):
+            with open(roles_file, 'a') as file_obj:
+                for id_key, roles_value in users_roles.iteritems():
+                    roles_str = ''
+                    for role in roles_value:
+                        roles_str += '{},'.format(role.role)
+                    file_obj.write('\n{}: {}'.format(id_key, roles_str[:-1]))
+
+        elif roles_file.endswith('json'):
+            existing_users_roles = self.read_roles()
+            with open(roles_file, 'w') as file_obj:
+                existing_users_roles.update(users_roles)
+                serializable_existing_users_roles = dict()
+                for id_key, roles_value in existing_users_roles.iteritems():
+                    serializable_roles = []
+                    for role_obj in roles_value:
+                        serializable_roles.append(role_obj.role)
+                    serializable_existing_users_roles[id_key] = serializable_roles
+                dump(serializable_existing_users_roles, file_obj)
+
+        elif roles_file.endswith('xml'):
+            existing_users_roles = self.read_roles()
+            existing_users_roles.update(users_roles)
+            root = ET.Element('users')
+            for id_key, roles_value in existing_users_roles.iteritems():
+                user = ET.SubElement(root, 'user')
+                user.set('id', str(id_key))
+                for role in roles_value:
+                    role_element = ET.SubElement(user, 'role')
+                    role_element.text = role.role
+            tree = ET.ElementTree(root)
+            tree.write(roles_file)
+
+    @classmethod
+    def get_roles_file(cls, folder_path):
+        number_of_role_files = 0
+        for file in listdir(folder_path):
+            if file.startswith('roles'):
+                if number_of_role_files > 0:
+                    raise RuntimeError("Multiple roles file in the repository!")
+                elif file.split('.')[1] not in ['txt', 'json', 'xml']:
+                    raise TypeError(
+                        "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(file))
+                else:
+                    return file
+
+    @classmethod
+    def parse_roles_file(cls, roles_file):
+        if roles_file.endswith('txt'):
+            with open(roles_file) as file_obj:
+                users_roles = dict()
+                for line in file_obj:
+                    row = line.split(':')
+                    user_id = int(row[0].strip())
+                    raw_roles = row[1].strip().split(',')
+                    user_roles = []
+                    for role in raw_roles:
+                        user_roles.append(Role(role.strip()))
+                    users_roles[user_id] = user_roles
+            return users_roles
+
+        elif roles_file.endswith('json'):
+            users_roles = dict()
+            with open(roles_file) as file_obj:
+                data = load(file_obj)
+            for id_key, roles_value in data.iteritems():
+                user_roles = []
+                for r in roles_value:
+                    user_roles.append(Role(r))
+                users_roles[int(id_key)] = user_roles
+            return users_roles
+
+        elif roles_file.endswith('xml'):
+            tree = ET.parse(roles_file)
+            users_root = tree.getroot()
+            users_roles = dict()
+            for user in users_root:
+                user_id = int(user.attrib['id'])
+                user_roles = []
+                for role in user:
+                    user_roles.append(Role(role.text))
+                users_roles[user_id] = user_roles
+            return users_roles
+
+        else:
+            raise WrongFileTypeError(
+                "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
 
 
 class UserManager(object):
@@ -217,24 +310,15 @@ class UserManager(object):
             return found_users
 
     def find_users_by_role(self, role):
-        number_of_role_files = 0
-        roles_file = ''
-        for file in listdir(self._storage_location):
-            if file.startswith('roles'):
-                if number_of_role_files > 0:
-                    raise RuntimeError("Multiple roles file in the repository!")
-                elif file.split('.')[1] not in ['txt', 'json', 'xml']:
-                    raise TypeError(
-                        "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(file))
-                else:
-                    roles_file = file
-        users_roles = UserManager.parse_roles_file(path.join(self._storage_location, roles_file))
+        role_manager = RoleManager(self._storage_location)
+        users_roles = role_manager.read_roles()
         found_users = []
         for id_key, roles_value in users_roles.iteritems():
-            if role in roles_value:
-                found_users.append(id_key)
+            for role_obj in roles_value:
+                if role.role == role_obj.role:
+                    found_users.append(id_key)
         if len(found_users) == 0:
-            raise UserNotFoundError("No user found with the {} role in the repository!".format(role))
+            raise UserNotFoundError("No user found with the {} role in the repository!".format(role.role))
         else:
             return found_users
 
@@ -250,42 +334,3 @@ class UserManager(object):
                 else:
                     all_files.append(item)
         return all_files
-
-    @classmethod
-    def parse_roles_file(cls, roles_file):
-        if roles_file.endswith('txt'):
-            with open(roles_file) as file_obj:
-                users_roles = dict()
-                for line in file_obj:
-                    row = line.split(':')
-                    user_id = int(row[0].strip())
-                    raw_roles = row[1].strip().split(',')
-                    user_roles = []
-                    for role in raw_roles:
-                        user_roles.append(role.strip())
-                    users_roles[user_id] = user_roles
-            return users_roles
-
-        elif roles_file.endswith('json'):
-            users_roles = dict()
-            with open(roles_file) as file_obj:
-                data = load(file_obj)
-            for id_key, roles_value in data.iteritems():
-                users_roles[int(id_key)] = roles_value
-            return users_roles
-
-        elif roles_file.endswith('xml'):
-            tree = ET.parse(roles_file)
-            users_root = tree.getroot()
-            users_roles = dict()
-            for user in users_root:
-                user_id = int(user.attrib['id'])
-                user_roles = []
-                for role in user:
-                    user_roles.append(role.text)
-                users_roles[user_id] = user_roles
-            return users_roles
-
-        else:
-            raise WrongFileTypeError(
-                "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
