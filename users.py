@@ -431,9 +431,12 @@ class UserManager(object):
 
 
         elif roles_file.endswith('json'):
+            pass
+            # TODO
 
         elif roles_file.endswith('xml'):
-
+            pass
+            # TODO
         else:
             raise WrongFileTypeError(
                 "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))

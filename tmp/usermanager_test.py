@@ -40,3 +40,5 @@ user_manager.user_has_specific_role(998, reviewer_role)
 
 for key, value in user_manager.list_users_by_role().iteritems():
     print("{}: {}".format(key, value))
+
+print(user_manager.check_role_file())
