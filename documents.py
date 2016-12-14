@@ -198,3 +198,7 @@ class DocumentManager(object):
     def find_document_by_format(self):
         pass
         # TODO
+
+    def document_files_exist(self):
+        pass
+        # TODO

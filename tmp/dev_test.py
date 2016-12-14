@@ -75,7 +75,8 @@ doc_manager = DocumentManager(repo)
 
 # Create document_gerator
 doc_generator = DocumentGenerator()
-makedirs('Documents')
+if not path.exists('Documents'):
+    makedirs('Documents')
 metadata1 = doc_generator.generate_metadata('office')
 metadata2 = doc_generator.generate_metadata('general')
 path_file1 = path.join('Documents', metadata1['filename'])
