@@ -359,7 +359,8 @@ class UserManager(object):
             with open(path.join(self._storage_location, user_file)) as file_obj:
                 first_name = file_obj.readline().strip()
                 family_name = file_obj.readline().strip()
-                if first_name + ' ' + family_name == name:
+                if name.lower() in '{} {}'.format(first_name.lower(),
+                                                  family_name.lower()):
                     found_users.append(user_file)
         if len(found_users) == 0:
             raise UserNotFoundError(
@@ -374,7 +375,7 @@ class UserManager(object):
         for user_file in all_files:
             with open(path.join(self._storage_location, user_file)) as file_obj:
                 for i, line in enumerate(file_obj):
-                    if i + 1 == 4 and line.strip() == email:
+                    if i + 1 == 4 and email.lower() in line.strip().lower():
                         found_users.append(user_file)
         if len(found_users) == 0:
             raise UserNotFoundError(
