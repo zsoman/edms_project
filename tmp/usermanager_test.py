@@ -10,7 +10,7 @@ author_role = Role('author')
 reviewer_role = Role('reviewer')
 visitor_role = Role('visitor')
 
-repo = Repository()
+repo = Repository(roles_file_type='txt')
 gen = UserGenerator()
 fname = gen.generate_first_name()
 lname = gen.generate_family_name()
@@ -21,6 +21,14 @@ user = User(fname, lname, birth, email, password)
 
 user_manager = UserManager(path.join(repo._location, 'users'))
 user_manager.save_user('1', user)
+
+user_manager.add_role_to_user(999, author_role)
+user_manager.add_role_to_user(999, manager_role)
+user_manager.add_role_to_user(998, manager_role)
+user_manager.add_role_to_user(997, visitor_role)
+user_manager.add_role_to_user(997, reviewer_role)
+user_manager.add_role_to_user(997, admin_role)
+
 print(user_manager.find_users_by_name('{} {}'.format(fname, lname)))
 print(user_manager.find_users_by_email(email))
 print(user_manager.find_users_by_role(author_role))
