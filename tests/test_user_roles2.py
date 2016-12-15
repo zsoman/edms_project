@@ -12,7 +12,7 @@ class TestUserRoles(unittest.TestCase):
 
 
     def setUp(self):
-        os.makedirs('/tmp/edms/users')
+        # os.makedirs('/tmp/edms/users')
         self._user_manager = UserManager('/tmp/edms/users')
         self._role_path = '/tmp/edms/roles.txt'
 
