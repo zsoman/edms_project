@@ -76,6 +76,10 @@ class Repository(object):
 
 
     def create_default_path_file(self):
+        # data = OrderedDict()
+        # data['directories']=FOLDERS_PATH
+        # data['files']={'repo_main_folder': path.basename(self._location),
+        #               'paths': self._paths_file}
         data = {
             'directories': FOLDERS_PATH,
             'files': {'repo_main_folder': path.basename(self._location),
