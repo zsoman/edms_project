@@ -125,4 +125,9 @@ for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 
 # Find document by
+print("\nFound document by id:")
 print(doc_manager.find_document_by_id(1))
+
+print("\nFound documents by title:")
+for doc_id_key, doc_value in doc_manager.find_document_by_title(metadata5['title']).iteritems():
+    print("{}: {}".format(doc_id_key, doc_value))

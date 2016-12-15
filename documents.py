@@ -290,9 +290,15 @@ class DocumentManager(object):
             return self.load_all_documents()[document_id]
 
 
-    def find_document_by_title(self):
-        pass
-        # TODO
+    def find_document_by_title(self, title):
+        documents_by_title = dict()
+        for doc_id_key, doc_value in self.load_all_documents().iteritems():
+            if doc_value.title == title:
+                documents_by_title[doc_id_key] = doc_value
+        if len(documents_by_title) == 0:
+            raise DocumentDoesntExistsError("No document was found with {} title!".format(title))
+        else:
+            return documents_by_title
 
 
     def find_document_by_author(self):
