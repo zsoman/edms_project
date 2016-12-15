@@ -115,7 +115,7 @@ doc_manager.update_document(1, update_document)
 print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
 
 # Remove docuement from file system
-doc_manager.remove_document(2)
+# doc_manager.remove_document(2)
 
 # Find all availabal documents id
 print(doc_manager.find_all_documents())
@@ -127,7 +127,9 @@ for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
 # Find document by
 print("\nFound document by id:")
 print(doc_manager.find_document_by_id(1))
-
 print("\nFound documents by title:")
 for doc_id_key, doc_value in doc_manager.find_document_by_title(metadata5['title']).iteritems():
+    print("{}: {}".format(doc_id_key, doc_value))
+print("\nFound documents by author:")
+for doc_id_key, doc_value in doc_manager.find_document_by_author(999).iteritems():
     print("{}: {}".format(doc_id_key, doc_value))

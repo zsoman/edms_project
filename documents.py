@@ -301,9 +301,15 @@ class DocumentManager(object):
             return documents_by_title
 
 
-    def find_document_by_author(self):
-        pass
-        # TODO
+    def find_document_by_author(self, author):
+        documents_by_author = dict()
+        for doc_id_key, doc_value in self.load_all_documents().iteritems():
+            if author in doc_value.author:
+                documents_by_author[doc_id_key] = doc_value
+        if len(documents_by_author) == 0:
+            raise DocumentDoesntExistsError("No document was found with {} author!".format(author))
+        else:
+            return documents_by_author
 
 
     def find_document_by_format(self):
