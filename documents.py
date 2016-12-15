@@ -1,6 +1,6 @@
 from datetime import datetime
 from os import path, makedirs
-from shutil import move
+from shutil import move, rmtree
 
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
@@ -243,13 +243,16 @@ class DocumentManager(object):
 
 
     def update_document(self, document_id, document):
-        pass
-        # TODO: updates the document in the memory
-
+        document_path = path.join(self._location, str(document_id))
+        self.save_document(document_path, document_id, document)
 
     def remove_document(self, document_id):
-        pass
-        # TODO: remove document from the repository
+        document_path = path.join(self._location, str(document_id))
+        if path.exists(document_path):
+            rmtree(document_path)
+        else:
+            raise DocumentDoesntExistsError(
+                "The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
 
 
     def all_available_doocuments(self):

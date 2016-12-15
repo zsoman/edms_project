@@ -2,9 +2,11 @@ from os import path, makedirs
 
 from docgen.generator import DocumentGenerator
 from documents import DocumentManager, Document
+from iniformat.reader import read_ini_file
 from repository import Repository
 from usergen.generator import UserGenerator
 from users import User, UserManager, RoleManager, Role
+
 
 # Role creation
 admin_role = Role('admin')
@@ -88,7 +90,9 @@ doc_generator.generate_random_file(path_file2)
 document = Document(metadata1['title'], metadata1['description'], [999, 998], [path_file1, path_file2], 'txt')
 
 doc_manager.add_document(document)
+print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
 
+# Test the document load by adding it again with new files to the repository
 loaded_doc = doc_manager.load_document(1)
 
 metadata3 = doc_generator.generate_metadata('office')
@@ -100,3 +104,15 @@ doc_generator.generate_random_file(path_file4)
 
 loaded_doc.files = [path_file3, path_file4]
 doc_manager.add_document(loaded_doc)
+
+# Test the document update
+metadata5 = doc_generator.generate_metadata('office')
+path_file5 = path.join('Documents', metadata5['filename'])
+doc_generator.generate_random_file(path_file5)
+
+update_document = Document(metadata5['title'], metadata5['description'], [999, 998], [path_file5], 'txt')
+doc_manager.update_document(1, update_document)
+print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
+
+# Remove docuement from file system
+doc_manager.remove_document(2)
