@@ -326,3 +326,8 @@ class DocumentManager(object):
     def document_files_exist(self):
         pass
         # TODO
+
+
+    def remove_document_files(self):
+        pass
+        # TODO
