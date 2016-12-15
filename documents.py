@@ -281,9 +281,13 @@ class DocumentManager(object):
             all_documents[document_id] = self.load_document(document_id)
         return all_documents
 
-    def find_document_by_id(self):
-        pass
-        # TODO
+
+    def find_document_by_id(self, document_id):
+        if document_id not in self.find_all_documents():
+            raise DocumentDoesntExistsError(
+                "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
+        else:
+            return self.load_all_documents()[document_id]
 
 
     def find_document_by_title(self):

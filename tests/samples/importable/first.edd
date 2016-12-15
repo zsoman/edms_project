@@ -1,0 +1,6 @@
+[document]
+title=Some important doc
+description=Contains various documentations
+author=Alice Smith
+files=part1.pdf part2.pdf
+type=pdf
