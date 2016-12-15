@@ -95,3 +95,5 @@ ENV/
 /tmp/Repositories/
 /tmp/Documents/
 tmp/Documents/
+/coverage/
+coverage/
