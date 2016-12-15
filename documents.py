@@ -323,10 +323,22 @@ class DocumentManager(object):
             return documents_by_author
 
 
-    def document_files_exist(self):
-        pass
-        # TODO
-
+    def document_files_exist(self, document_id):
+        existence_of_document_files = dict()
+        if document_id not in self.find_all_documents():
+            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+        else:
+            document_path = path.join(self._location, str(document_id))
+            document = self.find_document_by_id(document_id)
+            for document_file in document.files:
+                document_file_path = path.join(document_path, document_file)
+                if path.exists(document_file_path) and path.isfile(document_file_path):
+                    existence_of_document_files[document_file] = True
+                else:
+                    existence_of_document_files[document_file] = False
+        if len(existence_of_document_files) == 0:
+            raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
+        return existence_of_document_files
 
     def remove_document_files(self):
         pass
