@@ -18,7 +18,7 @@ The fields of a user object stored in the text file line-by-line as:
 
 import xml.etree.ElementTree as ET
 from collections import defaultdict, Counter
-from datetime import date
+from datetime import datetime, date
 from json import load, dump
 from os import path, remove, listdir
 from re import match
@@ -322,10 +322,10 @@ class UserManager(object):
 
     def load_user(self, user_id):
         """Load user from file"""
-        with open(path.join(self._location, user_id)) as user_file:
+        with open(path.join(self._location, str(user_id))) as user_file:
             first_name = user_file.readline().rstrip('\n')
             family_name = user_file.readline().rstrip('\n')
-            birth = user_file.readline().rstrip('\n')
+            birth = datetime.strptime(user_file.readline().rstrip('\n'), "%Y-%m-%d").date()
             email = user_file.readline().rstrip('\n')
             password = user_file.readline().rstrip('\n')
         user = User(first_name, family_name, birth, email, password)
@@ -335,6 +335,7 @@ class UserManager(object):
     def add_user(self, user):
         user_id = storage_utils.get_next_id(self._location)
         self.save_user(user_id, user)
+        return user_id
 
 
     def update_user(self, user_id, user):
@@ -343,7 +344,7 @@ class UserManager(object):
 
 
     def remove_user(self, user_id):
-        user_file_path = path.join(self._location, user_id)
+        user_file_path = path.join(self._location, str(user_id))
         if path.exists(user_file_path):
             remove(user_file_path)
         else:
@@ -351,7 +352,7 @@ class UserManager(object):
 
 
     def find_user_by_id(self, user_id):
-        user_file_path = path.join(self._location, user_id)
+        user_file_path = path.join(self._location, str(user_id))
         if path.exists(user_file_path):
             user = self.load_user(user_id)
             return user
@@ -369,11 +370,11 @@ class UserManager(object):
                 if name.lower() in '{} {}'.format(first_name.lower(),
                                                   family_name.lower()):
                     found_users.append(user_file)
-        if len(found_users) == 0:
-            raise UserNotFoundError(
-                    "No user found with the {} name in the repository!".format(name))
-        else:
-            return found_users
+        # if len(found_users) == 0:
+        #     raise UserNotFoundError(
+        #             "No user found with the {} name in the repository!".format(name))
+        # else:
+        return found_users
 
 
     def find_users_by_email(self, email):
@@ -384,11 +385,11 @@ class UserManager(object):
                 for i, line in enumerate(file_obj):
                     if i + 1 == 4 and email.lower() in line.strip().lower():
                         found_users.append(user_file)
-        if len(found_users) == 0:
-            raise UserNotFoundError(
-                    "No user found with the {} email in the repository!".format(email))
-        else:
-            return found_users
+        # if len(found_users) == 0:
+        #     raise UserNotFoundError(
+        #             "No user found with the {} email in the repository!".format(email))
+        # else:
+        return found_users
 
 
     def find_users_by_role(self, role):
