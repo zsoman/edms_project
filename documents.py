@@ -4,6 +4,7 @@ from shutil import move, rmtree
 
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
+from repository import Repository
 from storage_utils import get_next_id
 
 VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
@@ -22,7 +23,10 @@ class Document(object):
     def __init__(self, title, description, author, files, doc_format):
         self._title = title
         self._description = description
-        self._author = author
+        if isinstance(author, list):
+            self._author = author
+        else:
+            self._author = [author]
         self._files = files
         self._doc_format = doc_format
         self._creation_date = datetime.utcnow()
@@ -53,7 +57,10 @@ class Document(object):
 
     @property
     def author(self):
-        return self._author
+        if len(self._author) == 1:
+            return self._author[0]
+        else:
+            return self._author
 
 
     @author.setter
@@ -175,7 +182,10 @@ class DocumentManager(object):
 
 
     def __init__(self, repository):
-        self._repository = repository
+        if isinstance(repository, Repository):
+            self._repository = repository
+        else:
+            self._repository = Repository(location=repository)
         metadata_data = read_ini_file(self._repository._paths_file)
         self._location = path.join(self._repository._location,
                                    metadata_data['directories']['documents'])
@@ -220,9 +230,11 @@ class DocumentManager(object):
             meta_data = read_ini_file(metadata_file)
             list_of_files = ([str(file_name.strip("'")) for file_name in
                               meta_data['document']['files'][1:-1].split(', ')])
-            list_of_authors = (
-                [int(file_name.strip("'")) for file_name in
-                 meta_data['document']['author'][1:-1].split(', ')])
+            if '[' in meta_data['document']['author'] and ']' in meta_data['document']['author']:
+                list_of_authors = [int(file_name.strip("'")) for file_name in
+                                   meta_data['document']['author'][1:-1].split(', ')]
+            else:
+                list_of_authors = meta_data['document']['author']
             document = Document(meta_data['document']['title'],
                                 meta_data['document']['description'],
                                 list_of_authors, list_of_files,
@@ -242,6 +254,7 @@ class DocumentManager(object):
         new_document_id = get_next_id(self._location)
         new_document_folder = self.create_structure_for_document(new_document_id)
         self.save_document(new_document_folder, new_document_id, document)
+        return new_document_id
 
 
     def create_structure_for_document(self, new_document_id):
@@ -275,6 +288,10 @@ class DocumentManager(object):
         return all_available_documents
 
 
+    def count_documents(self):
+        return len(self.find_all_documents())
+
+
     def load_all_documents(self):
         all_documents = dict()
         for document_id in self.find_all_documents():
@@ -290,18 +307,18 @@ class DocumentManager(object):
             return self.load_all_documents()[document_id]
 
 
-    def find_document_by_title(self, title):
+    def find_documents_by_title(self, title):
         documents_by_title = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
-            if doc_value.title == title:
+            if doc_value.title.lower() == title.lower():
                 documents_by_title[doc_id_key] = doc_value
         if len(documents_by_title) == 0:
             raise DocumentDoesntExistsError("No document was found with {} title!".format(title))
         else:
-            return documents_by_title
+            return documents_by_title.values()
 
 
-    def find_document_by_author(self, author):
+    def find_documents_by_author(self, author):
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
             if author in doc_value.author:
@@ -309,10 +326,10 @@ class DocumentManager(object):
         if len(documents_by_author) == 0:
             raise DocumentDoesntExistsError("No document was found with {} author!".format(author))
         else:
-            return documents_by_author
+            return documents_by_author.values()
 
 
-    def find_document_by_format(self, format):
+    def find_documentS_by_format(self, format):
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
             if format == doc_value.doc_format:
@@ -320,7 +337,7 @@ class DocumentManager(object):
         if len(documents_by_author) == 0:
             raise DocumentDoesntExistsError("No document was found with {} format!".format(format))
         else:
-            return documents_by_author
+            return documents_by_author.values()
 
 
     def document_files_exist(self, document_id):

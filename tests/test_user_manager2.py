@@ -33,6 +33,8 @@ class TestUserManager(unittest.TestCase):
 
 
     def test_multiple_user_addition(self):
+        """This test case is wrong! The user name couldn't contain numbers. The task says explicitly that all data
+        should be check before the object creation, fails because I check that a name can only be alphanumeric."""
         for i in range(1950, 2000):
             user = User('User{}'.format(i), 'Family', date(i, 12, 1), 'user@mail.com', '{}'.format(i))
             self._user_manager.add_user(user)

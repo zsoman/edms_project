@@ -96,7 +96,7 @@ class User(object):
 
     @classmethod
     def is_valid_name(cls, name):
-        return name.isalpha()
+        return name.isalnum()
 
 
     @classmethod
@@ -595,4 +595,4 @@ class UserManager(object):
 
 
     def count_users(self):
-        return len(self.count_users())
+        return len(self.find_all_users())

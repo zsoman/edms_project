@@ -1,6 +1,6 @@
-import os
 import shutil
 import unittest
+from os import path, makedirs
 
 from docgen import generator
 from documents import Document
@@ -12,11 +12,13 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def setUp(self):
-        os.makedirs('/tmp/edms/documents')
+        # os.makedirs('/tmp/edms/documents')
         document_generator = generator.DocumentGenerator()
-        os.makedirs('/tmp/edms/samples')
+        # os.makedirs('/tmp/edms/samples')
         for name in ['a1.pdf', 'a2.pdf', 'b.doc', 'c1.html', 'c2.png', 'c3.png', 'c1.pdf',
                      'c2.pdf', 'c3.pdf']:
+            if not path.exists('/tmp/edms/samples'):
+                makedirs('/tmp/edms/samples')
             document_generator.generate_random_file('/tmp/edms/samples/{}'.format(name))
         self._document_manager = DocumentManager('/tmp/edms/documents')
 
@@ -32,9 +34,7 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def test_add_document(self):
-        document = Document('title1', 'desc1', 1,
-                            ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'],
-                            'pdf')
+        document = Document('title1', 'desc1', 1, ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
         self._document_manager.add_document(document)
         self.assertEqual(self._document_manager.count_documents(), 1)
 
@@ -113,13 +113,13 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def test_document_remove(self):
-        a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+        a = Document('A', 'description of A', 1, ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
         a_id = self._document_manager.add_document(a)
         b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
         b_id = self._document_manager.add_document(b)
         self.assertEqual(self._document_manager.count_documents(), 2)
         self._document_manager.remove_document(a_id)
+        # sleep(1000)
         document = self._document_manager.find_document_by_id(b_id)
         self.assertEqual(document.title, 'B')
         self.assertEqual(self._document_manager.count_documents(), 1)

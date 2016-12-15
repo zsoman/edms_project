@@ -128,13 +128,13 @@ for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
 print("\nFound document by id:")
 print(doc_manager.find_document_by_id(1))
 print("\nFound documents by title:")
-for doc_id_key, doc_value in doc_manager.find_document_by_title(metadata5['title']).iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_title(metadata5['title']).iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by author:")
-for doc_id_key, doc_value in doc_manager.find_document_by_author(999).iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_author(999).iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by format:")
-for doc_id_key, doc_value in doc_manager.find_document_by_format('txt').iteritems():
+for doc_id_key, doc_value in doc_manager.find_documentS_by_format('txt').iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 
 # Existence of document files
