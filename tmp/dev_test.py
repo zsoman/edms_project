@@ -133,3 +133,6 @@ for doc_id_key, doc_value in doc_manager.find_document_by_title(metadata5['title
 print("\nFound documents by author:")
 for doc_id_key, doc_value in doc_manager.find_document_by_author(999).iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
+print("\nFound documents by format:")
+for doc_id_key, doc_value in doc_manager.find_document_by_format('pdf').iteritems():
+    print("{}: {}".format(doc_id_key, doc_value))

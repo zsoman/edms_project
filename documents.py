@@ -312,9 +312,15 @@ class DocumentManager(object):
             return documents_by_author
 
 
-    def find_document_by_format(self):
-        pass
-        # TODO
+    def find_document_by_format(self, format):
+        documents_by_author = dict()
+        for doc_id_key, doc_value in self.load_all_documents().iteritems():
+            if format == doc_value.doc_format:
+                documents_by_author[doc_id_key] = doc_value
+        if len(documents_by_author) == 0:
+            raise DocumentDoesntExistsError("No document was found with {} format!".format(format))
+        else:
+            return documents_by_author
 
 
     def document_files_exist(self):
