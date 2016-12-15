@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import path, makedirs, listdir
+from os import path, makedirs, listdir, remove
 from shutil import move, rmtree
 
 from iniformat.reader import read_ini_file
@@ -352,15 +352,23 @@ class DocumentManager(object):
             document_path = path.join(self._location, str(document_id))
             document = self.find_document_by_id(document_id)
             for document_file in listdir(document_path):
-                if document_file not in document.files:
-                    unreferenced_document_files[document_file] = True
-                else:
+                if document_file != '{}_document_metadata.ini'.format(
+                        document_id) and document_file not in document.files:
                     unreferenced_document_files[document_file] = False
+                else:
+                    unreferenced_document_files[document_file] = True
         if len(unreferenced_document_files) == 0:
             raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
         return unreferenced_document_files
 
 
     def remove_document_files(self, document_id):
-        pass
-        # TODO
+        if document_id not in self.find_all_documents():
+            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+        else:
+            document_path = path.join(self._location, str(document_id))
+            for file_name_key, exist_value in self.unreferenced_document_files(document_id).iteritems():
+                if not exist_value:
+                    document_file_path = path.join(document_path, file_name_key)
+                    remove(document_file_path)
+                    print("removed {}".format(file_name_key))

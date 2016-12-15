@@ -141,4 +141,4 @@ for doc_id_key, doc_value in doc_manager.find_document_by_format('txt').iteritem
 # remove('Repositories/repo_1/documents/1/{}'.format(metadata5['filename']))
 print(doc_manager.document_files_exist(1))
 print(doc_manager.unreferenced_document_files(1))
-# doc_manager.remove_document_files(1)
+doc_manager.remove_document_files(1)
