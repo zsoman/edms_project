@@ -42,8 +42,13 @@ class TestDocumentManager(unittest.TestCase):
     def test_multiple_document_addition(self):
         for i in range(100):
             document = Document('Title {}'.format(i), 'Desc {}'.format(i), 1,
-                                ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'],
-                                'pdf')
+                                ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+            document_generator = generator.DocumentGenerator()
+            for name in ['a1.pdf', 'a2.pdf', 'b.doc', 'c1.html', 'c2.png', 'c3.png', 'c1.pdf',
+                         'c2.pdf', 'c3.pdf']:
+                if not path.exists('/tmp/edms/samples'):
+                    makedirs('/tmp/edms/samples')
+                document_generator.generate_random_file('/tmp/edms/samples/{}'.format(name))
             self._document_manager.add_document(document)
         self.assertEqual(self._document_manager.count_documents(), 100)
 
@@ -109,6 +114,7 @@ class TestDocumentManager(unittest.TestCase):
                          ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
             document_id = self._document_manager.add_document(a)
             b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+            # sleep(1000)
             self._document_manager.update_document(document_id + 1, b)
 
 

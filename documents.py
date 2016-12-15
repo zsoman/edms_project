@@ -58,7 +58,7 @@ class Document(object):
     @property
     def author(self):
         if len(self._author) == 1:
-            return self._author[0]
+            return int(self._author[0])
         else:
             return self._author
 
@@ -212,9 +212,7 @@ class DocumentManager(object):
         for key, value in data['document'].iteritems():
             data['document'][key] = str(value)
 
-        write_ini_file(path.join(new_document_folder,
-                                 '{}_document_metadata.ini'.format(new_document_id)),
-                       data)
+        write_ini_file(path.join(new_document_folder, '{}_document_metadata.ini'.format(new_document_id)), data)
 
 
     def load_document(self, document_id):
@@ -264,8 +262,11 @@ class DocumentManager(object):
 
 
     def update_document(self, document_id, document):
-        document_path = path.join(self._location, str(document_id))
-        self.save_document(document_path, document_id, document)
+        if document_id not in self.find_all_documents():
+            raise ValueError("The document with {} can't be updated because doesn't exists!".format(document_id))
+        else:
+            document_path = path.join(self._location, str(document_id))
+            self.save_document(document_path, document_id, document)
 
 
     def remove_document(self, document_id):
@@ -273,8 +274,7 @@ class DocumentManager(object):
         if path.exists(document_path):
             rmtree(document_path)
         else:
-            raise DocumentDoesntExistsError(
-                    "The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
+            raise ValueError("The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
 
 
     def find_all_documents(self):
@@ -301,7 +301,7 @@ class DocumentManager(object):
 
     def find_document_by_id(self, document_id):
         if document_id not in self.find_all_documents():
-            raise DocumentDoesntExistsError(
+            raise ValueError(
                     "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
         else:
             return self.load_all_documents()[document_id]
@@ -321,7 +321,11 @@ class DocumentManager(object):
     def find_documents_by_author(self, author):
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
-            if author in doc_value.author:
+            if isinstance(doc_value.author, list):
+                authors = doc_value.author
+            else:
+                authors = [doc_value.author]
+            if author in authors:
                 documents_by_author[doc_id_key] = doc_value
         if len(documents_by_author) == 0:
             raise DocumentDoesntExistsError("No document was found with {} author!".format(author))
@@ -329,7 +333,7 @@ class DocumentManager(object):
             return documents_by_author.values()
 
 
-    def find_documentS_by_format(self, format):
+    def find_documents_by_format(self, format):
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
             if format == doc_value.doc_format:

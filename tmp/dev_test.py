@@ -134,7 +134,7 @@ print("\nFound documents by author:")
 for doc_id_key, doc_value in doc_manager.find_documents_by_author(999).iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by format:")
-for doc_id_key, doc_value in doc_manager.find_documentS_by_format('txt').iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_format('txt').iteritems():
     print("{}: {}".format(doc_id_key, doc_value))
 
 # Existence of document files
