@@ -187,8 +187,7 @@ class DocumentManager(object):
         else:
             self._repository = Repository(location=repository)
         metadata_data = read_ini_file(self._repository._paths_file)
-        self._location = path.join(self._repository._location,
-                                   metadata_data['directories']['documents'])
+        self._location = path.join(self._repository._location, metadata_data['directories']['documents'])
 
 
     def save_document(self, new_document_folder, new_document_id, document):
@@ -212,7 +211,7 @@ class DocumentManager(object):
         for key, value in data['document'].iteritems():
             data['document'][key] = str(value)
 
-        write_ini_file(path.join(new_document_folder, '{}_document_metadata.ini'.format(new_document_id)), data)
+        write_ini_file(path.join(new_document_folder, '{}_document_metadata.edd'.format(new_document_id)), data)
 
 
     def load_document(self, document_id):
@@ -224,7 +223,7 @@ class DocumentManager(object):
         else:
             metadata_file = reduce(path.join,
                                    [self._location, str(document_id),
-                                    '{}_document_metadata.ini'.format(document_id)])
+                                    '{}_document_metadata.edd'.format(document_id)])
             meta_data = read_ini_file(metadata_file)
             list_of_files = ([str(file_name.strip("'")) for file_name in
                               meta_data['document']['files'][1:-1].split(', ')])
@@ -370,7 +369,7 @@ class DocumentManager(object):
             document_path = path.join(self._location, str(document_id))
             document = self.find_document_by_id(document_id)
             for document_file in listdir(document_path):
-                if document_file != '{}_document_metadata.ini'.format(
+                if document_file != '{}_document_metadata.edd'.format(
                         document_id) and document_file not in document.files:
                     unreferenced_document_files[document_file] = False
                 else:

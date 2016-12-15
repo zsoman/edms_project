@@ -38,7 +38,7 @@ class Repository(object):
                  roles_file_type='txt'):
         self._name = name
         self._location = location
-        self._metadata_file = path.join(self._location, '{}_metadata.ini'.format(path.basename(self._location)))
+        self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(self._location)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
         self.load()

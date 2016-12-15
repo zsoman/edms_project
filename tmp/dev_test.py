@@ -5,17 +5,16 @@ from documents import DocumentManager, Document
 from iniformat.reader import read_ini_file
 from repository import Repository
 from usergen.generator import UserGenerator
-from users import User, UserManager, RoleManager, Role
-
+from users import User, UserManager, RoleManager
 
 # Role creation
-admin_role = Role('admin')
-manager_role = Role('manager')
-author_role = Role('author')
-reviewer_role = Role('reviewer')
-visitor_role = Role('visitor')
+# admin_role = Role('admin')
+# manager_role = Role('manager')
+# author_role = Role('author')
+# reviewer_role = Role('reviewer')
+# visitor_role = Role('visitor')
 
-repo = Repository(roles_file_type='json')  # Create repo
+repo = Repository(roles_file_type = 'txt')  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 
 # Generate user data
@@ -27,26 +26,28 @@ password = gen.generate_password()
 
 # Create user from generated data
 user = User(fname, lname, birth, email, password)
+user = User(fname + '2', lname + '2', birth, email, password)
 
 # Create user_manager
 user_manager = UserManager(repo)
 
 # User manipulation
 user_manager.save_user('1', user)
+user_manager.save_user('2', user)
 
-user_manager.add_role_to_user(999, author_role)
-user_manager.add_role_to_user(999, manager_role)
-user_manager.add_role_to_user(998, manager_role)
-user_manager.add_role_to_user(997, visitor_role)
-user_manager.add_role_to_user(997, reviewer_role)
-user_manager.add_role_to_user(997, admin_role)
+user_manager.add_role(1, 'author')
+user_manager.add_role(1, 'manager')
+user_manager.add_role(2, 'manager')
+user_manager.add_role(2, 'visitor')
+user_manager.add_role(2, 'reviewer')
+user_manager.add_role(2, 'admin')
 
 # Search users by
 print("\n## Search for users by ##")
 print(user_manager.find_users_by_name('{} {}'.format(fname.upper(), lname)))
 print(user_manager.find_users_by_email(email.upper()[:7]))
-print(user_manager.find_users_by_role(author_role))
-print(user_manager.find_users_by_role(admin_role))
+print(user_manager.find_users_by_role('author'))
+print(user_manager.find_users_by_role('admin'))
 
 # Create role_manager
 role_manager = RoleManager(repo)
@@ -54,23 +55,23 @@ role_manager = RoleManager(repo)
 # Role_manager usage
 print("\n## Role manager usage ##")
 print(role_manager.read_roles())
-role_manager.write_roles({999: [author_role, visitor_role], 998: [reviewer_role]})
+role_manager.write_roles({1: ['author', 'visitor'], 2: ['reviewer', 'admin']})
 print(role_manager.read_roles())
 
-user_manager.add_role_to_user(999, admin_role)
-user_manager.add_role_to_user(997, admin_role)
-user_manager.remove_role_from_user(998, reviewer_role)
+user_manager.add_role(1, 'admin')
+user_manager.add_role(2, 'admin')
+user_manager.remove_role(2, 'reviewer')
 
-user_manager.user_has_specific_role(999, admin_role)
-user_manager.user_has_specific_role(998, reviewer_role)
-# user_manager.user_has_specific_role(996, reviewer_role)
+user_manager.has_role(1, 'admin')
+user_manager.has_role(2, 'reviewer')
+# user_manager.has_role(996, 'reviewer')
 
 print("\n## List users by role ##")
 for key, value in user_manager.list_users_by_role().iteritems():
     print("{}: {}".format(key, value))
 
 print("\n## Check role file ##")
-print(user_manager.check_role_file())
+# print(user_manager.check_role_file())
 
 # Create document_manager
 doc_manager = DocumentManager(repo)
@@ -87,10 +88,10 @@ doc_generator.generate_random_file(path_file1)
 doc_generator.generate_random_file(path_file2)
 
 # Create document
-document = Document(metadata1['title'], metadata1['description'], [999, 998], [path_file1, path_file2], 'txt')
+document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_file1, path_file2], 'txt')
 
 doc_manager.add_document(document)
-print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
+print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.edd'))
 
 # Test the document load by adding it again with new files to the repository
 loaded_doc = doc_manager.load_document(1)
@@ -110,9 +111,9 @@ metadata5 = doc_generator.generate_metadata('office')
 path_file5 = path.join('Documents', metadata5['filename'])
 doc_generator.generate_random_file(path_file5)
 
-update_document = Document(metadata5['title'], metadata5['description'], [999, 998], [path_file5], 'txt')
+update_document = Document(metadata5['title'], metadata5['description'], [1, 2], [path_file5], 'txt')
 doc_manager.update_document(1, update_document)
-print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
+print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.edd'))
 
 # Remove docuement from file system
 # doc_manager.remove_document(2)
@@ -128,13 +129,13 @@ for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
 print("\nFound document by id:")
 print(doc_manager.find_document_by_id(1))
 print("\nFound documents by title:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_title(metadata5['title']).iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_title(metadata5['title']):
     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by author:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_author(999).iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_author(1):
     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by format:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_format('txt').iteritems():
+for doc_id_key, doc_value in doc_manager.find_documents_by_format('txt'):
     print("{}: {}".format(doc_id_key, doc_value))
 
 # Existence of document files

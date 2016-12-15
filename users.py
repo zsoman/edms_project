@@ -466,22 +466,20 @@ class UserManager(object):
                     elif DELIMITER_CHAR not in line or line.count(DELIMITER_CHAR) > 1:
                         raise ValueError(
                             "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
-                    try:
-                        roles = []
-                        for role in line.split(DELIMITER_CHAR)[1].split(ROLE_DELIMITER_CHAR):
-                            roles.append(role.strip())
-                        roles_count = Counter(roles)
-                        for key, value in roles_count.iteritems():
-                            if value > 1:
-                                raise ValueError("The {} role is duplicated in the {}th line!".format(key, i + 1))
-                        for role in roles:
-                            role = role.strip()
-                            if role.isspace() or role == '':
-                                raise ValueError(
-                                    "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
-                            Role(role)
-                    except ValueError:
-                        raise ValueError("The {} role name is invalid in the {}th line!".format(role, i + 1))
+
+                    roles = []
+                    for role in line.split(DELIMITER_CHAR)[1].split(ROLE_DELIMITER_CHAR):
+                        roles.append(role.strip())
+                    roles_count = Counter(roles)
+                    for key, value in roles_count.iteritems():
+                        if value > 1:
+                            raise ValueError("The {} role is duplicated in the {}th line!".format(key, i + 1))
+                    for role in roles:
+                        role = role.strip()
+                        if role.isspace() or role == '':
+                            raise ValueError(
+                                "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
+                        Role(role)
 
                     user_ids.append(line.split(DELIMITER_CHAR)[0])
                 user_ids_counter = Counter(user_ids)
