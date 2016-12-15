@@ -25,6 +25,7 @@ from re import match
 
 import storage_utils
 from iniformat.reader import read_ini_file
+from repository import Repository
 
 DELIMITER_CHAR = ':'
 ROLE_DELIMITER_CHAR = ','
@@ -300,7 +301,10 @@ class UserManager(object):
     """Manage user objects"""
 
     def __init__(self, repository):
-        self._repository = repository
+        if isinstance(repository, Repository):
+            self._repository = repository
+        else:
+            self._repository = Repository(location=repository)
         metadata_data = read_ini_file(self._repository._paths_file)
         self._location = path.join(self._repository._location,
                                    metadata_data['directories']['users'])
@@ -308,7 +312,7 @@ class UserManager(object):
 
     def save_user(self, user_id, user):
         """Save user to file"""
-        with open(path.join(self._location, user_id), 'w') as user_file:
+        with open(path.join(self._location, str(user_id)), 'w') as user_file:
             user_file.write(user.first_name + '\n')
             user_file.write(user.family_name + '\n')
             user_file.write(str(user.birth) + '\n')
@@ -577,3 +581,18 @@ class UserManager(object):
                 else:
                     all_files.append(item)
         return all_files
+
+
+    def find_all_users(self):
+        all_available_users = []
+        for file_or_folder in listdir(self._location):
+            if path.isfile(path.join(self._location, file_or_folder)):
+                try:
+                    all_available_users.append(int(file_or_folder))
+                except:
+                    pass
+        return all_available_users
+
+
+    def count_users(self):
+        return len(self.count_users())

@@ -1,4 +1,3 @@
-import os
 import shutil
 import unittest
 from datetime import date
@@ -14,7 +13,7 @@ class TestUserManager(unittest.TestCase):
 
 
     def setUp(self):
-        os.makedirs('/tmp/edms/users')
+        # os.makedirs('/tmp/edms/users')
         self._user_manager = UserManager('/tmp/edms/users')
 
 
@@ -35,8 +34,7 @@ class TestUserManager(unittest.TestCase):
 
     def test_multiple_user_addition(self):
         for i in range(1950, 2000):
-            user = User('User{}'.format(i), 'Family', date(i, 12, 1), 'user@mail.com',
-                        '{}'.format(i))
+            user = User('User{}'.format(i), 'Family', date(i, 12, 1), 'user@mail.com', '{}'.format(i))
             self._user_manager.add_user(user)
         self.assertEqual(self._user_manager.count_users(), 50)
 

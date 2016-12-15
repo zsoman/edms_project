@@ -22,10 +22,7 @@ class Document(object):
     def __init__(self, title, description, author, files, doc_format):
         self._title = title
         self._description = description
-        if isinstance(author, int):
-            self._author = [author]
-        if isinstance(author, list):
-            self._author = author
+        self._author = author
         self._files = files
         self._doc_format = doc_format
         self._creation_date = datetime.utcnow()
