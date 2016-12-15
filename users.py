@@ -38,27 +38,27 @@ class WrongFileTypeError(Exception):
     pass
 
 
-class MissingUserIdentifier(Exception):
+class MissingUserIdentifierError(Exception):
     pass
 
 
-class MissingDelimiterCharacter(Exception):
+class MissingDelimiterCharacterError(Exception):
     pass
 
 
-class InvalidRoleName(Exception):
+class InvalidRoleNameError(Exception):
     pass
 
 
-class InconsistentUseOfRoleDelimiter(Exception):
+class InconsistentUseOfRoleDelimiterError(Exception):
     pass
 
 
-class DuplicateUserIdentifier(Exception):
+class DuplicateUserIdentifierError(Exception):
     pass
 
 
-class DuplicatedRoles(Exception):
+class DuplicatedRolesError(Exception):
     pass
 
 
@@ -456,11 +456,11 @@ class UserManager(object):
                 user_ids = []
                 for i, line in enumerate(file_obj):
                     if line.split(DELIMITER_CHAR)[0] == '':
-                        raise MissingUserIdentifier(
+                        raise MissingUserIdentifierError(
                                 "In the role file's {}th line has no user identifier!".format(
                                         i + 1))
                     elif DELIMITER_CHAR not in line or line.count(DELIMITER_CHAR) > 1:
-                        raise MissingDelimiterCharacter(
+                        raise MissingDelimiterCharacterError(
                                 "Missing or too many '{}' character in the {}th line!".format(
                                         DELIMITER_CHAR, i + 1))
                     try:
@@ -468,18 +468,18 @@ class UserManager(object):
                         roles_count = Counter(roles)
                         for key, value in roles_count.iteritems():
                             if value > 1:
-                                raise DuplicatedRoles(
+                                raise DuplicatedRolesError(
                                         "The {} role is duplicated in the {}th line!".format(
                                                 key, i + 1))
                         for role in roles:
                             role = role.strip()
                             if role.isspace():
-                                raise InconsistentUseOfRoleDelimiter(
+                                raise InconsistentUseOfRoleDelimiterError(
                                         "Too many '{}' characters in the {}th line!".format(
                                                 ROLE_DELIMITER_CHAR, i + 1))
                             Role(role)
                     except ValueError:
-                        raise InvalidRoleName(
+                        raise InvalidRoleNameError(
                                 "The {} role name is invalid in the {}th line!".format(
                                         role, i + 1))
 
@@ -487,7 +487,7 @@ class UserManager(object):
                 user_ids_counter = Counter(user_ids)
                 for key, value in user_ids_counter.iteritems():
                     if value > 1:
-                        raise DuplicatedRoles("The {} user id is duplicated!".format(key))
+                        raise DuplicatedRolesError("The {} user id is duplicated!".format(key))
             return True
 
 
@@ -496,17 +496,17 @@ class UserManager(object):
                 data = load(file_obj)
             for id_key, roles_value in data.iteritems():
                 if not isinstance(id_key, unicode):
-                    raise MissingUserIdentifier(
+                    raise MissingUserIdentifierError(
                         "In the role file has no user identifier!")
                 else:
                     try:
                         int(id_key)
                     except ValueError:
-                        MissingUserIdentifier(
+                        MissingUserIdentifierError(
                             "In the role file the {} key should be a number!".format(
                                 id_key))
                 if not isinstance(roles_value, list):
-                    raise InvalidRoleName(
+                    raise InvalidRoleNameError(
                         "The roles should be stored in a list, not in a {}!".format(
                             type(roles_value).__name__))
                 else:
@@ -514,12 +514,12 @@ class UserManager(object):
                         try:
                             Role(role)
                         except ValueError:
-                            raise InvalidRoleName(
+                            raise InvalidRoleNameError(
                                 "The {} role name is invalid!".format(role))
                     roles_count = Counter(roles_value)
                     for key, value in roles_count.iteritems():
                         if value > 1:
-                            raise DuplicatedRoles(
+                            raise DuplicatedRolesError(
                                 "The {} role is duplicated!".format(key))
             return True
 
@@ -529,21 +529,21 @@ class UserManager(object):
             users_root = tree.getroot()
             users_list = []
             if users_root.tag != 'users':
-                raise MissingUserIdentifier(
+                raise MissingUserIdentifierError(
                     "In the role file the root tag must be 'users' not {}!".format(
                         users_root.tag))
             for user in users_root:
                 if user.tag != 'user':
-                    raise MissingUserIdentifier(
+                    raise MissingUserIdentifierError(
                         "In the role file the root's child tags must be 'user' not {}!".format(
                             user.tag))
                 try:
                     users_list.append(int(user.attrib['id']))
                 except KeyError:
-                    raise MissingUserIdentifier(
+                    raise MissingUserIdentifierError(
                         "The user tag must have an 'id' attribute!")
                 except ValueError:
-                    raise MissingUserIdentifier(
+                    raise MissingUserIdentifierError(
                         "The user tag must have an 'id' attribute which is a number, not a {}!".format(
                             type(user.attrib['id']).__name__))
                 user_roles = []
@@ -551,15 +551,15 @@ class UserManager(object):
                     try:
                         user_roles.append(Role(role.text))
                     except ValueError:
-                        raise InvalidRoleName("The {} role name is invalid!".format(role))
+                        raise InvalidRoleNameError("The {} role name is invalid!".format(role))
                 roles_count = Counter(user_roles)
                 for key, value in roles_count.iteritems():
                     if value > 1:
-                        raise DuplicatedRoles("The {} role is duplicated!".format(key))
+                        raise DuplicatedRolesError("The {} role is duplicated!".format(key))
             users_list = Counter(user_roles)
             for key, value in users_list.iteritems():
                 if value > 1:
-                    raise DuplicatedRoles("The {} user ID is duplicated!".format(key))
+                    raise DuplicatedRolesError("The {} user ID is duplicated!".format(key))
         else:
             raise WrongFileTypeError(
                     "The roles file's type is inappropriate it should be TXT, JSON or XML!")

@@ -1,7 +1,8 @@
-import ConfigParser
 from datetime import datetime
 from os import path, makedirs
 from shutil import move
+
+import configparser
 
 from iniformat.reader import read_ini_file
 from storage_utils import get_next_id
@@ -11,13 +12,20 @@ AFTER_NEW_STATE = ['pending']
 AFTER_PENDING_STATE = ['accepted', 'rejected']
 
 
+class DocumentDoesntExistsError(Exception):
+    pass
+
+
 class Document(object):
     """Document of the repository"""
 
     def __init__(self, title, description, author, files, doc_format):
         self._title = title
         self._description = description
-        self._author = author
+        if isinstance(author, int):
+            self._author = [author]
+        if isinstance(author, list):
+            self._author = author
         self._files = files
         self._doc_format = doc_format
         self._creation_date = datetime.utcnow()
@@ -62,10 +70,18 @@ class Document(object):
         d = self._creation_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
 
+    @creation_date.setter
+    def creation_date(self, new_creation_date):
+        self._creation_date = new_creation_date
+
     @property
     def modification_date(self):
         d = self._modification_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
+
+    @modification_date.setter
+    def modification_date(self, new_modification_date):
+        self._modification_date = new_modification_date
 
     @modification_date.setter
     def modification_date(self, new_datetime):
@@ -147,19 +163,38 @@ class DocumentManager(object):
             'state': document.state,
             'is_public': document.is_public()
         }
-        parser = ConfigParser.ConfigParser()
+        parser = configparser.ConfigParser()
 
         parser.add_section('document')
-        for key in data.keys():
-            parser.set('document', key, data[key])
+        for key, value in data.iteritems():
+            parser['document'][key] = str(value)
+            # parser.set('document', key, data[key])
 
         with open(path.join(new_document_folder, '{}_document_metadata.ini'.format(new_document_id)), 'w') as file_obj:
             parser.write(file_obj)
 
-
-    def load_document(self):
-        pass
-        # TODO: loads a document by ID into an object, but it reads only the name of the file and not the path
+    def load_document(self, document_id):
+        document_path = path.join(self._location, str(document_id))
+        if not path.exists(document_path):
+            raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
+                                            "!".format(document_path, document_id))
+        else:
+            config = configparser.ConfigParser()
+            metadata_file = reduce(path.join,
+                                   [self._location, str(document_id), '{}_document_metadata.ini'.format(document_id)])
+            config.read(metadata_file)
+            list_of_files = ([str(file_name.strip("'")) for file_name in config['document']['files'][1:-1].split(', ')])
+            list_of_authors = (
+                [int(file_name.strip("'")) for file_name in config['document']['author'][1:-1].split(', ')])
+            document = Document(config['document']['title'], config['document']['description'],
+                                list_of_authors, list_of_files, config['document']['doc_format'])
+            document.creation_date = datetime.strptime(config['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
+            document.modification_date = datetime.strptime(config['document']['modification_date'],
+                                                           '%Y/%m/%d %H:%M:%S %f')
+            document.state = config['document']['state']
+            if config['document']['is_public'] == 'True':
+                document.make_public()
+            return document
 
     def add_document(self, document):
         new_document_id = get_next_id(self._location)

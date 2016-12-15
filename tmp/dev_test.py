@@ -88,3 +88,15 @@ doc_generator.generate_random_file(path_file2)
 document = Document(metadata1['title'], metadata1['description'], [999, 998], [path_file1, path_file2], 'txt')
 
 doc_manager.add_document(document)
+
+loaded_doc = doc_manager.load_document(1)
+
+metadata3 = doc_generator.generate_metadata('office')
+metadata4 = doc_generator.generate_metadata('general')
+path_file3 = path.join('Documents', metadata3['filename'])
+path_file4 = path.join('Documents', metadata4['filename'])
+doc_generator.generate_random_file(path_file3)
+doc_generator.generate_random_file(path_file4)
+
+loaded_doc.files = [path_file3, path_file4]
+doc_manager.add_document(loaded_doc)
