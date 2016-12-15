@@ -172,6 +172,7 @@ class Document(object):
         document_string += self.doc_format
         return document_string
 
+
 class DocumentManager(object):
     """Manage documents"""
 
@@ -207,6 +208,7 @@ class DocumentManager(object):
         write_ini_file(path.join(new_document_folder,
                                  '{}_document_metadata.ini'.format(new_document_id)),
                        data)
+
 
     def load_document(self, document_id):
         document_path = path.join(self._location, str(document_id))
@@ -255,13 +257,14 @@ class DocumentManager(object):
         document_path = path.join(self._location, str(document_id))
         self.save_document(document_path, document_id, document)
 
+
     def remove_document(self, document_id):
         document_path = path.join(self._location, str(document_id))
         if path.exists(document_path):
             rmtree(document_path)
         else:
             raise DocumentDoesntExistsError(
-                "The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
+                    "The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
 
 
     def find_all_documents(self):
@@ -285,7 +288,7 @@ class DocumentManager(object):
     def find_document_by_id(self, document_id):
         if document_id not in self.find_all_documents():
             raise DocumentDoesntExistsError(
-                "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
+                    "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
         else:
             return self.load_all_documents()[document_id]
 
@@ -340,6 +343,24 @@ class DocumentManager(object):
             raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
         return existence_of_document_files
 
-    def remove_document_files(self):
+
+    def unreferenced_document_files(self, document_id):
+        unreferenced_document_files = dict()
+        if document_id not in self.find_all_documents():
+            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+        else:
+            document_path = path.join(self._location, str(document_id))
+            document = self.find_document_by_id(document_id)
+            for document_file in listdir(document_path):
+                if document_file not in document.files:
+                    unreferenced_document_files[document_file] = True
+                else:
+                    unreferenced_document_files[document_file] = False
+        if len(unreferenced_document_files) == 0:
+            raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
+        return unreferenced_document_files
+
+
+    def remove_document_files(self, document_id):
         pass
         # TODO
