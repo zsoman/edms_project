@@ -13,7 +13,7 @@ author_role = Role('author')
 reviewer_role = Role('reviewer')
 visitor_role = Role('visitor')
 
-repo = Repository(roles_file_type = 'json')  # Create repo
+repo = Repository(roles_file_type='json')  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 
 # Generate user data

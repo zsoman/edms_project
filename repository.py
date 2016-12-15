@@ -33,14 +33,16 @@ FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects'
 class Repository(object):
     """Represents the document management system as a repository"""
 
-    def __init__(self, name = 'Repositiry_1', location = path.join('Repositories', 'repo_1'),
-                 roles_file_type = 'txt'):
+
+    def __init__(self, name='Repositiry_1', location=path.join('Repositories', 'repo_1'),
+                 roles_file_type='txt'):
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location, '{}_metadata.ini'.format(path.basename(self._location)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
         self.load()
+
 
     def load(self):
         """Try to load an existing repository"""
@@ -51,6 +53,7 @@ class Repository(object):
                 raise ValueError('The repository should be a directory!')
         else:
             self.initialize()
+
 
     def initialize(self):
         """Initialize a new repository"""
@@ -64,11 +67,13 @@ class Repository(object):
         self._creation_date = datetime.utcnow()
         self.create_repo_metadata_file(self._creation_date)
 
+
     def absolute_path(self):
         if path.isabs(self._location):
             return self._location
         else:
             return path.abspath(self._location)
+
 
     def create_default_path_file(self):
         data = {
@@ -77,6 +82,7 @@ class Repository(object):
                       'paths': self._paths_file}
         }
         write_ini_file(self._paths_file, data)
+
 
     def create_repo_metadata_file(self, date_obj):
         data = {
@@ -92,14 +98,15 @@ class Repository(object):
         }
         write_ini_file(self._metadata_file, data)
 
+
     def read_creation_date(self):
         metadata_data = read_ini_file(self._metadata_file)
         return datetime.strptime('{} {} {} {} {} {} {}'.format(
-            metadata_data['creation_date']['year'],
-            metadata_data['creation_date']['month'],
-            metadata_data['creation_date']['day'],
-            metadata_data['creation_date']['hour'],
-            metadata_data['creation_date']['minute'],
-            metadata_data['creation_date']['second'],
-            metadata_data['creation_date']['microsecond']
+                metadata_data['creation_date']['year'],
+                metadata_data['creation_date']['month'],
+                metadata_data['creation_date']['day'],
+                metadata_data['creation_date']['hour'],
+                metadata_data['creation_date']['minute'],
+                metadata_data['creation_date']['second'],
+                metadata_data['creation_date']['microsecond']
         ), '%Y %m %d %H %M %S %f')
