@@ -116,3 +116,6 @@ print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.ini'))
 
 # Remove docuement from file system
 doc_manager.remove_document(2)
+
+# Find all availabal documents id
+print(doc_manager.find_all_documents())

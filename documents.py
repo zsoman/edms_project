@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import path, makedirs
+from os import path, makedirs, listdir
 from shutil import move, rmtree
 
 from iniformat.reader import read_ini_file
@@ -255,10 +255,20 @@ class DocumentManager(object):
                 "The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
 
 
-    def all_available_doocuments(self):
+    def find_all_documents(self):
+        all_available_documents = []
+        for file_or_folder in listdir(self._location):
+            if path.isdir(path.join(self._location, file_or_folder)):
+                try:
+                    all_available_documents.append(int(file_or_folder))
+                except:
+                    pass
+        return all_available_documents
+
+
+    def load_all_documents(self):
         pass
         # TODO
-
 
     def find_document_by_id(self):
         pass
