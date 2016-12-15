@@ -119,3 +119,7 @@ doc_manager.remove_document(2)
 
 # Find all availabal documents id
 print(doc_manager.find_all_documents())
+
+# Load all docuements
+for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
+    print("{}: {}".format(doc_id_key, doc_value))

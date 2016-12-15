@@ -163,6 +163,15 @@ class Document(object):
                                                          new_state))
 
 
+    def __str__(self):
+        document_string = ''
+        document_string += self.title + ' - '
+        document_string += str(self.author) + ': '
+        document_string += self.description + '; '
+        document_string += str(self.files) + '; '
+        document_string += self.doc_format
+        return document_string
+
 class DocumentManager(object):
     """Manage documents"""
 
@@ -267,8 +276,10 @@ class DocumentManager(object):
 
 
     def load_all_documents(self):
-        pass
-        # TODO
+        all_documents = dict()
+        for document_id in self.find_all_documents():
+            all_documents[document_id] = self.load_document(document_id)
+        return all_documents
 
     def find_document_by_id(self):
         pass
