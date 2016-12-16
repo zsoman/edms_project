@@ -97,3 +97,4 @@ ENV/
 tmp/Documents/
 /coverage/
 coverage/
+/tests/Repositories/
