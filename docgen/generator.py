@@ -4,12 +4,10 @@
 
 import random
 import string
-from os import path, makedirs
-from shutil import move
 
-from documents import DocumentManager
-from iniformat.reader import read_ini_file
-from repository import Repository
+# from documents import DocumentManager
+# from iniformat.reader import read_ini_file
+# from repository import Repository
 
 document_types = ['general', 'office', 'image']
 
@@ -104,36 +102,36 @@ class DocumentGenerator(object):
                 random_file.write(row + '\n')
 
 
-class NewDocumentGenerator(object):
-    def __init__(self, repository):
-        if isinstance(repository, Repository):
-            self._repository = repository
-        else:
-            self._repository = Repository(location = repository)
-        self._document_manager = DocumentManager(self._repository)
-        self._location = path.join(self._repository._location, 'sample')
-        if not path.exists(self._location):
-            makedirs(self._location)
-
-    def import_from_generator(self):
-        pass
-        # TODO
-
-    def save_documents_to_repository(self):
-        all_documents = self._document_manager.find_all_documents()
-        for document in all_documents:
-            metadata_data = read_ini_file(self._repository._paths_file)
-            mew_path = path.join(self._repository._location, metadata_data['directories']['documents'])
-            move(path.join(self._location, document), mew_path)
-
-    def generate_author(self):
-        pass
-        # TODO
-
-    def generate_metadata(self):
-        pass
-        # TODO
-
-    def generate_many_documents(self):
-        pass
-        # TODO
+# class NewDocumentGenerator(object):
+#     def __init__(self, repository):
+#         if isinstance(repository, Repository):
+#             self._repository = repository
+#         else:
+#             self._repository = Repository(location = repository)
+#         self._document_manager = DocumentManager(self._repository)
+#         self._location = path.join(self._repository._location, 'sample')
+#         if not path.exists(self._location):
+#             makedirs(self._location)
+#
+#     def import_from_generator(self):
+#         pass
+#         # TODO
+#
+#     def save_documents_to_repository(self):
+#         all_documents = self._document_manager.find_all_documents()
+#         for document in all_documents:
+#             metadata_data = read_ini_file(self._repository._paths_file)
+#             mew_path = path.join(self._repository._location, metadata_data['directories']['documents'])
+#             move(path.join(self._location, document), mew_path)
+#
+#     def generate_author(self):
+#         pass
+#         # TODO
+#
+#     def generate_metadata(self):
+#         pass
+#         # TODO
+#
+#     def generate_many_documents(self):
+#         pass
+#         # TODO
