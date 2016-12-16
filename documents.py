@@ -180,9 +180,12 @@ class DocumentManager(object):
     """Manage documents"""
 
 
-    def __init__(self, repository_location, paths_file):
-        metadata_data = read_ini_file(paths_file)
-        self._location = path.join(repository_location, metadata_data['directories']['documents'])
+    def __init__(self, repository_location, paths_file=None):
+        if not paths_file:
+            self._location = repository_location
+        else:
+            metadata_data = read_ini_file(paths_file)
+            self._location = path.join(repository_location, metadata_data['directories']['documents'])
 
     def save_document(self, new_document_folder, new_document_id, document):
         basename_files_list = []
@@ -235,9 +238,10 @@ class DocumentManager(object):
             return document
 
 
-    def add_document(self, document):
+    def add_document(self, document, new_document_folder=None):
         new_document_id = get_next_id(self._location)
-        new_document_folder = self.create_structure_for_document(new_document_id)
+        if not new_document_folder:
+            new_document_folder = self.create_structure_for_document(new_document_id)
         self.save_document(new_document_folder, new_document_id, document)
         return new_document_id
 

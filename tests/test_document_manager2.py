@@ -12,9 +12,9 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def setUp(self):
-        # os.makedirs('/tmp/edms/documents')
+        makedirs('/tmp/edms/documents')
         document_generator = generator.DocumentGenerator()
-        # os.makedirs('/tmp/edms/samples')
+        makedirs('/tmp/edms/samples')
         for name in ['a1.pdf', 'a2.pdf', 'b.doc', 'c1.html', 'c2.png', 'c3.png', 'c1.pdf',
                      'c2.pdf', 'c3.pdf']:
             if not path.exists('/tmp/edms/samples'):

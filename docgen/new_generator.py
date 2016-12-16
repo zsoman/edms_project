@@ -42,6 +42,7 @@ class NewDocumentGenerator(object):
     def generate_file(self, name):
         doc_generator = DocumentGenerator()
         path_file = path.join(self._location, name)
+        print(path_file)
         doc_generator.generate_random_file(path_file)
         return path_file
 
@@ -55,8 +56,7 @@ class NewDocumentGenerator(object):
         document = Document(metadata['title'], metadata['description'], authors, files, 'txt')
         doc_id = self._doc_manager.add_document(document)
         return read_ini_file(
-                reduce(path.join,
-                       [self._doc_manager._location, str(doc_id), '{}_document_metadata.edd'.format(doc_id)]))
+            reduce(path.join, [self._doc_manager._location, str(doc_id), '{}_document_metadata.edd'.format(doc_id)]))
 
 
     def generate_many_documents(self, number_of_new_doc):

@@ -3,6 +3,7 @@ import shutil
 import unittest
 from datetime import date
 
+from docgen.new_generator import NewDocumentGenerator
 from documents import Document
 from repository import Repository
 from users import User
@@ -22,9 +23,15 @@ class TestImportExport(unittest.TestCase):
 
 
     def test_import_with_users(self):
+
         if os.path.exists('/tmp/test_repo2'):
             shutil.rmtree('/tmp/test_repo2')
         repository = Repository('Empty', '/tmp/test_repo2')
+
+        new_doc_gen = NewDocumentGenerator('tmp/samples/importable', repository._user_manager,
+                                           repository._document_manager)
+        new_doc_gen.generate_many_documents(2)
+
         alice = User('Alice', 'Smith', date(1980, 10, 10), 'alice@mail.org', '****')
         bob = User('Bob', 'Marker', date(1970, 11, 11), 'bob@mail.org', '****')
 
