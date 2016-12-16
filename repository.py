@@ -19,10 +19,13 @@ The roles.txt contains the user names and the list of assigned roles.
 """
 
 from datetime import datetime
-from os import makedirs, path, utime
+from os import makedirs, path, utime, listdir
+from shutil import copytree
 
+from documents import DocumentManager
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
+from users import UserManager
 
 # from users import UserManager
 
@@ -36,23 +39,31 @@ class Repository(object):
     """Represents the document management system as a repository"""
 
 
-    def __init__(self, name='Repositiry_1', location=path.join('Repositories', 'repo_1'),
-                 roles_file_type='txt'):
-        # self._document_manager = DocumentManager(location)
-        # self._user_manager = UserManager(location)
+    def __init__(self, name='Repositiry_1', location=path.join('Repositories', 'repo_1'), roles_file_type='txt'):
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(self._location)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
         self.load()
+        self._user_manager = UserManager(self._location, self._paths_file)
+        self._document_manager = DocumentManager(self._location, self._paths_file)
+
+
+    # def add_document_manager(self, document_manager):
+    #     self._document_manager = document_manager
+    #
+    #
+    # def add_user_manager(self, user_manager):
+    #     self._user_manager = user_manager
 
 
     def load(self):
         """Try to load an existing repository"""
         if path.exists(self._location):
             if path.isdir(self._location):
-                self._creation_date = self.read_creation_date()
+                # self._creation_date = self.read_creation_date()
+                pass
             else:
                 raise ValueError('The repository should be a directory!')
         else:
@@ -119,9 +130,37 @@ class Repository(object):
                 metadata_data['creation_date']['microsecond']
         ), '%Y %m %d %H %M %S %f')
 
-    def import_documents(self, param):
-        pass
-        # TODO
+
+    @classmethod
+    def find_all_documents_in_path(cls, from_path):
+        all_available_documents = []
+        for file_or_folder in listdir(from_path):
+            if path.isdir(path.join(from_path, file_or_folder)):
+                try:
+                    all_available_documents.append(int(file_or_folder))
+                except:
+                    pass
+        return all_available_documents
+
+
+    def import_documents(self, from_path):
+        if path.exists(from_path):
+            all_documents = Repository.find_all_documents_in_path(from_path)
+            metadata_data = read_ini_file(self._paths_file)
+            to_path = path.join(self._location, metadata_data['directories']['documents'])
+            for document_id in all_documents:
+                new_path = reduce(path.join, [to_path, str(document_id)])
+                old_path = path.join(from_path, str(document_id))
+                copytree(old_path, new_path)
+                document_files_existence = self._document_manager.document_files_exist(document_id)
+                for file_name_key, exists_value in document_files_existence.iteritems():
+                    if not exists_value:
+                        raise RuntimeError(
+                                "The {} file doesn't exists in the {} ID document!".format(file_name_key, document_id))
+        else:
+            raise ValueError("The '{}' doesn't exists!".format(from_path))
+            # TODO
+
 
     def export_documents(self, param, param1):
         pass

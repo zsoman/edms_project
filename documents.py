@@ -4,7 +4,6 @@ from shutil import move, rmtree
 
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
-from repository import Repository
 from storage_utils import get_next_id
 
 VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
@@ -181,14 +180,9 @@ class DocumentManager(object):
     """Manage documents"""
 
 
-    def __init__(self, repository):
-        if isinstance(repository, Repository):
-            self._repository = repository
-        else:
-            self._repository = Repository(location=repository)
-        metadata_data = read_ini_file(self._repository._paths_file)
-        self._location = path.join(self._repository._location, metadata_data['directories']['documents'])
-
+    def __init__(self, repository_location, paths_file):
+        metadata_data = read_ini_file(paths_file)
+        self._location = path.join(repository_location, metadata_data['directories']['documents'])
 
     def save_document(self, new_document_folder, new_document_id, document):
         basename_files_list = []
@@ -217,30 +211,24 @@ class DocumentManager(object):
     def load_document(self, document_id):
         document_path = path.join(self._location, str(document_id))
         if not path.exists(document_path):
-            raise DocumentDoesntExistsError(
-                    "The {} path doesn't exists, so the document with {} id can't be loaded"
-                    "!".format(document_path, document_id))
+            raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
+                                            "!".format(document_path, document_id))
         else:
             metadata_file = reduce(path.join,
-                                   [self._location, str(document_id),
-                                    '{}_document_metadata.edd'.format(document_id)])
+                                   [self._location, str(document_id), '{}_document_metadata.edd'.format(document_id)])
             meta_data = read_ini_file(metadata_file)
-            list_of_files = ([str(file_name.strip("'")) for file_name in
-                              meta_data['document']['files'][1:-1].split(', ')])
+            list_of_files = (
+                [str(file_name.strip("'")) for file_name in meta_data['document']['files'][1:-1].split(', ')])
             if '[' in meta_data['document']['author'] and ']' in meta_data['document']['author']:
                 list_of_authors = [int(file_name.strip("'")) for file_name in
                                    meta_data['document']['author'][1:-1].split(', ')]
             else:
                 list_of_authors = meta_data['document']['author']
-            document = Document(meta_data['document']['title'],
-                                meta_data['document']['description'],
-                                list_of_authors, list_of_files,
-                                meta_data['document']['doc_format'])
-            document.creation_date = datetime.strptime(
-                    meta_data['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
-            document.modification_date = datetime.strptime(
-                    meta_data['document']['modification_date'],
-                    '%Y/%m/%d %H:%M:%S %f')
+            document = Document(meta_data['document']['title'], meta_data['document']['description'], list_of_authors,
+                                list_of_files, meta_data['document']['doc_format'])
+            document.creation_date = datetime.strptime(meta_data['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
+            document.modification_date = datetime.strptime(meta_data['document']['modification_date'],
+                                                           '%Y/%m/%d %H:%M:%S %f')
             document.state = meta_data['document']['state']
             if meta_data['document']['is_public'] == 'True':
                 document.make_public()
@@ -389,6 +377,7 @@ class DocumentManager(object):
                     document_file_path = path.join(document_path, file_name_key)
                     remove(document_file_path)
                     print("removed {}".format(file_name_key))
+
 
     def export_document_manager(self):
         pass

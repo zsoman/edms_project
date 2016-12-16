@@ -26,7 +26,6 @@ from shutil import move
 
 import storage_utils
 from iniformat.reader import read_ini_file
-from repository import Repository
 
 DELIMITER_CHAR = ':'
 ROLE_DELIMITER_CHAR = ','
@@ -185,10 +184,9 @@ class RoleManager(object):
     """Manage the user roles which are stored in a text file."""
 
 
-    def __init__(self, repository):
-        self._repository = repository
-        metadata_data = read_ini_file(self._repository._paths_file)
-        self._location = path.join(self._repository._location, metadata_data['directories']['users'])
+    def __init__(self, repository_location, paths_file):
+        metadata_data = read_ini_file(paths_file)
+        self._location = path.join(repository_location, metadata_data['directories']['users'])
 
 
     def read_roles(self):
@@ -299,13 +297,11 @@ class UserManager(object):
     """Manage user objects"""
 
 
-    def __init__(self, repository):
-        if isinstance(repository, Repository):
-            self._repository = repository
-        else:
-            self._repository = Repository(location=repository)
-        metadata_data = read_ini_file(self._repository._paths_file)
-        self._location = path.join(self._repository._location, metadata_data['directories']['users'])
+    def __init__(self, repository_location, paths_file):
+        self.paths_file = paths_file
+        self.repository_location = repository_location
+        metadata_data = read_ini_file(self.paths_file)
+        self._location = path.join(self.repository_location, metadata_data['directories']['users'])
 
 
     def save_user(self, user_id, user):
@@ -391,7 +387,7 @@ class UserManager(object):
 
 
     def find_users_by_role(self, role):
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         found_users = []
         role = Role(role).role
@@ -408,7 +404,7 @@ class UserManager(object):
     def add_role(self, user_id, role):
         role = Role(role)
         _ = self.find_user_by_id(user_id)
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
             users_roles[user_id] = [role]
@@ -419,7 +415,7 @@ class UserManager(object):
 
 
     def remove_role(self, user_id, role):
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         _ = self.find_user_by_id(user_id)
         if user_id not in users_roles:
@@ -434,7 +430,7 @@ class UserManager(object):
 
 
     def has_role(self, user_id, role):
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
             raise RuntimeError("No user with {} ID!".format(user_id))
@@ -443,7 +439,7 @@ class UserManager(object):
 
 
     def list_users_by_role(self):
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         users_by_roles = defaultdict(list)
         for id_key, roles_values in users_roles.iteritems():
@@ -453,7 +449,7 @@ class UserManager(object):
 
 
     def check_role_file(self, roles_file=None):
-        role_manager = RoleManager(self._repository)
+        role_manager = RoleManager(self.repository_location, self.paths_file)
         user_roles = role_manager.read_roles()
         if not roles_file:
             roles_file = path.join(self._location, RoleManager.get_roles_file(self._location))
@@ -465,7 +461,7 @@ class UserManager(object):
                         raise ValueError("In the role file's {}th line has no user identifier!".format(i + 1))
                     elif DELIMITER_CHAR not in line or line.count(DELIMITER_CHAR) > 1:
                         raise ValueError(
-                            "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
+                                "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
 
                     roles = []
                     for role in line.split(DELIMITER_CHAR)[1].split(ROLE_DELIMITER_CHAR):
@@ -478,7 +474,7 @@ class UserManager(object):
                         role = role.strip()
                         if role.isspace() or role == '':
                             raise ValueError(
-                                "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
+                                    "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
                         Role(role)
 
                     user_ids.append(line.split(DELIMITER_CHAR)[0])

@@ -27,6 +27,14 @@ class TestImportExport(unittest.TestCase):
         repository = Repository('Empty', '/tmp/test_repo2')
         alice = User('Alice', 'Smith', date(1980, 10, 10), 'alice@mail.org', '****')
         bob = User('Bob', 'Marker', date(1970, 11, 11), 'bob@mail.org', '****')
+
+        # # I needed to add the UserManager and the DocumentManager like this, because I had issues with the all-round
+        # # imports. It can be added when init the repo.
+        # if repository._user_manager is None:
+        #     repository.add_user_manager(UserManager(repository))
+        # if repository._document_manager is None:
+        #     repository.add_document_manager(DocumentManager(repository))
+
         alice_id = repository._user_manager.add_user(alice)
         bob_id = repository._user_manager.add_user(bob)
         self.assertEqual(repository._user_manager.count_users(), 2)

@@ -1,22 +1,20 @@
 import random
-from os import path, makedirs, listdir, remove
-from shutil import rmtree
+from os import path, makedirs
 
 from documents import Document
-from documents import DocumentManager
 from generator import DocumentGenerator
 from iniformat.reader import read_ini_file
 from usergen.generator import UserGenerator
-from users import User, UserManager
+from users import User
 
 document_types = ['general', 'office', 'image']
 
 
 class NewDocumentGenerator(object):
-    def __init__(self, repo, user_manager, doc_manager):
-        self._location = path.join(repo._location, 'sample')
-        self._user_manager = UserManager(self._location)
-        self._doc_manager = DocumentManager(self._location)
+    def __init__(self, location, user_manager, doc_manager):
+        self._location = location
+        self._user_manager = user_manager
+        self._doc_manager = doc_manager
         if not path.exists(self._location):
             makedirs(self._location)
 
@@ -73,10 +71,20 @@ class NewDocumentGenerator(object):
                 authors.append(self.generate_author())
             self.generate_document(document_metadata, authors, files)
 
-        for file_or_folder in listdir(self._location):
-            full_path_file_or_folder = path.join(self._location, file_or_folder)
-            if path.isdir(full_path_file_or_folder):
-                if file_or_folder not in ['documents', 'users']:
-                    rmtree(full_path_file_or_folder)
-            else:
-                remove(full_path_file_or_folder)
+            # for file_or_folder in listdir(self._location):
+            #     full_path_file_or_folder = path.join(self._location, file_or_folder)
+            #     if path.isdir(full_path_file_or_folder):
+            #         if file_or_folder not in ['documents', 'users']:
+            #             rmtree(full_path_file_or_folder)
+            #     else:
+            #         remove(full_path_file_or_folder)
+            #
+            # for file_or_folder in listdir(path.join(self._location, 'documents')):
+            #     full_path_file_or_folder = reduce(path.join,[self._location, 'documents', file_or_folder])
+            #     if path.isdir(full_path_file_or_folder):
+            #         try:
+            #             int(file_or_folder)
+            #         except:
+            #             pass
+            #         copytree(full_path_file_or_folder, path.join(self._location, path.basename(full_path_file_or_folder)))
+            # rmtree(path.join(self._location, 'documents'))
