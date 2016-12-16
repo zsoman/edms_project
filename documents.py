@@ -389,3 +389,7 @@ class DocumentManager(object):
                     document_file_path = path.join(document_path, file_name_key)
                     remove(document_file_path)
                     print("removed {}".format(file_name_key))
+
+    def export_document_manager(self):
+        pass
+        # TODO

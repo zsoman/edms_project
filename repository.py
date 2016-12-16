@@ -21,8 +21,10 @@ The roles.txt contains the user names and the list of assigned roles.
 from datetime import datetime
 from os import makedirs, path, utime
 
+from documents import DocumentManager
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
+from users import UserManager
 
 ROLES_FILE = 'roles'
 PATHS_FILE = 'paths.ini'
@@ -36,6 +38,8 @@ class Repository(object):
 
     def __init__(self, name='Repositiry_1', location=path.join('Repositories', 'repo_1'),
                  roles_file_type='txt'):
+        self._document_manager = DocumentManager(location)
+        self._user_manager = UserManager(location)
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(self._location)))
@@ -114,3 +118,11 @@ class Repository(object):
                 metadata_data['creation_date']['second'],
                 metadata_data['creation_date']['microsecond']
         ), '%Y %m %d %H %M %S %f')
+
+    def import_documents(self, param):
+        pass
+        # TODO
+
+    def export_documents(self, param, param1):
+        pass
+        # TODO: only export accepted and public files, if a file is private or not accepted then the hole export is stopped.
