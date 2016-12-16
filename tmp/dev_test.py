@@ -1,6 +1,8 @@
 from os import path, makedirs
+from random import choice
 
 from docgen.generator import DocumentGenerator
+from docgen.new_generator import NewDocumentGenerator
 from documents import DocumentManager, Document
 from iniformat.reader import read_ini_file
 from repository import Repository
@@ -14,7 +16,7 @@ from users import User, UserManager, RoleManager
 # reviewer_role = Role('reviewer')
 # visitor_role = Role('visitor')
 
-repo = Repository(roles_file_type = 'txt')  # Create repo
+repo = Repository(roles_file_type='txt')  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 
 # Generate user data
@@ -77,10 +79,12 @@ print("\n## Check role file ##")
 doc_manager = DocumentManager(repo)
 
 # Create document_gerator
+
 doc_generator = DocumentGenerator()
 if not path.exists('Documents'):
     makedirs('Documents')
-metadata1 = doc_generator.generate_metadata('office')
+
+metadata1 = doc_generator.generate_metadata(choice(['general', 'office', 'image']))
 metadata2 = doc_generator.generate_metadata('general')
 path_file1 = path.join('Documents', metadata1['filename'])
 path_file2 = path.join('Documents', metadata2['filename'])
@@ -91,6 +95,7 @@ doc_generator.generate_random_file(path_file2)
 document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_file1, path_file2], 'txt')
 
 doc_manager.add_document(document)
+
 print(read_ini_file('Repositories/repo_1/documents/1/1_document_metadata.edd'))
 
 # Test the document load by adding it again with new files to the repository
@@ -129,17 +134,21 @@ for doc_id_key, doc_value in doc_manager.load_all_documents().iteritems():
 print("\nFound document by id:")
 print(doc_manager.find_document_by_id(1))
 print("\nFound documents by title:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_title(metadata5['title']):
-    print("{}: {}".format(doc_id_key, doc_value))
+# for doc_id_key, doc_value in doc_manager.find_documents_by_title(metadata5['title']):
+#     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by author:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_author(1):
-    print("{}: {}".format(doc_id_key, doc_value))
+# for doc_id_key, doc_value in doc_manager.find_documents_by_author(1):
+#     print("{}: {}".format(doc_id_key, doc_value))
 print("\nFound documents by format:")
-for doc_id_key, doc_value in doc_manager.find_documents_by_format('txt'):
-    print("{}: {}".format(doc_id_key, doc_value))
+# for doc_id_key, doc_value in doc_manager.find_documents_by_format('txt'):
+#     print("{}: {}".format(doc_id_key, doc_value))
 
 # Existence of document files
 # remove('Repositories/repo_1/documents/1/{}'.format(metadata5['filename']))
 print(doc_manager.document_files_exist(1))
 print(doc_manager.unreferenced_document_files(1))
 doc_manager.remove_document_files(1)
+
+# Test the new document generator
+new_doc_gen = NewDocumentGenerator(repo, user_manager, doc_manager)
+new_doc_gen.generate_many_documents(10)
