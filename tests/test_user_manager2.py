@@ -21,7 +21,6 @@ class TestUserManager(unittest.TestCase):
 
 
     def tearDown(self):
-        pass
         shutil.rmtree('/tmp/edms')
         shutil.rmtree(path.join('Repositories', 'repo_1'))
 
