@@ -1,9 +1,10 @@
 import shutil
 import unittest
 from datetime import date
+from os import makedirs
 
+from repository import Repository
 from users import User
-from users import UserManager
 
 SKIP_ADVANCED = False
 
@@ -13,8 +14,10 @@ class TestUserManager(unittest.TestCase):
 
 
     def setUp(self):
-        # os.makedirs('/tmp/edms/users')
-        self._user_manager = UserManager('/tmp/edms/users')
+        makedirs('/tmp/edms/users')
+        repo = Repository('/tmp/edms')
+        # self._user_manager = UserManager('/tmp/edms/users')
+        self._user_manager = repo._user_manager
 
 
     def tearDown(self):

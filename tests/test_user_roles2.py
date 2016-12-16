@@ -2,9 +2,10 @@ import os
 import shutil
 import unittest
 from datetime import date
+from os import makedirs
 
+from repository import Repository
 from users import User
-from users import UserManager
 
 
 class TestUserRoles(unittest.TestCase):
@@ -12,14 +13,16 @@ class TestUserRoles(unittest.TestCase):
 
 
     def setUp(self):
-        # os.makedirs('/tmp/edms/users')
-        self._user_manager = UserManager('/tmp/edms/users')
-        self._role_path = '/tmp/edms/roles.txt'
+        makedirs('/tmp/edms/users')
+        repo = Repository('/tmp/edms')
+        # self._user_manager = UserManager('/tmp/edms/users')
+        self._user_manager = repo._user_manager
+        self._role_path = '/tmp/edms/users/roles.txt'
 
 
     def tearDown(self):
         shutil.rmtree('/tmp/edms')
-
+        # pass
 
     def test_create_new_role_file(self):
         self._user_manager.set_role_file(self._role_path)

@@ -28,7 +28,7 @@ class TestImportExport(unittest.TestCase):
             shutil.rmtree('/tmp/test_repo2')
         repository = Repository('Empty', '/tmp/test_repo2')
 
-        new_doc_gen = NewDocumentGenerator('tmp/samples/importable', repository._user_manager,
+        new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repository._user_manager,
                                            repository._document_manager)
         new_doc_gen.generate_many_documents(2)
 

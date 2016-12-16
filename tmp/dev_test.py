@@ -1,5 +1,6 @@
 from docgen.new_generator import NewDocumentGenerator
 from repository import Repository
+from usergen.generator import UserGenerator
 
 # Role creation
 # admin_role = Role('admin')
@@ -11,7 +12,7 @@ from repository import Repository
 
 
 repo = Repository()  # Create repo
-# gen = UserGenerator()  # Create user_gerenerator
+gen = UserGenerator()  # Create user_gerenerator
 # # # Create user_manager
 # # user_manager = UserManager(repo)
 # # # Create document_manager
@@ -26,8 +27,8 @@ repo = Repository()  # Create repo
 # birth = gen.generate_birth_date()
 # email = gen.generate_email(fname, lname)
 # password = gen.generate_password()
-#
-# # Create user from generated data
+# #
+# # # Create user from generated data
 # user = User(fname, lname, birth, email, password)
 # user = User(fname + '2', lname + '2', birth, email, password)
 #
@@ -50,13 +51,13 @@ repo = Repository()  # Create repo
 # print(repo._user_manager.find_users_by_role('admin'))
 #
 # # Create role_manager
-# role_manager = RoleManager(repo._location, repo._paths_file)
+# # role_manager = RoleManager(repo._location, repo._paths_file)
 #
 # # Role_manager usage
-# print("\n## Role manager usage ##")
-# print(role_manager.read_roles())
-# role_manager.write_roles({1: ['author', 'visitor'], 2: ['reviewer', 'admin']})
-# print(role_manager.read_roles())
+# # print("\n## Role manager usage ##")
+# # print(role_manager.read_roles())
+# # role_manager.write_roles({1: ['author', 'visitor'], 2: ['reviewer', 'admin']})
+# # print(role_manager.read_roles())
 #
 # repo._user_manager.add_role(1, 'admin')
 # repo._user_manager.add_role(2, 'admin')
@@ -123,12 +124,12 @@ repo = Repository()  # Create repo
 # print(repo._document_manager.find_all_documents())
 #
 # # Load all docuements
-# for doc_id_key, doc_value in repo._document_manager.load_all_documents().iteritems():
-#     print("{}: {}".format(doc_id_key, doc_value))
+# # for doc_id_key, doc_value in repo._document_manager.load_all_documents().iteritems():
+# #     print("{}: {}".format(doc_id_key, doc_value))
 #
 # # Find document by
 # print("\nFound document by id:")
-# print(repo._document_manager.find_document_by_id(1))
+# # print(repo._document_manager.find_document_by_id(1))
 # print("\nFound documents by title:")
 # # for doc_id_key, doc_value in repo._document_manager.find_documents_by_title(metadata5['title']):
 # #     print("{}: {}".format(doc_id_key, doc_value))
@@ -141,9 +142,9 @@ repo = Repository()  # Create repo
 #
 # # Existence of document files
 # # remove('Repositories/repo_1/documents/1/{}'.format(metadata5['filename']))
-# print(repo._document_manager.document_files_exist(1))
-# print(repo._document_manager.unreferenced_document_files(1))
-# repo._document_manager.remove_document_files(1)
+# # print(repo._document_manager.document_files_exist(1))
+# # print(repo._document_manager.unreferenced_document_files(1))
+# # repo._document_manager.remove_document_files(1)
 
 # Test the new document generator
 new_doc_gen = NewDocumentGenerator('tmp', repo._user_manager, repo._document_manager)
