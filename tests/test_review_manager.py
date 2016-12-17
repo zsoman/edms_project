@@ -3,14 +3,14 @@ import shutil
 import unittest
 from datetime import date
 
-from reviews import ReviewManager
-
 from documents import Document
 from documents import DocumentManager
+from reviews import ReviewManager
 from users import User
 from users import UserManager
 
 
+@unittest.skip("not implemented")
 class TestReviewManager(unittest.TestCase):
     """Test the review manager class"""
 
