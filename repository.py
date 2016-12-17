@@ -148,15 +148,18 @@ class Repository(object):
             all_documents = Repository.find_all_documents_in_path(from_path)
             metadata_data = read_ini_file(self._paths_file)
             to_path = path.join(self._location, metadata_data['directories']['documents'])
-            for document_id in all_documents:
-                new_path = reduce(path.join, [to_path, str(document_id)])
-                old_path = path.join(from_path, str(document_id))
-                copytree(old_path, new_path)
-                document_files_existence = self._document_manager.document_files_exist(document_id)
-                for file_name_key, exists_value in document_files_existence.iteritems():
-                    if not exists_value:
-                        raise RuntimeError(
+            if len(all_documents) > 0:
+                for document_id in all_documents:
+                    new_path = reduce(path.join, [to_path, str(document_id)])
+                    old_path = path.join(from_path, str(document_id))
+                    copytree(old_path, new_path)
+                    document_files_existence = self._document_manager.document_files_exist(document_id)
+                    for file_name_key, exists_value in document_files_existence.iteritems():
+                        if not exists_value:
+                            raise RuntimeError(
                                 "The {} file doesn't exists in the {} ID document!".format(file_name_key, document_id))
+            else:
+                raise ValueError("No document to import from the '{}' path!".format(from_path))
         else:
             raise ValueError("The '{}' doesn't exists!".format(from_path))
             # TODO
