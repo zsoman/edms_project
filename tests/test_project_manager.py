@@ -4,8 +4,7 @@ import unittest
 
 from projects import Project
 from projects import ProjectManager
-
-from users import UserManager
+from repository import Repository
 
 
 class TestProjectManager(unittest.TestCase):
@@ -14,7 +13,9 @@ class TestProjectManager(unittest.TestCase):
 
     def setUp(self):
         os.makedirs('/tmp/edms/projects')
-        self._user_manager = UserManager('/tmp/edms/users')
+        repo = Repository('/tmp/edms')
+        self._user_manager = repo._user_manager
+        # self._user_manager = UserManager('/tmp/edms/users')
         self._project_manager = ProjectManager('/tmp/edms/projects', self._user_manager)
 
 

@@ -52,8 +52,7 @@ class Repository(object):
         """Try to load an existing repository"""
         if path.exists(self._location):
             if path.isdir(self._location):
-                # self._creation_date = self.read_creation_date()
-                pass
+                self._creation_date = self.read_creation_date()
             else:
                 raise ValueError('The repository should be a directory!')
         else:

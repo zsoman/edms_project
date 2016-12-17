@@ -1,3 +1,5 @@
+from os import path, makedirs, listdir
+
 class Project(object):
     def __init__(self, name, description, members = [], documents = []):
         self._name = name
@@ -67,3 +69,73 @@ class Project(object):
                 is_manager = False
                 break
         return is_adminstrator and is_manager
+
+
+class ProjectManager(object):
+    def __init__(self, project_path, user_manager):
+        self._location = project_path
+        self._user_manager = user_manager
+        self._projects = []
+        self.load()
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, value):
+        raise AttributeError("The location of a project can't be changed!")
+
+    @property
+    def user_manager(self):
+        return self._user_manager
+
+    @user_manager.setter
+    def user_manager(self, value):
+        raise AttributeError("The user manager of a project can't be changed!")
+
+    def load(self):
+        """Try to load an existing repository"""
+        if path.exists(self._location):
+            if not path.isdir(self._location):
+                raise ValueError('The repository should be a directory!')
+            self._projects = self.load_projects()
+        else:
+            self.initialize()
+
+    def initialize(self):
+        """Initialize a new repository"""
+        makedirs(self._location)
+
+    def load_projects(self):
+        projects = []
+        for file_or_folder in listdir(self.location):
+            if path.isdir(file_or_folder):
+                try:
+                    projects.append(int(file_or_folder))
+                except:
+                    pass
+        return projects
+
+    def count_projects(self):
+        return len(self._projects)
+
+    def add_project(self, project):
+        pass
+        # TODO
+
+    def find_project_by_id(self, a_id):
+        pass
+        # TODO
+
+    def update_project(self, project_id, b):
+        pass
+        # TODO
+
+    def remove_project(self, a_id):
+        pass
+        # TODO
+
+    def find_projects_by_name(self, param):
+        pass
+        # TODO

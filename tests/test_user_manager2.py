@@ -15,7 +15,7 @@ class TestUserManager(unittest.TestCase):
 
     def setUp(self):
         makedirs('/tmp/edms/users')
-        repo = Repository()
+        repo = Repository('/tmp/edms')
         # self._user_manager = UserManager('/tmp/edms/users')
         self._user_manager = repo._user_manager
 
