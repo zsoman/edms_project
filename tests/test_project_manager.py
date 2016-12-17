@@ -88,14 +88,12 @@ class TestProjectManager(unittest.TestCase):
         self.assertEqual(project.name, 'Project B')
         self.assertEqual(self._project_manager.count_projects(), 1)
 
-    @unittest.skip("not implemented")
     def test_project_remove_with_invalid_id(self):
         a = Project('Project A', 'Work on A')
         a_id = self._project_manager.add_project(a)
         with self.assertRaises(ValueError):
             self._project_manager.remove_project(a_id + 1)
 
-    @unittest.skip("not implemented")
     def test_find_projects_by_name(self):
         a = Project('Initialization', 'Work on A')
         b = Project('Progress', 'Work on B')

@@ -1,4 +1,5 @@
 from os import path, makedirs, listdir
+from shutil import rmtree
 
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
@@ -164,16 +165,26 @@ class ProjectManager(object):
         except ValueError:
             raise ValueError("The project with {} ID doesn't exists!".format(project_id))
 
+    def find_projects_by_name(self, name):
+        found_projects = []
+        for project_id in self._projects:
+            project = self.find_project_by_id(project_id)
+            if name.lower() in project.name.lower():
+                found_projects.append(project)
+        return found_projects
+
     def update_project(self, project_id, project):
         if project_id in self._projects:
             self.save_project(project, project_id)
         else:
             raise ValueError("The project with {} ID doesn't exists, it can't be updated!".format(project_id))
 
-    def remove_project(self, a_id):
-        pass
-        # TODO
+    def delet_project_in_file_system(self, project_id):
+        rmtree(path.join(self.location, str(project_id)))
 
-    def find_projects_by_name(self, param):
-        pass
-        # TODO
+    def remove_project(self, project_id):
+        if project_id in self._projects:
+            self._projects.remove(project_id)
+            self.delet_project_in_file_system(project_id)
+        else:
+            raise ValueError("The project with {} ID doesn't exists, it can't be removed!".format(project_id))
