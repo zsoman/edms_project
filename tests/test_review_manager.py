@@ -61,6 +61,7 @@ class TestReviewManager(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree('/tmp/edms')
+        shutil.rmtree('Repositories')
 
     def test_document_selection(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')

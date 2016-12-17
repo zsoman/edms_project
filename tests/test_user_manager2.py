@@ -1,7 +1,7 @@
 import shutil
 import unittest
 from datetime import date
-from os import makedirs, path
+from os import makedirs
 
 from repository import Repository
 from users import User
@@ -22,7 +22,7 @@ class TestUserManager(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree('/tmp/edms')
-        shutil.rmtree(path.join('Repositories', 'repo_1'))
+        shutil.rmtree('Repositories')
 
     def test_empty_user_storage(self):
         user_count = self._user_manager.count_users()
