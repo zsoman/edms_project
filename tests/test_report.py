@@ -38,7 +38,7 @@ class TestReport(unittest.TestCase):
             'reviewer': 0,
             'visitor': 0
         }
-        repository = Repository('Empty', '/DevTest/test_repo')
+        repository = Repository('Empty', '/tmp/test_repo')
         report = repository.create_report()
         self.assertEqual(report.user_count, 0)
         self.assertEqual(report.document_count, 0)

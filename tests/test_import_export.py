@@ -7,7 +7,7 @@ from documents import Document
 from repository import Repository
 from users import User
 
-SAMPLE_DIR_PATH = '/DevTest/samples'
+SAMPLE_DIR_PATH = '/tmp/samples'
 
 
 class TestImportExport(unittest.TestCase):
@@ -15,19 +15,19 @@ class TestImportExport(unittest.TestCase):
 
 
     def test_import_without_users(self):
-        repository = Repository('Empty', '/DevTest/test_repo')
+        repository = Repository('Empty', '/tmp/test_repo')
         with self.assertRaises(ValueError):
             repository.import_documents('{}/importable'.format(SAMPLE_DIR_PATH))
-        shutil.rmtree('/DevTest/test_repo')
+        shutil.rmtree('/tmp/test_repo')
 
 
     def test_import_with_users(self):
 
-        if os.path.exists('/DevTest/test_repo2'):
-            shutil.rmtree('/DevTest/test_repo2')
-        repository = Repository('Empty', '/DevTest/test_repo2')
+        if os.path.exists('/tmp/test_repo2'):
+            shutil.rmtree('/tmp/test_repo2')
+        repository = Repository('Empty', '/tmp/test_repo2')
 
-        # new_doc_gen = NewDocumentGenerator('/DevTest/samples/importable', repository._user_manager, repository._document_manager)
+        # new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repository._user_manager, repository._document_manager)
         # new_doc_gen.generate_many_documents(2)
 
         alice = User('Alice', 'Smith', date(1980, 10, 10), 'alice@mail.org', '****')
@@ -62,16 +62,16 @@ class TestImportExport(unittest.TestCase):
         self.assertEqual(second_document.files, ['data.doc'])
         self.assertEqual(second_document.doc_format, 'doc')
 
-        shutil.rmtree('/DevTest/test_repo2')
+        shutil.rmtree('/tmp/test_repo2')
 
 
     def test_export_documents(self):
         try:
-            shutil.rmtree('/DevTest/test_repo3')
-            shutil.rmtree('/DevTest/exported_documents')
+            shutil.rmtree('/tmp/test_repo3')
+            shutil.rmtree('/tmp/exported_documents')
         except OSError as error:
             pass
-        repository = Repository('Empty', '/DevTest/test_repo3')
+        repository = Repository('Empty', '/tmp/test_repo3')
         alice = User('Alice', 'Smith', date(1980, 10, 10), 'alice@mail.org', '****')
         bob = User('Bob', 'Marker', date(1970, 11, 11), 'bob@mail.org', '****')
         alice_id = repository._user_manager.add_user(alice)
@@ -98,15 +98,15 @@ class TestImportExport(unittest.TestCase):
         second_document.change_state('accepted')
         first_id = repository._document_manager.add_document(first_document)
         second_id = repository._document_manager.add_document(second_document)
-        repository.export_documents([first_id, second_id], '/DevTest/exported_documents')
+        repository.export_documents([first_id, second_id], '/tmp/exported_documents')
 
-        self.assertTrue(os.path.exists('/DevTest/exported_documents/part1.pdf'))
-        self.assertTrue(os.path.exists('/DevTest/exported_documents/part2.pdf'))
-        self.assertTrue(os.path.exists('/DevTest/exported_documents/data.doc'))
-        self.assertTrue(os.path.exists('/DevTest/exported_documents/1.edd'))
-        self.assertTrue(os.path.exists('/DevTest/exported_documents/2.edd'))
+        self.assertTrue(os.path.exists('/tmp/exported_documents/part1.pdf'))
+        self.assertTrue(os.path.exists('/tmp/exported_documents/part2.pdf'))
+        self.assertTrue(os.path.exists('/tmp/exported_documents/data.doc'))
+        self.assertTrue(os.path.exists('/tmp/exported_documents/1.edd'))
+        self.assertTrue(os.path.exists('/tmp/exported_documents/2.edd'))
 
-        with open('/DevTest/exported_documents/1.edd') as edd_file:
+        with open('/tmp/exported_documents/1.edd') as edd_file:
             lines = edd_file.readlines()
             self.assertIn('[document]\n', lines)
             self.assertIn('title=Some important doc\n', lines)
@@ -115,7 +115,7 @@ class TestImportExport(unittest.TestCase):
             self.assertIn('files=part1.pdf part2.pdf\n', lines)
             self.assertIn('type=pdf\n', lines)
 
-        with open('/DevTest/exported_documents/2.edd') as edd_file:
+        with open('/tmp/exported_documents/2.edd') as edd_file:
             lines = edd_file.readlines()
             self.assertIn('[document]\n', lines)
             self.assertIn('title=Data report\n', lines)
@@ -124,5 +124,5 @@ class TestImportExport(unittest.TestCase):
             self.assertIn('files=data.doc\n', lines)
             self.assertIn('type=doc\n', lines)
 
-        shutil.rmtree('/DevTest/exported_documents')
-        shutil.rmtree('/DevTest/test_repo3')
+        shutil.rmtree('/tmp/exported_documents')
+        shutil.rmtree('/tmp/test_repo3')

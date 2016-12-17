@@ -48,6 +48,7 @@ class Repository(object):
         self._user_manager = UserManager(self._location, self._paths_file)
         self._document_manager = DocumentManager(self._location, self._paths_file)
 
+
     def load(self):
         """Try to load an existing repository"""
         if path.exists(self._location):

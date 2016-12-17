@@ -92,9 +92,9 @@ ENV/
 .idea/inspectionProfiles/
 .idea/workspace.xml
 
-/DevTest/Repositories/
-/DevTest/Documents/
-DevTest/Documents/
+/tmp/Repositories/
+/tmp/Documents/
+tmp/Documents/
 /coverage/
 coverage/
 /tests/Repositories/

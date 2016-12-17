@@ -13,16 +13,16 @@ class TestUserRoles(unittest.TestCase):
 
 
     def setUp(self):
-        makedirs('/DevTest/edms/users')
+        makedirs('/tmp/edms/users')
         repo = Repository()
-        # self._user_manager = UserManager('/DevTest/edms/users')
+        # self._user_manager = UserManager('/tmp/edms/users')
         self._user_manager = repo._user_manager
         # self._role_path = RoleManager.get_roles_file(repo._location)
-        self._role_path = '/DevTest/edms/users/roles.txt'
+        self._role_path = '/tmp/edms/users/roles.txt'
 
 
     def tearDown(self):
-        shutil.rmtree('/DevTest/edms')
+        shutil.rmtree('/tmp/edms')
         shutil.rmtree(path.join('Repositories', 'repo_1'))
 
     def test_create_new_role_file(self):
