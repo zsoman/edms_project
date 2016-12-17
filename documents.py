@@ -210,8 +210,7 @@ class DocumentManager(object):
 
         write_ini_file(path.join(new_document_folder, '{}_document_metadata.edd'.format(new_document_id)), data)
 
-
-    def load_document(self, document_id):
+    def load_document(self, document_id, user_manager = None):
         document_path = path.join(self._location, str(document_id))
         if not path.exists(document_path):
             raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
@@ -222,20 +221,65 @@ class DocumentManager(object):
             meta_data = read_ini_file(metadata_file)
             list_of_files = (
                 [str(file_name.strip("'")) for file_name in meta_data['document']['files'][1:-1].split(', ')])
-            if '[' in meta_data['document']['author'] and ']' in meta_data['document']['author']:
-                list_of_authors = [int(file_name.strip("'")) for file_name in
-                                   meta_data['document']['author'][1:-1].split(', ')]
+            if 'author' in meta_data['document']:
+                if '[' in meta_data['document']['author'] and ']' in meta_data['document']['author']:
+                    list_of_authors = [int(file_name.strip("'")) for file_name in
+                                       meta_data['document']['author'][1:-1].split(', ')]
+                else:
+                    list_of_authors = meta_data['document']['author']
             else:
-                list_of_authors = meta_data['document']['author']
+                if '[' in meta_data['document']['author_name'] and ']' in meta_data['document']['author_name']:
+                    list_of_authors_by_name = [file_name.strip("'") for file_name in
+                                               meta_data['document']['author_name'][1:-1].split(', ')]
+                else:
+                    list_of_authors_by_name = meta_data['document']['author_name']
+                if not isinstance(list_of_authors_by_name, list):
+                    list_of_authors_by_name = [list_of_authors_by_name]
+                list_of_authors = set()
+                for author_name in list_of_authors_by_name:
+                    for user_id in user_manager.find_users_by_name(author_name):
+                        list_of_authors.add(int(user_id))
+                list_of_authors = list(list_of_authors)
             document = Document(meta_data['document']['title'], meta_data['document']['description'], list_of_authors,
                                 list_of_files, meta_data['document']['doc_format'])
             document.creation_date = datetime.strptime(meta_data['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
             document.modification_date = datetime.strptime(meta_data['document']['modification_date'],
                                                            '%Y/%m/%d %H:%M:%S %f')
-            document.state = meta_data['document']['state']
-            if meta_data['document']['is_public'] == 'True':
-                document.make_public()
+            if 'author' in meta_data['document']:
+                document.state = meta_data['document']['state']
+                if meta_data['document']['is_public'] == 'True':
+                    document.make_public()
+            else:
+                document.state = 'new'
+                document.make_private()
             return document
+
+    # def load_document_from_file(self, document_id, user_manager):
+    #     document_path = path.join(self._location, str(document_id))
+    #     if not path.exists(document_path):
+    #         raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
+    #                                         "!".format(document_path, document_id))
+    #     else:
+    #         metadata_file = reduce(path.join,
+    #                                [self._location, str(document_id), '{}_document_metadata.edd'.format(document_id)])
+    #         meta_data = read_ini_file(metadata_file)
+    #         list_of_files = (
+    #             [str(file_name.strip("'")) for file_name in meta_data['document']['files'][1:-1].split(', ')])
+    #         if '[' in meta_data['document']['author_name'] and ']' in meta_data['document']['author_name']:
+    #             list_of_authors_by_name = [file_name.strip("'") for file_name in meta_data['document']['author_name'][1:-1].split(', ')]
+    #         else:
+    #             list_of_authors_by_name = meta_data['document']['author_name']
+    #         list_of_authors = []
+    #         for author_name in list_of_authors_by_name:
+    #             list_of_authors.append(user_manager.find_users_by_name(author_name))
+    #         document = Document(meta_data['document']['title'], meta_data['document']['description'], list_of_authors,
+    #                             list_of_files, meta_data['document']['doc_format'])
+    #         document.creation_date = datetime.strptime(meta_data['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
+    #         document.modification_date = datetime.strptime(meta_data['document']['modification_date'],
+    #                                                        '%Y/%m/%d %H:%M:%S %f')
+    #         document.state = 'new'
+    #         document.make_private()
+    #         return document
 
 
     def add_document(self, document, new_document_folder=None):
@@ -282,20 +326,18 @@ class DocumentManager(object):
     def count_documents(self):
         return len(self.find_all_documents())
 
-
-    def load_all_documents(self):
+    def load_all_documents(self, user_manager = None):
         all_documents = dict()
         for document_id in self.find_all_documents():
-            all_documents[document_id] = self.load_document(document_id)
+            all_documents[document_id] = self.load_document(document_id, user_manager = user_manager)
         return all_documents
 
-
-    def find_document_by_id(self, document_id):
+    def find_document_by_id(self, document_id, user_manager = None):
         if document_id not in self.find_all_documents():
             raise ValueError(
                     "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
         else:
-            return self.load_all_documents()[document_id]
+            return self.load_all_documents(user_manager = user_manager)[document_id]
 
 
     def find_documents_by_title(self, title):
@@ -308,10 +350,9 @@ class DocumentManager(object):
         else:
             return documents_by_title.values()
 
-
-    def find_documents_by_author(self, author):
+    def find_documents_by_author(self, author, user_manager = None):
         documents_by_author = dict()
-        for doc_id_key, doc_value in self.load_all_documents().iteritems():
+        for doc_id_key, doc_value in self.load_all_documents(user_manager = user_manager).iteritems():
             if isinstance(doc_value.author, list):
                 authors = doc_value.author
             else:
@@ -334,14 +375,13 @@ class DocumentManager(object):
         else:
             return documents_by_author.values()
 
-
-    def document_files_exist(self, document_id):
+    def document_files_exist(self, document_id, user_manager = None):
         existence_of_document_files = dict()
         if document_id not in self.find_all_documents():
             raise ValueError("The docuement with {} ID doesn't exists!".format(document_id))
         else:
             document_path = path.join(self._location, str(document_id))
-            document = self.find_document_by_id(document_id)
+            document = self.find_document_by_id(document_id, user_manager = user_manager)
             for document_file in document.files:
                 document_file_path = path.join(document_path, document_file)
                 if path.exists(document_file_path) and path.isfile(document_file_path):

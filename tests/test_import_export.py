@@ -44,7 +44,7 @@ class TestImportExport(unittest.TestCase):
 
         self.assertEqual(repository._document_manager.count_documents(), 2)
 
-        results = repository._document_manager.find_documents_by_author(alice_id)
+        results = repository._document_manager.find_documents_by_author(alice_id, repository._user_manager)
         self.assertEqual(len(results), 1)
         first_document = results[0]
         self.assertEqual(first_document.author, alice_id)
@@ -53,7 +53,7 @@ class TestImportExport(unittest.TestCase):
         self.assertEqual(first_document.files, ['part1.pdf', 'part2.pdf'])
         self.assertEqual(first_document.doc_format, 'pdf')
 
-        results = repository._document_manager.find_documents_by_author(bob_id)
+        results = repository._document_manager.find_documents_by_author(bob_id, repository._user_manager)
         self.assertEqual(len(results), 1)
         second_document = results[0]
         self.assertEqual(second_document.author, bob_id)
