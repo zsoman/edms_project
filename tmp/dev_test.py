@@ -150,6 +150,9 @@ gen = UserGenerator()  # Create user_gerenerator
 new_doc_gen = NewDocumentGenerator('tmp', repo._user_manager, repo._document_manager)
 # new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repo._user_manager, repo._document_manager)
 new_doc_gen.generate_many_documents(2)
+repo.import_documents('tmp')
+
+repo.create_backup()
 
 # repo._document_manager.remove_document(1)
 # repo._document_manager.remove_document(2)

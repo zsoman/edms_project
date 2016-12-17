@@ -20,7 +20,7 @@ The roles.txt contains the user names and the list of assigned roles.
 
 from datetime import datetime
 from os import makedirs, path, utime, listdir, remove
-from shutil import copytree, rmtree, copy2
+from shutil import copytree, rmtree, copy2, make_archive
 
 from documents import DocumentManager
 from iniformat.reader import read_ini_file
@@ -188,3 +188,28 @@ class Repository(object):
                 raise TypeError(
                     "The docuement must be accepted and public to export, "
                     "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
+
+    def create_backup(self, backup_file_name = 'backup', backup_path = './', verbose = False):
+        backup_file_name = self.determine_export_file_name(backup_file_name, backup_path)
+        make_archive(path.join(backup_path, backup_file_name), 'zip', self._location, verbose = verbose)  # logger =
+
+    def determine_export_file_name(self, backup_file_name, backup_path):
+        if path.exists(path.join(backup_path, backup_file_name + '.zip')):
+            new_backup_file_name = backup_file_name
+            number = 1
+            if '_' in backup_file_name:
+                try:
+                    number = int(backup_file_name.split('_')[-1])
+                    new_backup_file_name = '_'.join(backup_file_name[:-1]) + '_{}'
+                except ValueError:
+                    new_backup_file_name += '_{}'
+            else:
+                new_backup_file_name += '_{}'
+
+            while True:
+                if new_backup_file_name.format(number) + '.zip' in listdir(backup_path):
+                    number += 1
+                else:
+                    return new_backup_file_name.format(number)
+        else:
+            return backup_file_name

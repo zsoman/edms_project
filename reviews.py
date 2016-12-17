@@ -147,9 +147,11 @@ class Review(object):
 
 
 class ReviewManager(object):
-    def __init__(self):
-        pass
-        # TODO
+    def __init__(self, review_manager_path, user_manager, document_manager):
+        self._location = review_manager_path
+        self._user_manager = user_manager
+        self._document_manager = document_manager
+
 
     def select_document(self, submission_id):
         pass

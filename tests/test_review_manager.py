@@ -4,13 +4,11 @@ import unittest
 from datetime import date
 
 from documents import Document
-from documents import DocumentManager
+from repository import Repository
 from reviews import ReviewManager
 from users import User
-from users import UserManager
 
 
-@unittest.skip("not implemented")
 class TestReviewManager(unittest.TestCase):
     """Test the review manager class"""
 
@@ -38,8 +36,11 @@ class TestReviewManager(unittest.TestCase):
 
 
     def create_manager_objects(self):
-        self._user_manager = UserManager('/tmp/edms/users')
-        self._document_manager = DocumentManager('/tmp/edms/documents')
+        repo = Repository('/tmp/edms')
+        # self._user_manager = UserManager('/tmp/edms/users')
+        self._user_manager = repo._user_manager
+        # self._document_manager = DocumentManager('/tmp/edms/documents')
+        self._document_manager = repo._document_manager
         self._review_manager = ReviewManager('/tmp/edms/reviews', self._user_manager, self._document_manager)
 
 
@@ -61,13 +62,12 @@ class TestReviewManager(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree('/tmp/edms')
 
-
     def test_document_selection(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
         self._review_manager.select_document(submission_id)
 
-
+    @unittest.skip("not implemented")
     def test_submission(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -75,7 +75,7 @@ class TestReviewManager(unittest.TestCase):
         self._review_manager.submit_document(self._author_id, self._manager_id, submission_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_submission_with_invalid_roles(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -85,7 +85,7 @@ class TestReviewManager(unittest.TestCase):
             self._review_manager.submit_document(self._author_id, self._manager_id, submission_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_review_request_1(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -96,7 +96,7 @@ class TestReviewManager(unittest.TestCase):
         self._review_manager.send_reviewing_request_1(self._manager_id, self._reviewer_1_id, request_1_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_review_request_2(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -110,7 +110,7 @@ class TestReviewManager(unittest.TestCase):
         self._review_manager.send_reviewing_request_2(self._manager_id, self._reviewer_2_id, request_2_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_invalid_review_request_order(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -125,7 +125,7 @@ class TestReviewManager(unittest.TestCase):
             self._review_manager.send_reviewing_request_1(self._manager_id, self._reviewer_1_id, request_1_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_review_responses(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -145,7 +145,7 @@ class TestReviewManager(unittest.TestCase):
         self._review_manager.send_review_2(self._reviewer_2_id, self._manager_id, response_2_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_review_response_with_invalid_role(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -166,7 +166,7 @@ class TestReviewManager(unittest.TestCase):
             self._review_manager.send_review_2(self._author_id, self._manager_id, response_2_id)
         self._review_manager.save_review()
 
-
+    @unittest.skip("not implemented")
     def test_reviewing_process_with_evaluation(self):
         submission = Document('Submission', 'First submission', 1, ['/tmp/edms/samples/submission.pdf'], 'pdf')
         submission_id = self._document_manager.add_document(submission)
@@ -179,8 +179,7 @@ class TestReviewManager(unittest.TestCase):
         response_2 = Document('response_2', 'Second response', 1, ['/tmp/edms/samples/response_2.pdf'], 'pdf')
         response_2_id = self._document_manager.add_document(response_2)
         evaluation_result = Document('response_2', 'Second response', 1,
-                                     ['/tmp/edms/samples/evaluation_result.pdf'],
-                                     'pdf')
+                                     ['/tmp/edms/samples/evaluation_result.pdf'], 'pdf')
         evaluation_result_id = self._document_manager.add_document(evaluation_result)
         self._review_manager.select_document(submission_id)
         self._review_manager.submit_document(self._author_id, self._manager_id, submission_id)
