@@ -27,20 +27,17 @@ class TestProjectManager(unittest.TestCase):
         project_count = self._project_manager.count_projects()
         self.assertEqual(project_count, 0)
 
-    @unittest.skip("not implemented")
     def test_add_project(self):
         project = Project('My Project', 'A very difficult project')
         self._project_manager.add_project(project)
         self.assertEqual(self._project_manager.count_projects(), 1)
 
-    @unittest.skip("not implemented")
     def test_multiple_project_addition(self):
         for i in range(100):
             project = Project('Project {}'.format(i), 'Common project')
             self._project_manager.add_project(project)
         self.assertEqual(self._project_manager.count_projects(), 100)
 
-    @unittest.skip("not implemented")
     def test_find_project_by_id(self):
         a = Project('Project A', 'Work on A')
         b = Project('Project B', 'Work on B')
@@ -53,19 +50,16 @@ class TestProjectManager(unittest.TestCase):
         self.assertEqual(project.name, 'Project B')
         self.assertEqual(project.description, 'Work on B')
 
-    @unittest.skip("not implemented")
     def test_invalid_id_in_empty(self):
         with self.assertRaises(ValueError):
             self._project_manager.find_project_by_id(4321)
 
-    @unittest.skip("not implemented")
     def test_invalid_id(self):
         a = Project('Project A', 'Work on A')
         a_id = self._project_manager.add_project(a)
         with self.assertRaises(ValueError):
             self._project_manager.find_project_by_id(a_id + 1)
 
-    @unittest.skip("not implemented")
     def test_project_update(self):
         a = Project('Project A', 'Work on A')
         project_id = self._project_manager.add_project(a)
@@ -75,7 +69,6 @@ class TestProjectManager(unittest.TestCase):
         self.assertEqual(updated_project.name, b.name)
         self.assertEqual(updated_project.description, b.description)
 
-    @unittest.skip("not implemented")
     def test_project_update_with_invalid_id(self):
         with self.assertRaises(ValueError):
             a = Project('Project A', 'Work on A')

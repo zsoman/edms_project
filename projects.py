@@ -1,5 +1,11 @@
 from os import path, makedirs, listdir
 
+from iniformat.reader import read_ini_file
+from iniformat.writer import write_ini_file
+from storage_utils import get_next_id
+
+PROJECT_METADATA_FILE_NAME_FORMAT = '{}_project_metadata.edd'
+
 class Project(object):
     def __init__(self, name, description, members = [], documents = []):
         self._name = name
@@ -99,7 +105,7 @@ class ProjectManager(object):
         if path.exists(self._location):
             if not path.isdir(self._location):
                 raise ValueError('The repository should be a directory!')
-            self._projects = self.load_projects()
+            self._projects = self.load_projects_ids()
         else:
             self.initialize()
 
@@ -107,7 +113,7 @@ class ProjectManager(object):
         """Initialize a new repository"""
         makedirs(self._location)
 
-    def load_projects(self):
+    def load_projects_ids(self):
         projects = []
         for file_or_folder in listdir(self.location):
             if path.isdir(file_or_folder):
@@ -120,17 +126,49 @@ class ProjectManager(object):
     def count_projects(self):
         return len(self._projects)
 
+    def save_project(self, project, next_id):
+        data = {
+            'project': {
+                'name': project.name,
+                'description': project.description,
+                'members': str(project.members),
+                'documents': str(project.documents)
+            }
+        }
+        project_path = path.join(self.location, str(next_id))
+        project_metadata_path = path.join(project_path, PROJECT_METADATA_FILE_NAME_FORMAT.format(next_id))
+        if not path.exists(project_path):
+            makedirs(project_path)
+        write_ini_file(project_metadata_path, data)
+        return next_id
+
+
     def add_project(self, project):
-        pass
-        # TODO
+        new_project_id = self.save_project(project, get_next_id(self.location))
+        self._projects.append(new_project_id)
+        return new_project_id
 
-    def find_project_by_id(self, a_id):
-        pass
-        # TODO
+    def load_project(self, project_id):
+        project_path = path.join(self.location, str(project_id))
+        if path.exists(project_path):
+            project_metadata_path = path.join(project_path, PROJECT_METADATA_FILE_NAME_FORMAT.format(project_id))
+            project_data = read_ini_file(project_metadata_path)['project']
+            return Project(project_data['name'], project_data['description'], project_data['members'],
+                           project_data['documents'])
+        else:
+            raise ValueError("The {} path doesn't exists!".format(project_path))
 
-    def update_project(self, project_id, b):
-        pass
-        # TODO
+    def find_project_by_id(self, project_id):
+        try:
+            return self.load_project(project_id)
+        except ValueError:
+            raise ValueError("The project with {} ID doesn't exists!".format(project_id))
+
+    def update_project(self, project_id, project):
+        if project_id in self._projects:
+            self.save_project(project, project_id)
+        else:
+            raise ValueError("The project with {} ID doesn't exists, it can't be updated!".format(project_id))
 
     def remove_project(self, a_id):
         pass
