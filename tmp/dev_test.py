@@ -1,4 +1,8 @@
-from docgen.new_generator import NewDocumentGenerator
+from os import path, makedirs
+from random import choice
+
+from docgen.new_generator import NewDocumentGenerator, DocumentGenerator
+from documents import Document
 from repository import Repository
 from usergen.generator import UserGenerator
 
@@ -153,6 +157,25 @@ new_doc_gen.generate_many_documents(2)
 repo.import_documents('tmp')
 
 repo.create_backup()
+
+doc_generator = DocumentGenerator()
+if not path.exists('Documents'):
+    makedirs('Documents')
+
+metadata1 = doc_generator.generate_metadata(choice(['general', 'office', 'image']))
+metadata2 = doc_generator.generate_metadata('general')
+path_file1 = path.join('Documents', metadata1['filename'])
+path_file2 = path.join('Documents', metadata2['filename'])
+doc_generator.generate_random_file(path_file1)
+doc_generator.generate_random_file(path_file2)
+
+# Create document
+document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_file1, path_file2], 'txt')
+
+repo._document_manager.add_document(document)
+
+repo.restore()
+
 
 # repo._document_manager.remove_document(1)
 # repo._document_manager.remove_document(2)

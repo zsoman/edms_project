@@ -21,6 +21,7 @@ The roles.txt contains the user names and the list of assigned roles.
 from datetime import datetime
 from os import makedirs, path, utime, listdir, remove
 from shutil import copytree, rmtree, copy2, make_archive
+from zipfile import ZipFile
 
 from documents import DocumentManager
 from iniformat.reader import read_ini_file
@@ -213,3 +214,9 @@ class Repository(object):
                     return new_backup_file_name.format(number)
         else:
             return backup_file_name
+
+    def restore(self, backup_file_name = 'backup', backup_path = './', verbose = False):
+        rmtree(self._location)
+        # ZipFile(path.join(backup_path, backup_file_name+'.zip'))
+        with ZipFile(path.join(backup_path, backup_file_name + '.zip'), "r") as z:
+            z.extractall(self._location)
