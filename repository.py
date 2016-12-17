@@ -188,4 +188,3 @@ class Repository(object):
                 raise TypeError(
                     "The docuement must be accepted and public to export, "
                     "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
-        # TODO: only export accepted and public files, if a file is private or not accepted then the hole export is stopped.
