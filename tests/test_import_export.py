@@ -35,6 +35,10 @@ class TestImportExport(unittest.TestCase):
 
         alice_id = repository._user_manager.add_user(alice)
         bob_id = repository._user_manager.add_user(bob)
+        repository._user_manager.save_user(alice_id, alice)
+        repository._user_manager.save_user(bob_id, bob)
+
+
         self.assertEqual(repository._user_manager.count_users(), 2)
         repository.import_documents('{}/importable'.format(SAMPLE_DIR_PATH))
 

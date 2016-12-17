@@ -20,7 +20,7 @@ The roles.txt contains the user names and the list of assigned roles.
 
 from datetime import datetime
 from os import makedirs, path, utime, listdir
-from shutil import copytree
+from shutil import copytree, rmtree
 
 from documents import DocumentManager
 from iniformat.reader import read_ini_file
@@ -153,11 +153,24 @@ class Repository(object):
                     new_path = reduce(path.join, [to_path, str(document_id)])
                     old_path = path.join(from_path, str(document_id))
                     copytree(old_path, new_path)
-                    document_files_existence = self._document_manager.document_files_exist(document_id)
-                    for file_name_key, exists_value in document_files_existence.iteritems():
-                        if not exists_value:
-                            raise RuntimeError(
-                                "The {} file doesn't exists in the {} ID document!".format(file_name_key, document_id))
+                    try:
+                        document_files_existence = self._document_manager.document_files_exist(document_id)
+                        for file_name_key, exists_value in document_files_existence.iteritems():
+                            if not exists_value:
+                                raise RuntimeError(
+                                    "The {} file doesn't exists in the {} ID document!".format(file_name_key,
+                                                                                               document_id))
+                        document = self._document_manager.load_document(document_id)
+                        if not isinstance(document.author, list):
+                            doc_author = [document.author]
+                        else:
+                            doc_author = document.author
+                        for author in doc_author:
+                            _ = self._user_manager.find_user_by_id(author)
+
+                    except Exception as e:
+                        rmtree(new_path)
+                        raise e
             else:
                 raise ValueError("No document to import from the '{}' path!".format(from_path))
         else:

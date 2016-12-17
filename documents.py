@@ -338,7 +338,7 @@ class DocumentManager(object):
     def document_files_exist(self, document_id):
         existence_of_document_files = dict()
         if document_id not in self.find_all_documents():
-            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+            raise ValueError("The docuement with {} ID doesn't exists!".format(document_id))
         else:
             document_path = path.join(self._location, str(document_id))
             document = self.find_document_by_id(document_id)
