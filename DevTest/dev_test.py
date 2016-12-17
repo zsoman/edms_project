@@ -147,8 +147,8 @@ gen = UserGenerator()  # Create user_gerenerator
 # # repo._document_manager.remove_document_files(1)
 
 # Test the new document generator
-new_doc_gen = NewDocumentGenerator('tmp', repo._user_manager, repo._document_manager)
-# new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repo._user_manager, repo._document_manager)
+new_doc_gen = NewDocumentGenerator('DevTest', repo._user_manager, repo._document_manager)
+# new_doc_gen = NewDocumentGenerator('/DevTest/samples/importable', repo._user_manager, repo._document_manager)
 new_doc_gen.generate_many_documents(2)
 
 # repo._document_manager.remove_document(1)

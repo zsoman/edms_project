@@ -1,7 +1,7 @@
 import os
 
 # You should set to the appropriate path!
-MESSAGE_DIRECTORY = '/tmp/messages'
+MESSAGE_DIRECTORY = '/DevTest/messages'
 
 
 def get_new_message_id():

@@ -14,14 +14,14 @@ class TestUserManager(unittest.TestCase):
 
 
     def setUp(self):
-        makedirs('/tmp/edms/users')
+        makedirs('/DevTest/edms/users')
         repo = Repository()
-        # self._user_manager = UserManager('/tmp/edms/users')
+        # self._user_manager = UserManager('/DevTest/edms/users')
         self._user_manager = repo._user_manager
 
 
     def tearDown(self):
-        shutil.rmtree('/tmp/edms')
+        shutil.rmtree('/DevTest/edms')
         shutil.rmtree(path.join('Repositories', 'repo_1'))
 
     def test_empty_user_storage(self):

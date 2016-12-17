@@ -13,13 +13,13 @@ class TestProjectManager(unittest.TestCase):
 
 
     def setUp(self):
-        os.makedirs('/tmp/edms/projects')
-        self._user_manager = UserManager('/tmp/edms/users')
-        self._project_manager = ProjectManager('/tmp/edms/projects', self._user_manager)
+        os.makedirs('/DevTest/edms/projects')
+        self._user_manager = UserManager('/DevTest/edms/users')
+        self._project_manager = ProjectManager('/DevTest/edms/projects', self._user_manager)
 
 
     def tearDown(self):
-        shutil.rmtree('/tmp/edms')
+        shutil.rmtree('/DevTest/edms')
 
 
     def test_empty_project_storage(self):

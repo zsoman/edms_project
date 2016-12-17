@@ -12,19 +12,19 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def setUp(self):
-        makedirs('/tmp/edms/documents')
+        makedirs('/DevTest/edms/documents')
         document_generator = generator.DocumentGenerator()
-        makedirs('/tmp/edms/samples')
+        makedirs('/DevTest/edms/samples')
         for name in ['a1.pdf', 'a2.pdf', 'b.doc', 'c1.html', 'c2.png', 'c3.png', 'c1.pdf',
                      'c2.pdf', 'c3.pdf']:
-            if not path.exists('/tmp/edms/samples'):
-                makedirs('/tmp/edms/samples')
-            document_generator.generate_random_file('/tmp/edms/samples/{}'.format(name))
-        self._document_manager = DocumentManager('/tmp/edms/documents')
+            if not path.exists('/DevTest/edms/samples'):
+                makedirs('/DevTest/edms/samples')
+            document_generator.generate_random_file('/DevTest/edms/samples/{}'.format(name))
+        self._document_manager = DocumentManager('/DevTest/edms/documents')
 
 
     def tearDown(self):
-        shutil.rmtree('/tmp/edms')
+        shutil.rmtree('/DevTest/edms')
         pass
 
 
@@ -34,7 +34,8 @@ class TestDocumentManager(unittest.TestCase):
 
 
     def test_add_document(self):
-        document = Document('title1', 'desc1', 1, ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+        document = Document('title1', 'desc1', 1, ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'],
+                            'pdf')
         self._document_manager.add_document(document)
         self.assertEqual(self._document_manager.count_documents(), 1)
 
@@ -42,20 +43,20 @@ class TestDocumentManager(unittest.TestCase):
     def test_multiple_document_addition(self):
         for i in range(100):
             document = Document('Title {}'.format(i), 'Desc {}'.format(i), 1,
-                                ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                                ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
             document_generator = generator.DocumentGenerator()
             for name in ['a1.pdf', 'a2.pdf', 'b.doc', 'c1.html', 'c2.png', 'c3.png', 'c1.pdf',
                          'c2.pdf', 'c3.pdf']:
-                if not path.exists('/tmp/edms/samples'):
-                    makedirs('/tmp/edms/samples')
-                document_generator.generate_random_file('/tmp/edms/samples/{}'.format(name))
+                if not path.exists('/DevTest/edms/samples'):
+                    makedirs('/DevTest/edms/samples')
+                document_generator.generate_random_file('/DevTest/edms/samples/{}'.format(name))
             self._document_manager.add_document(document)
         self.assertEqual(self._document_manager.count_documents(), 100)
 
 
     def test_retrieve_last_document(self):
         document = Document('title1', 'desc1', 1,
-                            ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'],
+                            ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'],
                             'pdf')
         document_id = self._document_manager.add_document(document)
         retrieved = self._document_manager.find_document_by_id(document_id)
@@ -68,11 +69,11 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_find_document_by_id(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         c = Document('C', 'description of C', 1,
-                     ['/tmp/edms/samples/c1.html', '/tmp/edms/samples/c2.png',
-                      '/tmp/edms/samples/c3.png'], 'html')
+                     ['/DevTest/edms/samples/c1.html', '/DevTest/edms/samples/c2.png',
+                      '/DevTest/edms/samples/c3.png'], 'html')
         a_id = self._document_manager.add_document(a)
         b_id = self._document_manager.add_document(b)
         c_id = self._document_manager.add_document(c)
@@ -91,7 +92,7 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_invalid_id(self):
         a = Document('title1', 'desc1', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
         a_id = self._document_manager.add_document(a)
         with self.assertRaises(ValueError):
             self._document_manager.find_document_by_id(a_id + 1)
@@ -99,9 +100,9 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_document_update(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
         document_id = self._document_manager.add_document(a)
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         self._document_manager.update_document(document_id, b)
         updated_document = self._document_manager.find_document_by_id(document_id)
         self.assertEqual(updated_document.author, b.author)
@@ -111,17 +112,18 @@ class TestDocumentManager(unittest.TestCase):
     def test_document_update_with_invalid_id(self):
         with self.assertRaises(ValueError):
             a = Document('A', 'description of A', 1,
-                         ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                         ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
             document_id = self._document_manager.add_document(a)
-            b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+            b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
             # sleep(1000)
             self._document_manager.update_document(document_id + 1, b)
 
 
     def test_document_remove(self):
-        a = Document('A', 'description of A', 1, ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+        a = Document('A', 'description of A', 1, ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'],
+                     'pdf')
         a_id = self._document_manager.add_document(a)
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         b_id = self._document_manager.add_document(b)
         self.assertEqual(self._document_manager.count_documents(), 2)
         self._document_manager.remove_document(a_id)
@@ -133,7 +135,7 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_document_remove_with_invalid_id(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
         a_id = self._document_manager.add_document(a)
         with self.assertRaises(ValueError):
             self._document_manager.remove_document(a_id + 1)
@@ -141,9 +143,9 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_find_document_by_title(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
         self._document_manager.add_document(a)
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         self._document_manager.add_document(b)
         documents = self._document_manager.find_documents_by_title('a')
         self.assertEqual(len(documents), 1)
@@ -157,9 +159,9 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_find_documents_by_author(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
         self._document_manager.add_document(a)
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         self._document_manager.add_document(b)
         documents = self._document_manager.find_documents_by_author(1)
         self.assertEqual(len(documents), 1)
@@ -173,11 +175,11 @@ class TestDocumentManager(unittest.TestCase):
 
     def test_find_documents_by_format(self):
         a = Document('A', 'description of A', 1,
-                     ['/tmp/edms/samples/a1.pdf', '/tmp/edms/samples/a2.pdf'], 'pdf')
-        b = Document('B', 'description of B', 2, ['/tmp/edms/samples/b.doc'], 'doc')
+                     ['/DevTest/edms/samples/a1.pdf', '/DevTest/edms/samples/a2.pdf'], 'pdf')
+        b = Document('B', 'description of B', 2, ['/DevTest/edms/samples/b.doc'], 'doc')
         c = Document('C', 'description of A', 1,
-                     ['/tmp/edms/samples/c1.pdf', '/tmp/edms/samples/c2.pdf',
-                      '/tmp/edms/samples/c3.pdf'], 'pdf')
+                     ['/DevTest/edms/samples/c1.pdf', '/DevTest/edms/samples/c2.pdf',
+                      '/DevTest/edms/samples/c3.pdf'], 'pdf')
         self._document_manager.add_document(a)
         self._document_manager.add_document(b)
         self._document_manager.add_document(c)
