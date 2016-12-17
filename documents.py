@@ -254,34 +254,6 @@ class DocumentManager(object):
                 document.make_private()
             return document
 
-    # def load_document_from_file(self, document_id, user_manager):
-    #     document_path = path.join(self._location, str(document_id))
-    #     if not path.exists(document_path):
-    #         raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
-    #                                         "!".format(document_path, document_id))
-    #     else:
-    #         metadata_file = reduce(path.join,
-    #                                [self._location, str(document_id), '{}_document_metadata.edd'.format(document_id)])
-    #         meta_data = read_ini_file(metadata_file)
-    #         list_of_files = (
-    #             [str(file_name.strip("'")) for file_name in meta_data['document']['files'][1:-1].split(', ')])
-    #         if '[' in meta_data['document']['author_name'] and ']' in meta_data['document']['author_name']:
-    #             list_of_authors_by_name = [file_name.strip("'") for file_name in meta_data['document']['author_name'][1:-1].split(', ')]
-    #         else:
-    #             list_of_authors_by_name = meta_data['document']['author_name']
-    #         list_of_authors = []
-    #         for author_name in list_of_authors_by_name:
-    #             list_of_authors.append(user_manager.find_users_by_name(author_name))
-    #         document = Document(meta_data['document']['title'], meta_data['document']['description'], list_of_authors,
-    #                             list_of_files, meta_data['document']['doc_format'])
-    #         document.creation_date = datetime.strptime(meta_data['document']['creation_date'], '%Y/%m/%d %H:%M:%S %f')
-    #         document.modification_date = datetime.strptime(meta_data['document']['modification_date'],
-    #                                                        '%Y/%m/%d %H:%M:%S %f')
-    #         document.state = 'new'
-    #         document.make_private()
-    #         return document
-
-
     def add_document(self, document, new_document_folder=None):
         new_document_id = get_next_id(self._location)
         if not new_document_folder:

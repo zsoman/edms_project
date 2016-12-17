@@ -2,6 +2,7 @@ import os
 import shutil
 import unittest
 from datetime import date
+from shutil import copy2
 
 from documents import Document
 from repository import Repository
@@ -71,6 +72,13 @@ class TestImportExport(unittest.TestCase):
             shutil.rmtree('/tmp/exported_documents')
         except OSError as error:
             pass
+
+        for test_file in ['part1.pdf', 'part2.pdf', 'data.doc']:
+            file_to_path = reduce(os.path.join, [SAMPLE_DIR_PATH, 'importable', test_file])
+            file_from_path = reduce(os.path.join, [SAMPLE_DIR_PATH, 'importable', 'export_files_for_test', test_file])
+            if not os.path.exists(file_to_path):
+                copy2(file_from_path, file_to_path)
+
         repository = Repository('Empty', '/tmp/test_repo3')
         alice = User('Alice', 'Smith', date(1980, 10, 10), 'alice@mail.org', '****')
         bob = User('Bob', 'Marker', date(1970, 11, 11), 'bob@mail.org', '****')
@@ -112,8 +120,8 @@ class TestImportExport(unittest.TestCase):
             self.assertIn('title=Some important doc\n', lines)
             self.assertIn('description=Contains various documentations\n', lines)
             self.assertIn('author=Alice Smith\n', lines)
-            self.assertIn('files=part1.pdf part2.pdf\n', lines)
-            self.assertIn('type=pdf\n', lines)
+            self.assertIn("files=['part1.pdf', 'part2.pdf']\n", lines)
+            self.assertIn('doc_format=pdf\n', lines)
 
         with open('/tmp/exported_documents/2.edd') as edd_file:
             lines = edd_file.readlines()
@@ -121,8 +129,8 @@ class TestImportExport(unittest.TestCase):
             self.assertIn('title=Data report\n', lines)
             self.assertIn('description=Figures and graphs mainly\n', lines)
             self.assertIn('author=Bob Marker\n', lines)
-            self.assertIn('files=data.doc\n', lines)
-            self.assertIn('type=doc\n', lines)
+            self.assertIn("files=['data.doc']\n", lines)
+            self.assertIn('doc_format=doc\n', lines)
 
         shutil.rmtree('/tmp/exported_documents')
         shutil.rmtree('/tmp/test_repo3')

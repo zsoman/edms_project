@@ -19,8 +19,8 @@ The roles.txt contains the user names and the list of assigned roles.
 """
 
 from datetime import datetime
-from os import makedirs, path, utime, listdir
-from shutil import copytree, rmtree
+from os import makedirs, path, utime, listdir, remove
+from shutil import copytree, rmtree, copy2
 
 from documents import DocumentManager
 from iniformat.reader import read_ini_file
@@ -47,7 +47,6 @@ class Repository(object):
         self.load()
         self._user_manager = UserManager(self._location, self._paths_file)
         self._document_manager = DocumentManager(self._location, self._paths_file)
-
 
     def load(self):
         """Try to load an existing repository"""
@@ -159,8 +158,35 @@ class Repository(object):
                 raise ValueError("No document to import from the '{}' path!".format(from_path))
         else:
             raise ValueError("The '{}' doesn't exists!".format(from_path))
-            # TODO
 
-    def export_documents(self, param, param1):
-        pass
+    def export_documents(self, list_of_documents_id, path_to):
+        if not path.exists(path_to):
+            makedirs(path_to)
+        for document_id in list_of_documents_id:
+            document = self._document_manager.load_document(document_id)
+            if document.state == 'accepted' and document.is_public():
+                exported_document_path = path.join(self._document_manager._location, str(document_id))
+                for file_name in listdir(exported_document_path):
+                    if file_name != '{}_document_metadata.edd'.format(document_id):
+                        copy2(path.join(exported_document_path, file_name), path_to)
+                existing_metadata_file = '{}_document_metadata.edd'.format(document_id)
+                remove(path.join(exported_document_path, existing_metadata_file))
+                user = self._user_manager.find_user_by_id(document.author)
+                data = {
+                    'document': {
+                        'title': document.title,
+                        'description': document.description,
+                        'author': '{} {}'.format(user.first_name, user.family_name),
+                        'files': document.files,
+                        'doc_format': document.doc_format,
+                        'creation_date': document.creation_date,
+                        'modification_date': document.modification_date
+                    }}
+                for key, value in data['document'].iteritems():
+                    data['document'][key] = str(value)
+                write_ini_file(path.join(path_to, '{}.edd'.format(document_id)), data)
+            else:
+                raise TypeError(
+                    "The docuement must be accepted and public to export, "
+                    "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
         # TODO: only export accepted and public files, if a file is private or not accepted then the hole export is stopped.
