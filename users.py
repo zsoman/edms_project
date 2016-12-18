@@ -17,7 +17,7 @@ The fields of a user object stored in the text file line-by-line as:
 """
 
 import xml.etree.ElementTree as ET
-from collections import defaultdict, Counter
+from collections import Counter
 from datetime import datetime, date
 from json import load, dump
 from os import path, remove, listdir
@@ -441,11 +441,14 @@ class UserManager(object):
     def list_users_by_role(self):
         role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
-        users_by_roles = defaultdict(list)
+        users_by_roles = dict()
         for id_key, roles_values in users_roles.iteritems():
             for role in roles_values:
-                users_by_roles[role].append(id_key)
-        return dict(users_by_roles)
+                if role.role in users_by_roles:
+                    users_by_roles[role.role].append(id_key)
+                else:
+                    users_by_roles[role.role] = [id_key]
+        return users_by_roles
 
 
     def check_role_file(self, roles_file=None):

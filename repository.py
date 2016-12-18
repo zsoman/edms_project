@@ -24,6 +24,8 @@ from os import makedirs, path, utime, listdir, remove
 from shutil import copytree, rmtree, copy2, make_archive
 from zipfile import ZipFile
 
+from jinja2 import Environment, FileSystemLoader
+
 from documents import DocumentManager
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
@@ -311,20 +313,25 @@ class Repository(object):
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def show_repository_info(self):
-        execfile('./repository_information.py')
-        url = "http://127.0.0.1:5000/Reposiory-information"
-        webbrowser.open(url)
-
-    def retrieve_info_of_repository(self):
-        print(read_ini_file(self._metadata_file))
-        print(read_ini_file(self._paths_file))
-        print(self._creation_date)
+        paths = read_ini_file(self._paths_file)
         users = dict()
-        docuements = dict()
+        documents = dict()
+        roles = dict()
+
         for user_id in self._user_manager.find_all_users():
             users[user_id] = self._user_manager.load_user(user_id)
         for document_id in self._document_manager.find_all_documents():
-            docuements[document_id] = self._document_manager.load_document(document_id, self._user_manager)
-        print(users)
-        print(docuements)
-        print(self._user_manager.list_users_by_role())
+            documents[document_id] = self._document_manager.load_document(document_id, self._user_manager)
+        for role_key, user_ids_value in self._user_manager.list_users_by_role().iteritems():
+            roles[role_key] = ', '.join([str(i) for i in user_ids_value])
+        abs_path = path.dirname(path.abspath(__file__))
+
+        env = Environment(loader = FileSystemLoader(path.join(abs_path, 'templates')))
+        template = env.get_template('rep_info.html')
+        output_from_parsed_template = template.render(repository_name = self._name, creation_date = self._creation_date,
+                                                      paths = paths, users = users, roles = roles,
+                                                      documents = documents)
+
+        with open(path.join(abs_path, "index.html"), "wb") as fh:
+            fh.write(output_from_parsed_template)
+        webbrowser.open(path.join(abs_path, "index.html"))

@@ -1,5 +1,6 @@
 from os import path, makedirs
 from random import choice
+from shutil import rmtree
 
 from docgen.new_generator import NewDocumentGenerator, DocumentGenerator
 from documents import Document
@@ -13,7 +14,11 @@ from users import User
 # author_role = Role('author')
 # reviewer_role = Role('reviewer')
 # visitor_role = Role('visitor')
-
+abs_path = path.dirname(path.abspath(__file__))
+if path.exists(path.join(abs_path, 'Documents')):
+    rmtree(path.join(abs_path, 'Documents'))
+if path.exists(path.join(abs_path, 'Repositories')):
+    rmtree(path.join(abs_path, 'Repositories'))
 repo = Repository()  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 # # # Create user_manager
@@ -170,6 +175,7 @@ repo._user_manager.save_user('1', user)
 repo._user_manager.save_user('2', user)
 
 repo._user_manager.add_role(1, 'author')
+repo._user_manager.add_role(1, 'visitor')
 repo._user_manager.add_role(1, 'manager')
 repo._user_manager.add_role(2, 'manager')
 repo._user_manager.add_role(2, 'visitor')
@@ -192,10 +198,10 @@ document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_
 
 repo._document_manager.add_document(document)
 
-repo.restore(verbose = True, backup_documents = False)
+repo.restore(verbose = True)
 
 # repo.retrieve_info_of_repository()
-# repo.show_repository_info()
+repo.show_repository_info()
 
 
 
