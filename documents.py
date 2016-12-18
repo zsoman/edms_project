@@ -45,6 +45,15 @@ class Document(object):
     """
 
     def __init__(self, title, description, author, files, doc_format):
+        """
+        Initialisation of a new Document object.
+
+        :param title: New title of the document.
+        :param description: New description of the document.
+        :param author: New author(s) of the document.
+        :param files: New file(s) of the document.
+        :param doc_format: New document format of the document.
+        """
         self._title = title
         self._description = description
         if isinstance(author, list):
@@ -60,22 +69,49 @@ class Document(object):
 
     @property
     def title(self):
+        """
+        The property of the :py:attr:_title attribute.
+
+        :return: The title of the Document object :py:attr:_title.
+        """
         return self._title
 
     @title.setter
     def title(self, value):
+        """
+        The setter of the :py:attr:_title.
+
+        :param value: New title.
+        :return:
+        """
         self._title = value
 
     @property
     def description(self):
+        """
+        The property of the :py:attr:_description attribute.
+
+        :return: The description of the Document object :py:attr:_description.
+        """
         return self._description
 
     @description.setter
     def description(self, value):
+        """
+        The setter of the :py:attr:_description.
+
+        :param value: New description.
+        :return:
+        """
         self._description = value
 
     @property
     def author(self):
+        """
+        The property of the :py:attr:_author attribute.
+
+        :return: The author(s) of the Document object :py:attr:_author.
+        """
         if len(self._author) == 1:
             return int(self._author[0])
         else:
@@ -83,38 +119,84 @@ class Document(object):
 
     @author.setter
     def author(self, value):
+        """
+        The setter of the :py:attr:_author.
+
+        :param value: New author(s).
+        :return:
+        """
         self._author = value
 
     @property
     def files(self):
+        """
+        The property of the :py:attr:_files attribute.
+
+        :return: The file(s) of the Document object :py:attr:_files.
+        """
         return self._files
 
     @files.setter
     def files(self, value):
+        """
+        The setter of the :py:attr:_files.
+
+        :param value: New file(s).
+        :return:
+        """
         self._files = value
 
     @property
     def creation_date(self):
+        """
+        The property of the :py:attr:_creation_date attribute.
+
+        :return: String representation of a date in the following format: YEAR/MONTH/DAY HOUR:MINUTES:SECONDS
+        MILLISECONDS. The creation date of the Document object :py:attr:_creation_date.
+        """
         d = self._creation_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
                                              d.second, d.microsecond)
 
     @creation_date.setter
-    def creation_date(self, new_creation_date):
-        self._creation_date = new_creation_date
+    def creation_date(self, new_datetime):
+        """
+        The setter of the :py:attr:_creation_date.
+
+        :param new_datetime: New date object. This parameter must be a :py:mod:datetime object, else a :py:exc:TypeError
+        is raised.
+        :exception TypeError is raised if the ``new_datetime`` parameter is not a :py:mod:datetime object.
+        :return:
+        """
+        if isinstance(new_datetime, datetime):
+            self._creation_date = new_datetime
+        else:
+            raise TypeError("The new date must be a datetime object and not {}!".format(
+                type(new_datetime).__name__))
+
 
     @property
     def modification_date(self):
+        """
+        The property of the :py:attr:_modification_date attribute.
+
+        :return: String representation of a date in the following format: YEAR/MONTH/DAY HOUR:MINUTES:SECONDS
+        MILLISECONDS. The modification date of the Document object :py:attr:_modification_date.
+        """
         d = self._modification_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
                                              d.second, d.microsecond)
 
     @modification_date.setter
-    def modification_date(self, new_modification_date):
-        self._modification_date = new_modification_date
-
-    @modification_date.setter
     def modification_date(self, new_datetime):
+        """
+        The setter of the :py:attr:_modification_date.
+
+        :param new_datetime: New date object. This parameter must be a :py:mod:datetime object, else a :py:exc:TypeError
+        is raised.
+        :exception TypeError is raised if the ``new_datetime`` parameter is not a :py:mod:datetime object.
+        :return:
+        """
         if isinstance(new_datetime, datetime):
             self._modification_date = new_datetime
         else:
@@ -123,10 +205,24 @@ class Document(object):
 
     @property
     def state(self):
+        """
+        The property of the :py:attr:_state attribute.
+
+        :return: The state of the Document object :py:attr:_state.
+        """
         return self._state
 
     @state.setter
     def state(self, value):
+        """
+        The setter of the :py:attr:_state.
+
+        :param value: New state. If the ``value`` parameter is not a valid state (new, pending, accepted, rejected) a
+        :py:exc:ValueError is raised.
+        :exception ValueError is raised if the ``value`` parameter is not in :py:const:VALID_DOCUMENT_STATES list of
+        valid states.
+        :return:
+        """
         if value in VALID_DOCUMENT_STATES:
             self._state = value
         else:
@@ -134,27 +230,54 @@ class Document(object):
 
     @property
     def doc_format(self):
+        """
+        The property of the :py:attr:_doc_format attribute.
+
+        :return: The document format of the Document object :py:attr:_doc_format.
+        """
         return self._doc_format
 
     @doc_format.setter
     def doc_format(self, value):
+        """
+        The setter of the :py:attr:_doc_format.
+
+        :param value: New document format.
+        :return:
+        """
         self._doc_format = value
 
     def is_public(self):
         """
         Returns the visibility of the document.
 
-        :return: If the is_public attribute is True it returns True, if it's False it returns false.
+        :return: If the :py:attr:is_public attribute is True it returns True, if it's False it returns false.
         """
         return self._is_public
 
     def make_public(self):
+        """
+        Makes the document public. Sets the :py:attr:is_public attribute to True.
+
+        :return:
+        """
         self._is_public = True
 
     def make_private(self):
+        """
+        Makes the document private. Sets the :py:attr:is_public attribute to False.
+
+        :return:
+        """
         self._is_public = False
 
     def change_state(self, new_state):
+        """
+        Changes the state of the document from it's actual :py:attr:state to ``new_state`` if it's a reachable state.
+
+        :param new_state: The state to change the :py:attr:state to.
+        :return:
+        """
         if new_state not in VALID_DOCUMENT_STATES:
             raise ValueError("The {} state is not a valid state!".format(new_state))
         else:
@@ -175,6 +298,12 @@ class Document(object):
                                                      new_state))
 
     def __str__(self):
+        """
+        String representation of the :py:class:Document.
+
+        :return: Document represented by a string in the following format: :py:attr:title - :py:attr:author :
+        :py:attr:description ; :py:attr:files ; :py:attr:doc_format.
+        """
         document_string = ''
         document_string += self.title + ' - '
         document_string += str(self.author) + ': '
@@ -185,7 +314,11 @@ class Document(object):
 
 
 class DocumentManager(object):
-    """Manage documents"""
+    """Manage documents in a repository.
+
+    :py:class:DocumentManager contains the methods to manage the documents in a repository. For example: save a document,
+    load, add documents to reposritory, update, remove, create backup and load backup etc.
+    """
 
     def __init__(self, repository_location, paths_file = None):
         if not paths_file:
