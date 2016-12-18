@@ -25,7 +25,6 @@ class TestDocumentManager(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree('/tmp/edms')
-        pass
 
 
     def test_empty_document_storage(self):

@@ -6,7 +6,6 @@ from projects import Project
 class TestProject(unittest.TestCase):
     """Test the project class"""
 
-
     def test_creation(self):
         project = Project('project_1', 'The first project')
 
