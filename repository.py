@@ -45,7 +45,7 @@ class Repository(object):
     def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
         self._name = name
         self._location = location
-        self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(self._location)))
+        self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(name)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
         self.load()
@@ -57,7 +57,7 @@ class Repository(object):
         if path.exists(self._location):
             if path.isdir(self._location):
                 self._creation_date = self.read_creation_date()
-                self._name = read_ini_file(self._location)['repository']['name']
+                self._name = read_ini_file(self._paths_file)['repository']['name']
             else:
                 raise ValueError('The repository should be a directory!')
         else:
@@ -82,10 +82,6 @@ class Repository(object):
             return path.abspath(self._location)
 
     def create_default_path_file(self):
-        # data = OrderedDict()
-        # data['directories']=FOLDERS_PATH
-        # data['files']={'repo_main_folder': path.basename(self._location),
-        #               'paths': self._paths_file}
         data = {
             'directories': FOLDERS_PATH,
             'files': {'repo_main_folder': path.basename(self._location),
@@ -312,7 +308,7 @@ class Repository(object):
                     self._location))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
-    def show_repository_info(self):
+    def show_repository_info(self, name = ''):
         paths = read_ini_file(self._paths_file)
         users = dict()
         documents = dict()
@@ -332,6 +328,19 @@ class Repository(object):
                                                       paths = paths, users = users, roles = roles,
                                                       documents = documents)
 
-        with open(path.join(abs_path, "index.html"), "wb") as fh:
+        with open(path.join(abs_path, "index{}.html".format('_' + name)), "wb") as fh:
             fh.write(output_from_parsed_template)
-        webbrowser.open(path.join(abs_path, "index.html"))
+        webbrowser.open(path.join(abs_path, "index{}.html".format('_' + name)))
+
+    def show_backup_info(self, backup_file):
+        if '.zip' not in backup_file:
+            full_backup_file = backup_file + '.zip'
+        else:
+            full_backup_file = backup_file
+        abs_path = path.dirname(path.abspath(__file__))
+        tmp_location = abs_path + '/tmp/tmp_repository'
+        with ZipFile(full_backup_file, "r") as z:
+            z.extractall(tmp_location)
+        tmp_repo = Repository(location = tmp_location)
+        tmp_repo.show_repository_info(name = path.basename(backup_file))
+        rmtree(tmp_location)

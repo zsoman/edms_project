@@ -180,7 +180,7 @@ repo._user_manager.add_role(1, 'manager')
 repo._user_manager.add_role(2, 'manager')
 repo._user_manager.add_role(2, 'visitor')
 
-repo.create_backup(verbose = True, backup_projects = False, backup_users = False)
+repo.create_backup(verbose = True)
 
 doc_generator = DocumentGenerator()
 if not path.exists('Documents'):
@@ -198,11 +198,12 @@ document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_
 
 repo._document_manager.add_document(document)
 
-repo.restore(verbose = True)
+# repo.restore(verbose = True)
 
 # repo.retrieve_info_of_repository()
 repo.show_repository_info()
 
+repo.show_backup_info('Backups/backup')
 
 
 # repo._document_manager.remove_document(1)
