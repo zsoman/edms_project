@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+"""This file contains the implementation of Documents and DocumentManager classes.
+
+The documents are represented as a directory which name is a number, ID. This directory includes the files that are
+represented in the document's abstraction level. The document manager operates on documents: count, save, add, load etc.
+"""
+
+# Imports -----------------------------------------------------------------------------------------------------------
 from datetime import datetime
 from os import path, makedirs, listdir, remove
 from shutil import move, rmtree
@@ -10,14 +18,31 @@ VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
 AFTER_NEW_STATE = ['pending']
 AFTER_PENDING_STATE = ['accepted', 'rejected']
 
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanely - Training 360 Project"
+__credits__ = "Zsolt Bokor Levente"
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+
+# -------------------------------------------------------------------------------------------------------------------
 
 class DocumentDoesntExistsError(Exception):
+    """This exception is raised when a document doesn't exists.
+    """
     pass
 
 
 class Document(object):
-    """Document of the repository"""
+    """Document of the repository.
 
+    The document is represented by: title, description, author(s): list of user IDs, files: list of files represented in
+    the filesystem, document format: the format of the documents, creation date, modification date, state: new, pending,
+    accepted, rejected; public/private.
+    """
 
     def __init__(self, title, description, author, files, doc_format):
         self._title = title
@@ -33,26 +58,21 @@ class Document(object):
         self._state = 'new'
         self._is_public = False
 
-
     @property
     def title(self):
         return self._title
-
 
     @title.setter
     def title(self, value):
         self._title = value
 
-
     @property
     def description(self):
         return self._description
 
-
     @description.setter
     def description(self, value):
         self._description = value
-
 
     @property
     def author(self):
@@ -61,21 +81,17 @@ class Document(object):
         else:
             return self._author
 
-
     @author.setter
     def author(self, value):
         self._author = value
-
 
     @property
     def files(self):
         return self._files
 
-
     @files.setter
     def files(self, value):
         self._files = value
-
 
     @property
     def creation_date(self):
@@ -83,11 +99,9 @@ class Document(object):
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
                                              d.second, d.microsecond)
 
-
     @creation_date.setter
     def creation_date(self, new_creation_date):
         self._creation_date = new_creation_date
-
 
     @property
     def modification_date(self):
@@ -95,11 +109,9 @@ class Document(object):
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
                                              d.second, d.microsecond)
 
-
     @modification_date.setter
     def modification_date(self, new_modification_date):
         self._modification_date = new_modification_date
-
 
     @modification_date.setter
     def modification_date(self, new_datetime):
@@ -107,13 +119,11 @@ class Document(object):
             self._modification_date = new_datetime
         else:
             raise TypeError("The new date must be a datetime object and not {}!".format(
-                    type(new_datetime).__name__))
-
+                type(new_datetime).__name__))
 
     @property
     def state(self):
         return self._state
-
 
     @state.setter
     def state(self, value):
@@ -122,28 +132,27 @@ class Document(object):
         else:
             raise ValueError('The "{}" is an invalid document state!'.format(value))
 
-
     @property
     def doc_format(self):
         return self._doc_format
-
 
     @doc_format.setter
     def doc_format(self, value):
         self._doc_format = value
 
-
     def is_public(self):
-        return self._is_public
+        """
+        Returns the visibility of the document.
 
+        :return: If the is_public attribute is True it returns True, if it's False it returns false.
+        """
+        return self._is_public
 
     def make_public(self):
         self._is_public = True
 
-
     def make_private(self):
         self._is_public = False
-
 
     def change_state(self, new_state):
         if new_state not in VALID_DOCUMENT_STATES:
@@ -156,15 +165,14 @@ class Document(object):
             else:
                 if self.state == 'new':
                     raise ValueError(
-                            "Because the current state is 'new' the new state must be "
-                            "{}, can't be {}!".format(', '.join(AFTER_NEW_STATE),
-                                                      new_state))
+                        "Because the current state is 'new' the new state must be "
+                        "{}, can't be {}!".format(', '.join(AFTER_NEW_STATE),
+                                                  new_state))
                 elif self.state == 'pending':
                     raise ValueError(
-                            "Because the current state is 'pending' the new state must "
-                            "be {}, can't be {}!".format(', '.join(AFTER_PENDING_STATE),
-                                                         new_state))
-
+                        "Because the current state is 'pending' the new state must "
+                        "be {}, can't be {}!".format(', '.join(AFTER_PENDING_STATE),
+                                                     new_state))
 
     def __str__(self):
         document_string = ''
@@ -179,8 +187,7 @@ class Document(object):
 class DocumentManager(object):
     """Manage documents"""
 
-
-    def __init__(self, repository_location, paths_file=None):
+    def __init__(self, repository_location, paths_file = None):
         if not paths_file:
             self._location = repository_location
         else:
@@ -254,19 +261,17 @@ class DocumentManager(object):
                 document.make_private()
             return document
 
-    def add_document(self, document, new_document_folder=None):
+    def add_document(self, document, new_document_folder = None):
         new_document_id = get_next_id(self._location)
         if not new_document_folder:
             new_document_folder = self.create_structure_for_document(new_document_id)
         self.save_document(new_document_folder, new_document_id, document)
         return new_document_id
 
-
     def create_structure_for_document(self, new_document_id):
         new_document_folder = path.join(self._location, str(new_document_id))
         makedirs(new_document_folder)
         return new_document_folder
-
 
     def update_document(self, document_id, document):
         if document_id not in self.find_all_documents():
@@ -275,14 +280,12 @@ class DocumentManager(object):
             document_path = path.join(self._location, str(document_id))
             self.save_document(document_path, document_id, document)
 
-
     def remove_document(self, document_id):
         document_path = path.join(self._location, str(document_id))
         if path.exists(document_path):
             rmtree(document_path)
         else:
             raise ValueError("The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
-
 
     def find_all_documents(self):
         all_available_documents = []
@@ -293,7 +296,6 @@ class DocumentManager(object):
                 except:
                     pass
         return all_available_documents
-
 
     def count_documents(self):
         return len(self.find_all_documents())
@@ -307,10 +309,9 @@ class DocumentManager(object):
     def find_document_by_id(self, document_id, user_manager = None):
         if document_id not in self.find_all_documents():
             raise ValueError(
-                    "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
+                "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
         else:
             return self.load_all_documents(user_manager = user_manager)[document_id]
-
 
     def find_documents_by_title(self, title):
         documents_by_title = dict()
@@ -335,7 +336,6 @@ class DocumentManager(object):
             raise DocumentDoesntExistsError("No document was found with {} author!".format(author))
         else:
             return documents_by_author.values()
-
 
     def find_documents_by_format(self, format):
         documents_by_author = dict()
@@ -364,7 +364,6 @@ class DocumentManager(object):
             raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
         return existence_of_document_files
 
-
     def unreferenced_document_files(self, document_id):
         unreferenced_document_files = dict()
         if document_id not in self.find_all_documents():
@@ -381,7 +380,6 @@ class DocumentManager(object):
         if len(unreferenced_document_files) == 0:
             raise RuntimeError("The document with {} ID doesn't contains registered files!".format(document_id))
         return unreferenced_document_files
-
 
     def remove_document_files(self, document_id):
         if document_id not in self.find_all_documents():
