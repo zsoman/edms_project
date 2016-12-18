@@ -18,6 +18,7 @@ The paths.ini file contains the (relative or absolute) paths of mentioned subdir
 The roles.txt contains the user names and the list of assigned roles.
 """
 
+import webbrowser
 from datetime import datetime
 from os import makedirs, path, utime, listdir, remove
 from shutil import copytree, rmtree, copy2, make_archive
@@ -39,7 +40,7 @@ FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects'
 class Repository(object):
     """Represents the document management system as a repository"""
 
-    def __init__(self, name = 'Repositiry_1', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
+    def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(self._location)))
@@ -54,6 +55,7 @@ class Repository(object):
         if path.exists(self._location):
             if path.isdir(self._location):
                 self._creation_date = self.read_creation_date()
+                self._name = read_ini_file(self._location)['repository']['name']
             else:
                 raise ValueError('The repository should be a directory!')
         else:
@@ -85,7 +87,9 @@ class Repository(object):
         data = {
             'directories': FOLDERS_PATH,
             'files': {'repo_main_folder': path.basename(self._location),
-                      'paths': self._paths_file}
+                      'paths': self._paths_file,
+                      'metadata': self._metadata_file},
+            'repository': {'name': self._name}
         }
         write_ini_file(self._paths_file, data)
 
@@ -190,11 +194,48 @@ class Repository(object):
                     "The docuement must be accepted and public to export, "
                     "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
 
-    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False):
+    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                      date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                      backup_projects = True, backup_reports = True, backup_users = True):
+        start_time = datetime.utcnow()
+        if verbose:
+            print("The backup of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
+                date_format)))
         if not path.exists(backup_path):
             makedirs(backup_path)
+            if verbose:
+                print("The {} backup path structure is created.".format(backup_path))
+        else:
+            if verbose:
+                print("The {} backup path exists.".format(backup_path))
         backup_file_name = self.determine_export_file_name(backup_file_name, backup_path)
-        make_archive(path.join(backup_path, backup_file_name), 'zip', self._location, verbose = verbose)  # logger =
+        if verbose:
+            print("The name of the backup file is: {}.zip.".format(backup_file_name))
+        new_location = self._location
+        if not (backup_documents and backup_logs and backup_projects and backup_reports and backup_users and
+                    backup_metadata):
+            pats_file = read_ini_file(self._paths_file)
+            copytree(new_location, './{}'.format(backup_file_name))
+            new_location = './{}'.format(backup_file_name)
+            if not backup_documents:
+                rmtree(path.join(new_location, pats_file['directories']['documents']))
+            if not backup_logs:
+                rmtree(path.join(new_location, pats_file['directories']['logs']))
+            if not backup_projects:
+                rmtree(path.join(new_location, pats_file['directories']['projects']))
+            if not backup_reports:
+                rmtree(path.join(new_location, pats_file['directories']['reports']))
+            if not backup_users:
+                rmtree(path.join(new_location, pats_file['directories']['users']))
+        make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose)  # logger =
+        if new_location == './{}'.format(backup_file_name) and path.exists(new_location):
+            rmtree(new_location)
+        if verbose:
+            end_time = datetime.utcnow()
+            print("The backup is completed on UTC {}, please check the {} file".format(end_time.strftime(date_format),
+                                                                                       path.join(backup_path,
+                                                                                                 backup_file_name)))
+            print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def determine_export_file_name(self, backup_file_name, backup_path):
         if path.exists(path.join(backup_path, backup_file_name + '.zip')):
@@ -222,6 +263,11 @@ class Repository(object):
         # ZipFile(path.join(backup_path, backup_file_name+'.zip'))
         with ZipFile(path.join(backup_path, backup_file_name + '.zip'), "r") as z:
             z.extractall(self._location)
+
+    def show_repository_info(self):
+        execfile('./repository_information.py')
+        url = "http://127.0.0.1:5000/Reposiory-information"
+        webbrowser.open(url)
 
     def retrieve_info_of_repository(self):
         print(read_ini_file(self._metadata_file))
