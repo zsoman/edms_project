@@ -190,7 +190,9 @@ class Repository(object):
                     "The docuement must be accepted and public to export, "
                     "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
 
-    def create_backup(self, backup_file_name = 'backup', backup_path = './', verbose = False):
+    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False):
+        if not path.exists(backup_path):
+            makedirs(backup_path)
         backup_file_name = self.determine_export_file_name(backup_file_name, backup_path)
         make_archive(path.join(backup_path, backup_file_name), 'zip', self._location, verbose = verbose)  # logger =
 
@@ -215,8 +217,22 @@ class Repository(object):
         else:
             return backup_file_name
 
-    def restore(self, backup_file_name = 'backup', backup_path = './', verbose = False):
+    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False):
         rmtree(self._location)
         # ZipFile(path.join(backup_path, backup_file_name+'.zip'))
         with ZipFile(path.join(backup_path, backup_file_name + '.zip'), "r") as z:
             z.extractall(self._location)
+
+    def retrieve_info_of_repository(self):
+        print(read_ini_file(self._metadata_file))
+        print(read_ini_file(self._paths_file))
+        print(self._creation_date)
+        users = dict()
+        docuements = dict()
+        for user_id in self._user_manager.find_all_users():
+            users[user_id] = self._user_manager.load_user(user_id)
+        for document_id in self._document_manager.find_all_documents():
+            docuements[document_id] = self._document_manager.load_document(document_id, self._user_manager)
+        print(users)
+        print(docuements)
+        print(self._user_manager.list_users_by_role())

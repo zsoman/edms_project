@@ -5,6 +5,7 @@ from docgen.new_generator import NewDocumentGenerator, DocumentGenerator
 from documents import Document
 from repository import Repository
 from usergen.generator import UserGenerator
+from users import User
 
 # Role creation
 # admin_role = Role('admin')
@@ -12,8 +13,6 @@ from usergen.generator import UserGenerator
 # author_role = Role('author')
 # reviewer_role = Role('reviewer')
 # visitor_role = Role('visitor')
-
-
 
 repo = Repository()  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
@@ -151,10 +150,29 @@ gen = UserGenerator()  # Create user_gerenerator
 # # repo._document_manager.remove_document_files(1)
 
 # Test the new document generator
-new_doc_gen = NewDocumentGenerator('tmp', repo._user_manager, repo._document_manager)
+new_doc_gen = NewDocumentGenerator('Documents', repo._user_manager, repo._document_manager)
 # new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repo._user_manager, repo._document_manager)
 new_doc_gen.generate_many_documents(2)
-repo.import_documents('tmp')
+repo.import_documents('Documents')
+
+fname = gen.generate_first_name()
+lname = gen.generate_family_name()
+birth = gen.generate_birth_date()
+email = gen.generate_email(fname, lname)
+password = gen.generate_password()
+#
+# # Create user from generated data
+user = User(fname, lname, birth, email, password)
+user = User(fname + '2', lname + '2', birth, email, password)
+
+# User manipulation
+repo._user_manager.save_user('1', user)
+repo._user_manager.save_user('2', user)
+
+repo._user_manager.add_role(1, 'author')
+repo._user_manager.add_role(1, 'manager')
+repo._user_manager.add_role(2, 'manager')
+repo._user_manager.add_role(2, 'visitor')
 
 repo.create_backup()
 
@@ -176,6 +194,7 @@ repo._document_manager.add_document(document)
 
 repo.restore()
 
+repo.retrieve_info_of_repository()
 
 # repo._document_manager.remove_document(1)
 # repo._document_manager.remove_document(2)
