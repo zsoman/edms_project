@@ -37,6 +37,7 @@ ROLES_FILE = 'roles'
 PATHS_FILE = 'paths.ini'
 FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects',
                 'reports': 'reports', 'users': 'users'}
+BACKUP_FREQUENCY = 7
 
 
 class Repository(object):
@@ -56,7 +57,14 @@ class Repository(object):
         """Try to load an existing repository"""
         if path.exists(self._location):
             if path.isdir(self._location):
-                self._creation_date = self.read_creation_date()
+                self._creation_date = self.read_creation_date('creation_date')
+                self._last_backup_date = self.read_creation_date('last_backup_date')
+                self.create_repo_metadata_file(self._creation_date, self._last_backup_date)
+                if self.is_backup_needed():
+                    self._last_backup_date = datetime.utcnow().date()
+                    self.create_repo_metadata_file(self._creation_date, self._last_backup_date)
+                    self.create_backup(backup_file_name = self._name)
+
                 self._name = read_ini_file(self._paths_file)['repository']['name']
             else:
                 raise ValueError('The repository should be a directory!')
@@ -73,7 +81,8 @@ class Repository(object):
             utime(role_file_path, None)
         self.create_default_path_file()
         self._creation_date = datetime.utcnow()
-        self.create_repo_metadata_file(self._creation_date)
+        self._last_backup_date = datetime.strptime('0001/1/1', '%Y/%m/%d').date()
+        self.create_repo_metadata_file(self._creation_date, self._last_backup_date)
 
     def absolute_path(self):
         if path.isabs(self._location):
@@ -91,7 +100,7 @@ class Repository(object):
         }
         write_ini_file(self._paths_file, data)
 
-    def create_repo_metadata_file(self, date_obj):
+    def create_repo_metadata_file(self, date_obj, backup_date_obj):
         data = {
             'creation_date': {
                 'year': date_obj.year,
@@ -101,21 +110,32 @@ class Repository(object):
                 'minute': date_obj.minute,
                 'second': date_obj.second,
                 'microsecond': date_obj.microsecond
-            }
+            },
+            'last_backup_date': {
+                'year': backup_date_obj.year,
+                'month': backup_date_obj.month,
+                'day': backup_date_obj.day}
         }
         write_ini_file(self._metadata_file, data)
 
-    def read_creation_date(self):
+    def read_creation_date(self, type_of_date):
         metadata_data = read_ini_file(self._metadata_file)
-        return datetime.strptime('{} {} {} {} {} {} {}'.format(
-            metadata_data['creation_date']['year'],
-            metadata_data['creation_date']['month'],
-            metadata_data['creation_date']['day'],
-            metadata_data['creation_date']['hour'],
-            metadata_data['creation_date']['minute'],
-            metadata_data['creation_date']['second'],
-            metadata_data['creation_date']['microsecond']
-        ), '%Y %m %d %H %M %S %f')
+        if type_of_date == 'creation_date':
+            return datetime.strptime('{} {} {} {} {} {} {}'.format(
+                metadata_data[type_of_date]['year'],
+                metadata_data[type_of_date]['month'],
+                metadata_data[type_of_date]['day'],
+                metadata_data[type_of_date]['hour'],
+                metadata_data[type_of_date]['minute'],
+                metadata_data[type_of_date]['second'],
+                metadata_data[type_of_date]['microsecond']
+            ), '%Y %m %d %H %M %S %f')
+        elif type_of_date == 'last_backup_date':
+            return datetime.strptime('{:0>4} {} {}'.format(
+                metadata_data[type_of_date]['year'],
+                metadata_data[type_of_date]['month'],
+                metadata_data[type_of_date]['day']
+            ), '%Y %m %d').date()
 
     @classmethod
     def find_all_documents_in_path(cls, from_path):
@@ -325,8 +345,8 @@ class Repository(object):
         env = Environment(loader = FileSystemLoader(path.join(abs_path, 'templates')))
         template = env.get_template('rep_info.html')
         output_from_parsed_template = template.render(repository_name = self._name, creation_date = self._creation_date,
-                                                      paths = paths, users = users, roles = roles,
-                                                      documents = documents)
+                                                      backup_date = self._last_backup_date, paths = paths,
+                                                      users = users, roles = roles, documents = documents)
 
         with open(path.join(abs_path, "index{}.html".format('_' + name)), "wb") as fh:
             fh.write(output_from_parsed_template)
@@ -337,10 +357,19 @@ class Repository(object):
             full_backup_file = backup_file + '.zip'
         else:
             full_backup_file = backup_file
-        abs_path = path.dirname(path.abspath(__file__))
-        tmp_location = abs_path + '/tmp/tmp_repository'
-        with ZipFile(full_backup_file, "r") as z:
-            z.extractall(tmp_location)
-        tmp_repo = Repository(location = tmp_location)
-        tmp_repo.show_repository_info(name = path.basename(backup_file))
-        rmtree(tmp_location)
+        if path.exists(full_backup_file):
+            abs_path = path.dirname(path.abspath(__file__))
+            tmp_location = abs_path + '/tmp/tmp_repository'
+            with ZipFile(full_backup_file, "r") as z:
+                z.extractall(tmp_location)
+            tmp_repo = Repository(location = tmp_location)
+            tmp_repo.show_repository_info(name = path.basename(backup_file))
+            rmtree(tmp_location)
+        else:
+            raise TypeError("The {} backup doesn't exists!".format(full_backup_file))
+
+    def is_backup_needed(self):
+        if (datetime.utcnow().date() - self._last_backup_date).days > BACKUP_FREQUENCY:
+            return True
+        else:
+            return False

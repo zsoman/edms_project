@@ -17,8 +17,8 @@ from users import User
 abs_path = path.dirname(path.abspath(__file__))
 if path.exists(path.join(abs_path, 'Documents')):
     rmtree(path.join(abs_path, 'Documents'))
-if path.exists(path.join(abs_path, 'Repositories')):
-    rmtree(path.join(abs_path, 'Repositories'))
+# if path.exists(path.join(abs_path, 'Repositories')):
+#     rmtree(path.join(abs_path, 'Repositories'))
 repo = Repository()  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 # # # Create user_manager
@@ -158,7 +158,7 @@ gen = UserGenerator()  # Create user_gerenerator
 new_doc_gen = NewDocumentGenerator('Documents', repo._user_manager, repo._document_manager)
 # new_doc_gen = NewDocumentGenerator('/tmp/samples/importable', repo._user_manager, repo._document_manager)
 new_doc_gen.generate_many_documents(2)
-repo.import_documents('Documents')
+# repo.import_documents('Documents')
 
 fname = gen.generate_first_name()
 lname = gen.generate_family_name()
@@ -180,7 +180,7 @@ repo._user_manager.add_role(1, 'manager')
 repo._user_manager.add_role(2, 'manager')
 repo._user_manager.add_role(2, 'visitor')
 
-repo.create_backup(verbose = True)
+# repo.create_backup(verbose = True)
 
 doc_generator = DocumentGenerator()
 if not path.exists('Documents'):
@@ -203,7 +203,7 @@ repo._document_manager.add_document(document)
 # repo.retrieve_info_of_repository()
 repo.show_repository_info()
 
-repo.show_backup_info('Backups/backup')
+# repo.show_backup_info('Backups/Repository_2')
 
 
 # repo._document_manager.remove_document(1)

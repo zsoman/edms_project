@@ -99,3 +99,5 @@ tmp/Documents/
 coverage/
 /tests/Repositories/
 /tmp/Backups/
+!/tmp/tmp_repository/
+/tmp/tmp_repository/
