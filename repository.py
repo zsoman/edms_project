@@ -212,21 +212,25 @@ class Repository(object):
         if verbose:
             print("The name of the backup file is: {}.zip.".format(backup_file_name))
         new_location = self._location
-        if not (backup_documents and backup_logs and backup_projects and backup_reports and backup_users and
-                    backup_metadata):
+        if not (backup_documents and backup_logs and backup_projects and backup_reports and backup_users):
             pats_file = read_ini_file(self._paths_file)
             copytree(new_location, './{}'.format(backup_file_name))
             new_location = './{}'.format(backup_file_name)
             if not backup_documents:
-                rmtree(path.join(new_location, pats_file['directories']['documents']))
+                rmtree(path.join(self._location, pats_file['directories']['documents']))
+                makedirs(path.join(self._location, pats_file['directories']['documents']))
             if not backup_logs:
-                rmtree(path.join(new_location, pats_file['directories']['logs']))
+                rmtree(path.join(self._location, pats_file['directories']['logs']))
+                makedirs(path.join(self._location, pats_file['directories']['logs']))
             if not backup_projects:
-                rmtree(path.join(new_location, pats_file['directories']['projects']))
+                rmtree(path.join(self._location, pats_file['directories']['projects']))
+                makedirs(path.join(self._location, pats_file['directories']['projects']))
             if not backup_reports:
-                rmtree(path.join(new_location, pats_file['directories']['reports']))
+                rmtree(path.join(self._location, pats_file['directories']['reports']))
+                makedirs(path.join(self._location, pats_file['directories']['reports']))
             if not backup_users:
-                rmtree(path.join(new_location, pats_file['directories']['users']))
+                rmtree(path.join(self._location, pats_file['directories']['users']))
+                makedirs(path.join(self._location, pats_file['directories']['users']))
         make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose)  # logger =
         if new_location == './{}'.format(backup_file_name) and path.exists(new_location):
             rmtree(new_location)
@@ -258,11 +262,53 @@ class Repository(object):
         else:
             return backup_file_name
 
-    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False):
+    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                backup_projects = True, backup_reports = True, backup_users = True):
+        start_time = datetime.utcnow()
+        if verbose:
+            print("The restore of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
+                date_format)))
         rmtree(self._location)
-        # ZipFile(path.join(backup_path, backup_file_name+'.zip'))
+        if verbose:
+            print("The old repository is deleted on {} path.".format(self._location))
+
         with ZipFile(path.join(backup_path, backup_file_name + '.zip'), "r") as z:
             z.extractall(self._location)
+
+        if not (backup_documents and backup_logs and backup_projects and backup_reports and backup_users):
+            pats_file = read_ini_file(self._paths_file)
+            unimported = []
+            if not backup_documents:
+                rmtree(path.join(self._location, pats_file['directories']['documents']))
+                makedirs(path.join(self._location, pats_file['directories']['documents']))
+                unimported.append('documents')
+            if not backup_logs:
+                rmtree(path.join(self._location, pats_file['directories']['logs']))
+                makedirs(path.join(self._location, pats_file['directories']['logs']))
+                unimported.append('logs')
+            if not backup_projects:
+                rmtree(path.join(self._location, pats_file['directories']['projects']))
+                makedirs(path.join(self._location, pats_file['directories']['projects']))
+                unimported.append('projects')
+            if not backup_reports:
+                rmtree(path.join(self._location, pats_file['directories']['reports']))
+                makedirs(path.join(self._location, pats_file['directories']['reports']))
+                unimported.append('reports')
+            if not backup_users:
+                rmtree(path.join(self._location, pats_file['directories']['users']))
+                makedirs(path.join(self._location, pats_file['directories']['users']))
+                unimported.append('users')
+            if len(unimported) > 0:
+                print("The {} were not imported.".format(', '.join(unimported)))
+
+        if verbose:
+            end_time = datetime.utcnow()
+            print(
+                "The restore is completed on UTC {}, please check the {} repository".format(
+                    end_time.strftime(date_format),
+                    self._location))
+            print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def show_repository_info(self):
         execfile('./repository_information.py')

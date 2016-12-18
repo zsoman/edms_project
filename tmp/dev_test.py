@@ -192,7 +192,7 @@ document = Document(metadata1['title'], metadata1['description'], [1, 2], [path_
 
 repo._document_manager.add_document(document)
 
-repo.restore()
+repo.restore(verbose = True, backup_documents = False)
 
 # repo.retrieve_info_of_repository()
 # repo.show_repository_info()
