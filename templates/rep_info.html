@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{repository_name}}</title>
+</head>
+<body>
+<h1>{{repository_name}}</h1>
+<p>Created on: {{creation_date}}</p>
+<p>Last backup on: {{backup_date}}</p>
+<h3>Parts of the repository:</h3>
+
+<h3>
+    <ul>Files</ul>
+</h3>
+{% for key, value in paths['files'].iteritems() %}
+<li><b>{{key}}: </b> ./{{ value }}</li>
+{% endfor %}
+
+<h3>
+    <ul>Directories</ul>
+</h3>
+{% for key, value in paths['directories'].iteritems() %}
+<li><b>{{key}}: </b>{{ value }}</li>
+{% endfor %}
+
+<h3>
+    <ul>Users</ul>
+</h3>
+<p>Number of users: {{users|length}}</p>
+{% for key, value in users.iteritems() %}
+<li><b>{{key}} ID: </b>{{ value.full_name}} {{value.birth}}; email: {{value.email}} password: {{ value.password }}</li>
+{% endfor %}
+
+<h3>
+    <ul>Roles</ul>
+</h3>
+<p>Number of roles that are fulfilled: {{roles|length}}</p>
+{% for key, value in roles.iteritems() %}
+<li><b>{{key}}: </b>{{ value }}</li>
+{% endfor %}
+
+<h3>
+    <ul>Documents</ul>
+</h3>
+<p>Number of documents: {{documents|length}}</p>
+{% for key, value in documents.iteritems() %}
+<li><b>{{key}} ID: </b>{{ value._title}} - {{value._author}}: {{value._description}} files: {{ value._files }}; format:
+    {{value._doc_format}}
+</li>
+{% endfor %}
+</body>
+</html>

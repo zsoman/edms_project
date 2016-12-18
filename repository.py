@@ -24,6 +24,7 @@ from os import makedirs, path, utime, listdir, remove
 from shutil import copytree, rmtree, copy2, make_archive
 from zipfile import ZipFile
 
+import schedule
 from jinja2 import Environment, FileSystemLoader
 
 from documents import DocumentManager
@@ -49,9 +50,10 @@ class Repository(object):
         self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(name)))
         self._paths_file = path.join(self._location, PATHS_FILE)
         self._roles_file_type = roles_file_type
-        self.load()
         self._user_manager = UserManager(self._location, self._paths_file)
         self._document_manager = DocumentManager(self._location, self._paths_file)
+        self.load()
+        schedule.every(BACKUP_FREQUENCY).day.at('4:00').do(self.create_backup())
 
     def load(self):
         """Try to load an existing repository"""
