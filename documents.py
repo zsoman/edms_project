@@ -174,7 +174,6 @@ class Document(object):
             raise TypeError("The new date must be a datetime object and not {}!".format(
                 type(new_datetime).__name__))
 
-
     @property
     def modification_date(self):
         """
@@ -321,6 +320,12 @@ class DocumentManager(object):
     """
 
     def __init__(self, repository_location, paths_file = None):
+        """
+        Initialisation of a new DocumentManager object.
+
+        :param repository_location: The path of the repository for which is working.
+        :param paths_file: The path where the repositorie's paths_file is, this is a metadata file of the repository.
+        """
         if not paths_file:
             self._location = repository_location
         else:
@@ -328,6 +333,17 @@ class DocumentManager(object):
             self._location = path.join(repository_location, metadata_data['directories']['documents'])
 
     def save_document(self, new_document_folder, new_document_id, document):
+        """
+        This method saves a :py:class:Repository object to the filesystem.
+
+        Moves the files stored in the :py:attr:files attribute of the document to the document's path and writes the
+        metadata file [ID]_document_metadata.edd in the document directory. This file stores all the attributes of the
+        :py:class:Document class.
+        :param new_document_folder: The path of the document, the name of the document is a number, ID.
+        :param new_document_id: The ID of the new document.
+        :param document: :py:class:Document object to save to the filesystem.
+        :return:
+        """
         basename_files_list = []
         for path_file in document.files:
             basename_files_list.append(path.basename(path_file))
