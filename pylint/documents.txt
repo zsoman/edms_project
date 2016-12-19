@@ -1,0 +1,228 @@
+************* Module documents
+C:  2, 0: Line too long (102/100) (line-too-long)
+C:  4, 0: Line too long (115/100) (line-too-long)
+C:  5, 0: Line too long (120/100) (line-too-long)
+C:  8, 0: Line too long (117/100) (line-too-long)
+C: 18, 0: Line too long (117/100) (line-too-long)
+C: 27, 0: Line too long (117/100) (line-too-long)
+C: 44, 0: Line too long (120/100) (line-too-long)
+C: 45, 0: Line too long (120/100) (line-too-long)
+C:157, 0: Line too long (109/100) (line-too-long)
+C:161, 0: Line too long (111/100) (line-too-long)
+C:168, 0: Line too long (120/100) (line-too-long)
+C:170, 0: Line too long (106/100) (line-too-long)
+C:176, 0: Line too long (117/100) (line-too-long)
+C:183, 0: Line too long (109/100) (line-too-long)
+C:184, 0: Line too long (105/100) (line-too-long)
+C:187, 0: Line too long (111/100) (line-too-long)
+C:194, 0: Line too long (120/100) (line-too-long)
+C:196, 0: Line too long (106/100) (line-too-long)
+C:202, 0: Line too long (117/100) (line-too-long)
+C:218, 0: Line too long (117/100) (line-too-long)
+C:220, 0: Line too long (116/100) (line-too-long)
+C:252, 0: Line too long (109/100) (line-too-long)
+C:274, 0: Line too long (117/100) (line-too-long)
+C:288, 0: Line too long (120/100) (line-too-long)
+C:291, 0: Line too long (117/100) (line-too-long)
+C:298, 0: Line too long (119/100) (line-too-long)
+C:313, 0: Line too long (121/100) (line-too-long)
+C:317, 0: No space allowed around keyword argument assignment
+    def __init__(self, repository_location, paths_file = None):
+                                                       ^ (bad-whitespace)
+C:322, 0: Line too long (117/100) (line-too-long)
+C:328, 0: Line too long (102/100) (line-too-long)
+C:334, 0: Line too long (116/100) (line-too-long)
+C:335, 0: Line too long (118/100) (line-too-long)
+C:337, 0: Line too long (103/100) (line-too-long)
+C:362, 0: Line too long (112/100) (line-too-long)
+C:364, 0: No space allowed around keyword argument assignment
+    def load_document(self, document_id, user_manager = None):
+                                                      ^ (bad-whitespace)
+C:370, 0: Line too long (104/100) (line-too-long)
+C:375, 0: Line too long (118/100) (line-too-long)
+C:379, 0: Line too long (118/100) (line-too-long)
+C:382, 0: Line too long (110/100) (line-too-long)
+C:384, 0: Line too long (101/100) (line-too-long)
+C:390, 0: Line too long (111/100) (line-too-long)
+C:392, 0: Line too long (102/100) (line-too-long)
+C:402, 0: Line too long (118/100) (line-too-long)
+C:404, 0: Line too long (118/100) (line-too-long)
+C:405, 0: Line too long (102/100) (line-too-long)
+C:416, 0: No space allowed around keyword argument assignment
+    def add_document(self, document, new_document_folder = None):
+                                                         ^ (bad-whitespace)
+C:418, 0: Line too long (113/100) (line-too-long)
+C:447, 0: Line too long (116/100) (line-too-long)
+C:452, 0: Line too long (113/100) (line-too-long)
+C:459, 0: Line too long (118/100) (line-too-long)
+C:469, 0: Line too long (116/100) (line-too-long)
+C:475, 0: Line too long (113/100) (line-too-long)
+C:495, 0: No space allowed around keyword argument assignment
+    def load_all_documents(self, user_manager = None):
+                                              ^ (bad-whitespace)
+C:500, 0: Line too long (119/100) (line-too-long)
+C:501, 0: Line too long (119/100) (line-too-long)
+C:506, 0: Line too long (101/100) (line-too-long)
+C:506, 0: No space allowed around keyword argument assignment
+            all_documents[document_id] = self.load_document(document_id, user_manager = user_manager)
+                                                                                      ^ (bad-whitespace)
+C:509, 0: No space allowed around keyword argument assignment
+    def find_document_by_id(self, document_id, user_manager = None):
+                                                            ^ (bad-whitespace)
+C:515, 0: Line too long (106/100) (line-too-long)
+C:519, 0: Line too long (111/100) (line-too-long)
+C:521, 0: No space allowed around keyword argument assignment
+            return self.load_all_documents(user_manager = user_manager)[document_id]
+                                                        ^ (bad-whitespace)
+C:528, 0: Line too long (112/100) (line-too-long)
+C:540, 0: No space allowed around keyword argument assignment
+    def find_documents_by_author(self, author, user_manager = None):
+                                                            ^ (bad-whitespace)
+C:546, 0: Line too long (103/100) (line-too-long)
+C:551, 0: Line too long (102/100) (line-too-long)
+C:551, 0: No space allowed around keyword argument assignment
+        for doc_id_key, doc_value in self.load_all_documents(user_manager = user_manager).iteritems():
+                                                                          ^ (bad-whitespace)
+C:568, 0: Line too long (106/100) (line-too-long)
+C:581, 0: No space allowed around keyword argument assignment
+    def document_files_exist(self, document_id, user_manager = None):
+                                                             ^ (bad-whitespace)
+C:583, 0: Line too long (109/100) (line-too-long)
+C:587, 0: Line too long (103/100) (line-too-long)
+C:590, 0: Line too long (120/100) (line-too-long)
+C:598, 0: No space allowed around keyword argument assignment
+            document = self.find_document_by_id(document_id, user_manager = user_manager)
+                                                                          ^ (bad-whitespace)
+C:606, 0: Line too long (112/100) (line-too-long)
+C:611, 0: Line too long (109/100) (line-too-long)
+C:614, 0: Line too long (103/100) (line-too-long)
+C:617, 0: Line too long (113/100) (line-too-long)
+C:633, 0: Line too long (112/100) (line-too-long)
+C:648, 0: Line too long (104/100) (line-too-long)
+C: 32, 0: Invalid constant name "module_logger" (invalid-name)
+R: 41, 0: Too many instance attributes (12/7) (too-many-instance-attributes)
+R: 49, 4: Too many arguments (6/5) (too-many-arguments)
+C:160, 8: Invalid variable name "d" (invalid-name)
+C:186, 8: Invalid variable name "d" (invalid-name)
+R:330, 4: Method could be a function (no-self-use)
+R:401,16: Redefinition of list_of_authors type from set to list (redefined-variable-type)
+R:364, 4: Too many branches (14/12) (too-many-branches)
+W:483,16: No exception type(s) specified (bare-except)
+W:563,39: Redefining built-in 'format' (redefined-builtin)
+R:601,16: The if statement can be replaced with 'var = bool(test)' (simplifiable-if-statement)
+
+
+Report
+======
+249 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |3      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |39     |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    iniformat 
+      \-reader (documents)
+      \-writer (documents)
+    storage_utils (documents)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |300    |46.01 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |296    |45.40 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |0.61  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |52     |7.98  |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |81     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |6      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |2      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++-----------------------------+------------+
+|message id                   |occurrences |
++=============================+============+
+|line-too-long                |67          |
++-----------------------------+------------+
+|bad-whitespace               |11          |
++-----------------------------+------------+
+|invalid-name                 |3           |
++-----------------------------+------------+
+|too-many-instance-attributes |1           |
++-----------------------------+------------+
+|too-many-branches            |1           |
++-----------------------------+------------+
+|too-many-arguments           |1           |
++-----------------------------+------------+
+|simplifiable-if-statement    |1           |
++-----------------------------+------------+
+|redefined-variable-type      |1           |
++-----------------------------+------------+
+|redefined-builtin            |1           |
++-----------------------------+------------+
+|no-self-use                  |1           |
++-----------------------------+------------+
+|bare-except                  |1           |
++-----------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 6.43/10
+

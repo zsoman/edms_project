@@ -1,0 +1,417 @@
+************* Module repository
+C:  4, 0: Line too long (108/100) (line-too-long)
+C: 15, 0: Line too long (112/100) (line-too-long)
+C: 22, 0: Line too long (117/100) (line-too-long)
+C: 39, 0: Line too long (117/100) (line-too-long)
+C: 48, 0: Line too long (140/100) (line-too-long)
+C: 54, 0: Line too long (117/100) (line-too-long)
+C: 62, 0: Line too long (117/100) (line-too-long)
+C: 68, 0: Line too long (117/100) (line-too-long)
+C: 72, 0: Line too long (117/100) (line-too-long)
+C: 72, 0: No space allowed around keyword argument assignment
+    def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
+                            ^ (bad-whitespace)
+C: 72, 0: No space allowed around keyword argument assignment
+    def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
+                                                     ^ (bad-whitespace)
+C: 72, 0: No space allowed around keyword argument assignment
+    def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
+                                                                                                            ^ (bad-whitespace)
+C: 77, 0: Line too long (113/100) (line-too-long)
+C: 82, 0: Line too long (102/100) (line-too-long)
+C: 87, 0: Line too long (109/100) (line-too-long)
+C:230, 0: Line too long (118/100) (line-too-long)
+C:231, 0: Line too long (114/100) (line-too-long)
+C:243, 0: No space allowed around keyword argument assignment
+                    self.create_backup(backup_file_name = self._name)
+                                                        ^ (bad-whitespace)
+C:259, 0: Line too long (120/100) (line-too-long)
+C:280, 0: Line too long (113/100) (line-too-long)
+C:299, 0: Line too long (104/100) (line-too-long)
+C:325, 0: Line too long (106/100) (line-too-long)
+C:360, 0: Line too long (110/100) (line-too-long)
+C:368, 0: Line too long (112/100) (line-too-long)
+C:370, 0: Line too long (118/100) (line-too-long)
+C:385, 0: Line too long (110/100) (line-too-long)
+C:387, 0: Line too long (107/100) (line-too-long)
+C:388, 0: Line too long (129/100) (line-too-long)
+C:388, 0: No space allowed around keyword argument assignment
+                                                                                               user_manager = self._user_manager)
+                                                                                                            ^ (bad-whitespace)
+C:391, 0: Line too long (108/100) (line-too-long)
+C:393, 0: Line too long (110/100) (line-too-long)
+C:396, 0: Line too long (104/100) (line-too-long)
+C:397, 0: Line too long (109/100) (line-too-long)
+C:407, 0: Line too long (116/100) (line-too-long)
+C:419, 0: Line too long (115/100) (line-too-long)
+C:424, 0: Line too long (107/100) (line-too-long)
+C:434, 0: Line too long (111/100) (line-too-long)
+C:435, 0: Line too long (102/100) (line-too-long)
+C:446, 0: Line too long (106/100) (line-too-long)
+C:462, 0: Line too long (110/100) (line-too-long)
+C:464, 0: Line too long (109/100) (line-too-long)
+C:467, 0: No space allowed around keyword argument assignment
+    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                             ^ (bad-whitespace)
+C:467, 0: No space allowed around keyword argument assignment
+    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                                                     ^ (bad-whitespace)
+C:467, 0: No space allowed around keyword argument assignment
+    def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                                                                            ^ (bad-whitespace)
+C:468, 0: Line too long (101/100) (line-too-long)
+C:468, 0: No space allowed around keyword argument assignment
+                      date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                                  ^ (bad-whitespace)
+C:468, 0: No space allowed around keyword argument assignment
+                      date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                                                                          ^ (bad-whitespace)
+C:468, 0: No space allowed around keyword argument assignment
+                      date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                                                                                              ^ (bad-whitespace)
+C:469, 0: No space allowed around keyword argument assignment
+                      backup_projects = True, backup_reports = True, backup_users = True):
+                                      ^ (bad-whitespace)
+C:469, 0: No space allowed around keyword argument assignment
+                      backup_projects = True, backup_reports = True, backup_users = True):
+                                                             ^ (bad-whitespace)
+C:469, 0: No space allowed around keyword argument assignment
+                      backup_projects = True, backup_reports = True, backup_users = True):
+                                                                                  ^ (bad-whitespace)
+C:471, 0: Line too long (109/100) (line-too-long)
+C:473, 0: Line too long (121/100) (line-too-long)
+C:474, 0: Line too long (117/100) (line-too-long)
+C:475, 0: Line too long (117/100) (line-too-long)
+C:477, 0: Line too long (115/100) (line-too-long)
+C:479, 0: Line too long (101/100) (line-too-long)
+C:481, 0: Line too long (101/100) (line-too-long)
+C:491, 0: Line too long (116/100) (line-too-long)
+C:494, 0: Line too long (114/100) (line-too-long)
+C:500, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:504, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:508, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:510, 0: Line too long (106/100) (line-too-long)
+C:514, 0: Line too long (118/100) (line-too-long)
+C:525, 0: Line too long (119/100) (line-too-long)
+C:540, 0: Line too long (120/100) (line-too-long)
+C:541, 0: Line too long (119/100) (line-too-long)
+C:541, 0: No space allowed around keyword argument assignment
+        make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose, logger = logger)
+                                                                                            ^ (bad-whitespace)
+C:541, 0: No space allowed around keyword argument assignment
+        make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose, logger = logger)
+                                                                                                              ^ (bad-whitespace)
+C:548, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:551, 0: Line too long (101/100) (line-too-long)
+C:555, 0: Line too long (116/100) (line-too-long)
+C:577, 0: Line too long (106/100) (line-too-long)
+C:583, 0: No space allowed around keyword argument assignment
+    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                       ^ (bad-whitespace)
+C:583, 0: No space allowed around keyword argument assignment
+    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                                               ^ (bad-whitespace)
+C:583, 0: No space allowed around keyword argument assignment
+    def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
+                                                                                      ^ (bad-whitespace)
+C:584, 0: No space allowed around keyword argument assignment
+                date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                            ^ (bad-whitespace)
+C:584, 0: No space allowed around keyword argument assignment
+                date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                                                                    ^ (bad-whitespace)
+C:584, 0: No space allowed around keyword argument assignment
+                date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
+                                                                                        ^ (bad-whitespace)
+C:585, 0: No space allowed around keyword argument assignment
+                backup_projects = True, backup_reports = True, backup_users = True):
+                                ^ (bad-whitespace)
+C:585, 0: No space allowed around keyword argument assignment
+                backup_projects = True, backup_reports = True, backup_users = True):
+                                                       ^ (bad-whitespace)
+C:585, 0: No space allowed around keyword argument assignment
+                backup_projects = True, backup_reports = True, backup_users = True):
+                                                                            ^ (bad-whitespace)
+C:587, 0: Line too long (115/100) (line-too-long)
+C:589, 0: Line too long (121/100) (line-too-long)
+C:590, 0: Line too long (115/100) (line-too-long)
+C:592, 0: Line too long (118/100) (line-too-long)
+C:594, 0: Line too long (115/100) (line-too-long)
+C:596, 0: Line too long (101/100) (line-too-long)
+C:598, 0: Line too long (101/100) (line-too-long)
+C:601, 0: Line too long (119/100) (line-too-long)
+C:602, 0: Line too long (115/100) (line-too-long)
+C:605, 0: Line too long (117/100) (line-too-long)
+C:608, 0: Line too long (115/100) (line-too-long)
+C:613, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:618, 0: Line too long (106/100) (line-too-long)
+C:652, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:659, 0: Unnecessary parens after 'print' keyword (superfluous-parens)
+C:662, 0: Line too long (101/100) (line-too-long)
+C:664, 0: No space allowed around keyword argument assignment
+    def show_repository_info(self, name = ''):
+                                        ^ (bad-whitespace)
+C:668, 0: Line too long (105/100) (line-too-long)
+C:669, 0: Line too long (109/100) (line-too-long)
+C:670, 0: Line too long (109/100) (line-too-long)
+C:672, 0: Line too long (117/100) (line-too-long)
+C:673, 0: Line too long (106/100) (line-too-long)
+C:685, 0: Line too long (106/100) (line-too-long)
+C:690, 0: No space allowed around keyword argument assignment
+        env = Environment(loader = FileSystemLoader(path.join(abs_path, 'templates')))
+                                 ^ (bad-whitespace)
+C:692, 0: Line too long (120/100) (line-too-long)
+C:692, 0: No space allowed around keyword argument assignment
+        output_from_parsed_template = template.render(repository_name = self._name, creation_date = self._creation_date,
+                                                                      ^ (bad-whitespace)
+C:692, 0: No space allowed around keyword argument assignment
+        output_from_parsed_template = template.render(repository_name = self._name, creation_date = self._creation_date,
+                                                                                                  ^ (bad-whitespace)
+C:693, 0: Line too long (106/100) (line-too-long)
+C:693, 0: No space allowed around keyword argument assignment
+                                                      backup_date = self._last_backup_date, paths = paths,
+                                                                  ^ (bad-whitespace)
+C:693, 0: No space allowed around keyword argument assignment
+                                                      backup_date = self._last_backup_date, paths = paths,
+                                                                                                  ^ (bad-whitespace)
+C:694, 0: Line too long (106/100) (line-too-long)
+C:694, 0: No space allowed around keyword argument assignment
+                                                      users = users, roles = roles, documents = documents)
+                                                            ^ (bad-whitespace)
+C:694, 0: No space allowed around keyword argument assignment
+                                                      users = users, roles = roles, documents = documents)
+                                                                           ^ (bad-whitespace)
+C:694, 0: No space allowed around keyword argument assignment
+                                                      users = users, roles = roles, documents = documents)
+                                                                                              ^ (bad-whitespace)
+C:700, 0: Line too long (102/100) (line-too-long)
+C:704, 0: Line too long (119/100) (line-too-long)
+C:722, 0: No space allowed around keyword argument assignment
+            tmp_repo = Repository(location = tmp_location)
+                                           ^ (bad-whitespace)
+C:723, 0: No space allowed around keyword argument assignment
+            tmp_repo.show_repository_info(name = path.basename(backup_file))
+                                               ^ (bad-whitespace)
+C:732, 0: Line too long (117/100) (line-too-long)
+C:747, 0: Line too long (107/100) (line-too-long)
+C:755, 0: Line too long (102/100) (line-too-long)
+C: 50, 0: Invalid constant name "logger" (invalid-name)
+R: 65, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
+W:105,19: Unused argument 'value' (unused-argument)
+R:105, 4: Method could be a function (no-self-use)
+W:124,23: Unused argument 'value' (unused-argument)
+R:124, 4: Method could be a function (no-self-use)
+W:143,28: Unused argument 'value' (unused-argument)
+R:143, 4: Method could be a function (no-self-use)
+W:162,25: Unused argument 'value' (unused-argument)
+R:162, 4: Method could be a function (no-self-use)
+W:181,30: Unused argument 'value' (unused-argument)
+R:181, 4: Method could be a function (no-self-use)
+W:200,27: Unused argument 'value' (unused-argument)
+R:200, 4: Method could be a function (no-self-use)
+W:219,31: Unused argument 'value' (unused-argument)
+R:219, 4: Method could be a function (no-self-use)
+W:260,42: Unused variable 'role_file' (unused-variable)
+W:257,12: Unused variable 'name_key' (unused-variable)
+W:359,16: No exception type(s) specified (bare-except)
+W:358,32: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:360,33: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:376,25: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:385,32: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:391,49: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:397,37: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:374, 8: Too many nested blocks (6/5) (too-many-nested-blocks)
+C:405,40: Invalid variable name "e" (invalid-name)
+W:407,41: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:411,33: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:414,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:429,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:432,25: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:434,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:435,51: Access to a protected member _location of a client class (protected-access)
+W:439,36: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:443,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:446,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:462,33: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:467, 4: Too many arguments (10/5) (too-many-arguments)
+W:491,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:498,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:502,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:506,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:513,25: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:519,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:525,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:529,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:534,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:540,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:549,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:551,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:467, 4: Too many branches (14/12) (too-many-branches)
+R:467, 4: Too many statements (53/50) (too-many-statements)
+W:577,32: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:580,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:553, 4: Method could be a function (no-self-use)
+R:583, 4: Too many arguments (10/5) (too-many-arguments)
+W:605,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:611,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+C:615,80: Invalid variable name "z" (invalid-name)
+W:624,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:630,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:636,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:642,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:648,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:653,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:660,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:662,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:664, 4: Too many local variables (16/15) (too-many-locals)
+E:692,38: Instance of 'str' has no 'render' member (no-member)
+C:696,83: Invalid variable name "fh" (invalid-name)
+W:698,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:700,20: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+C:719,51: Invalid variable name "z" (invalid-name)
+W:727,29: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:702, 4: Method could be a function (no-self-use)
+R:737, 8: The if statement can be replaced with 'return bool(test)' (simplifiable-if-statement)
+C:742, 4: Missing method docstring (missing-docstring)
+R: 65, 0: Too many public methods (23/20) (too-many-public-methods)
+W:264, 8: Attribute '_last_backup_date' defined outside __init__ (attribute-defined-outside-init)
+W:263, 8: Attribute '_creation_date' defined outside __init__ (attribute-defined-outside-init)
+
+
+Report
+======
+365 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |1          |=          |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |1          |=          |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |31     |31         |=          |96.77       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |0          |=          |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    documents (repository)
+    iniformat 
+      \-reader (repository)
+      \-writer (repository)
+    jinja2 (repository)
+    schedule (repository)
+    users (repository)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |440    |57.67 |366      |+74.00     |
++----------+-------+------+---------+-----------+
+|docstring |268    |35.12 |267      |+1.00      |
++----------+-------+------+---------+-----------+
+|comment   |6      |0.79  |6        |=          |
++----------+-------+------+---------+-----------+
+|empty     |49     |6.42  |52       |-3.00      |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |130    |111      |+19.00     |
++-----------+-------+---------+-----------+
+|refactor   |18     |18       |=          |
++-----------+-------+---------+-----------+
+|warning    |56     |14       |+42.00     |
++-----------+-------+---------+-----------+
+|error      |1      |1        |=          |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++-------------------------------+------------+
+|message id                     |occurrences |
++===============================+============+
+|line-too-long                  |81          |
++-------------------------------+------------+
+|logging-format-interpolation   |43          |
++-------------------------------+------------+
+|bad-whitespace                 |36          |
++-------------------------------+------------+
+|no-self-use                    |9           |
++-------------------------------+------------+
+|unused-argument                |7           |
++-------------------------------+------------+
+|superfluous-parens             |7           |
++-------------------------------+------------+
+|invalid-name                   |5           |
++-------------------------------+------------+
+|unused-variable                |2           |
++-------------------------------+------------+
+|too-many-arguments             |2           |
++-------------------------------+------------+
+|attribute-defined-outside-init |2           |
++-------------------------------+------------+
+|too-many-statements            |1           |
++-------------------------------+------------+
+|too-many-public-methods        |1           |
++-------------------------------+------------+
+|too-many-nested-blocks         |1           |
++-------------------------------+------------+
+|too-many-locals                |1           |
++-------------------------------+------------+
+|too-many-instance-attributes   |1           |
++-------------------------------+------------+
+|too-many-branches              |1           |
++-------------------------------+------------+
+|simplifiable-if-statement      |1           |
++-------------------------------+------------+
+|protected-access               |1           |
++-------------------------------+------------+
+|no-member                      |1           |
++-------------------------------+------------+
+|missing-docstring              |1           |
++-------------------------------+------------+
+|bare-except                    |1           |
++-------------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 4.27/10 (previous run: 5.16/10, -0.89)
+

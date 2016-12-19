@@ -1,0 +1,132 @@
+************* Module docgen.new_generator
+C:  4, 0: Line too long (117/100) (line-too-long)
+C: 15, 0: Line too long (117/100) (line-too-long)
+C: 24, 0: Line too long (117/100) (line-too-long)
+C: 67, 0: Line too long (112/100) (line-too-long)
+C: 69, 0: No space allowed around keyword argument assignment
+    def add_document(self, document, new_document_folder = None):
+                                                         ^ (bad-whitespace)
+C:  1, 0: Empty module docstring (empty-docstring)
+W: 11, 0: Relative import 'generator', should be 'docgen.generator' (relative-import)
+C: 26, 0: Invalid constant name "document_types" (invalid-name)
+C: 27, 0: Invalid constant name "module_logger" (invalid-name)
+C: 30, 0: Missing class docstring (missing-docstring)
+C: 36, 4: Missing method docstring (missing-docstring)
+C: 42, 4: Missing method docstring (missing-docstring)
+R: 42, 4: Method could be a function (no-self-use)
+C: 46, 4: Missing method docstring (missing-docstring)
+R: 46, 4: Method could be a function (no-self-use)
+C: 69, 4: Missing method docstring (missing-docstring)
+C: 76, 4: Missing method docstring (missing-docstring)
+C: 81, 4: Missing method docstring (missing-docstring)
+C: 85, 4: Missing method docstring (missing-docstring)
+
+
+Report
+======
+61 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |8      |NC         |NC         |12.50       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    docgen 
+      \-generator (docgen.new_generator)
+    documents (docgen.new_generator)
+    iniformat 
+      \-writer (docgen.new_generator)
+    storage_utils (docgen.new_generator)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |63     |67.02 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |11     |11.70 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |4.26  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |16     |17.02 |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |16     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |2      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |1      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------+------------+
+|message id        |occurrences |
++==================+============+
+|missing-docstring |8           |
++------------------+------------+
+|line-too-long     |4           |
++------------------+------------+
+|no-self-use       |2           |
++------------------+------------+
+|invalid-name      |2           |
++------------------+------------+
+|relative-import   |1           |
++------------------+------------+
+|empty-docstring   |1           |
++------------------+------------+
+|bad-whitespace    |1           |
++------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 6.89/10
+

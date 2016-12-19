@@ -1,0 +1,112 @@
+************* Module usergen.generator
+C:  4, 0: Line too long (117/100) (line-too-long)
+C: 10, 0: Line too long (117/100) (line-too-long)
+C: 19, 0: Line too long (117/100) (line-too-long)
+C:  1, 0: Empty module docstring (empty-docstring)
+C: 21, 0: Invalid constant name "module_logger" (invalid-name)
+C: 23, 0: Invalid constant name "first_names" (invalid-name)
+C: 66, 0: Invalid constant name "family_names" (invalid-name)
+C: 89, 0: Invalid constant name "email_domains" (invalid-name)
+C: 96, 4: Missing method docstring (missing-docstring)
+R: 96, 4: Method could be a function (no-self-use)
+C:100, 4: Missing method docstring (missing-docstring)
+R:100, 4: Method could be a function (no-self-use)
+C:104, 4: Missing method docstring (missing-docstring)
+R:104, 4: Method could be a function (no-self-use)
+C:111, 4: Missing method docstring (missing-docstring)
+R:111, 4: Method could be a function (no-self-use)
+C:131, 4: Missing method docstring (missing-docstring)
+R:131, 4: Method could be a function (no-self-use)
+
+
+Report
+======
+44 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |5      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |48     |36.09 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |62     |46.62 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |3.01  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |19     |14.29 |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |13     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |5      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------+------------+
+|message id        |occurrences |
++==================+============+
+|no-self-use       |5           |
++------------------+------------+
+|missing-docstring |5           |
++------------------+------------+
+|invalid-name      |4           |
++------------------+------------+
+|line-too-long     |3           |
++------------------+------------+
+|empty-docstring   |1           |
++------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 5.91/10
+

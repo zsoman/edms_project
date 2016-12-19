@@ -1,0 +1,114 @@
+************* Module docgen.generator
+C:  4, 0: Line too long (117/100) (line-too-long)
+C:  9, 0: Line too long (117/100) (line-too-long)
+C: 18, 0: Line too long (117/100) (line-too-long)
+C: 21, 0: Invalid constant name "document_types" (invalid-name)
+C: 23, 0: Invalid constant name "extensions" (invalid-name)
+C: 29, 0: Invalid constant name "topics" (invalid-name)
+C: 32, 0: Invalid constant name "filename_parts" (invalid-name)
+C: 37, 0: Invalid constant name "module_logger" (invalid-name)
+C: 43, 4: Missing method docstring (missing-docstring)
+R: 43, 4: Method could be a function (no-self-use)
+C: 46, 4: Missing method docstring (missing-docstring)
+R: 46, 4: Method could be a function (no-self-use)
+C: 58, 4: Missing method docstring (missing-docstring)
+R: 58, 4: Method could be a function (no-self-use)
+C: 61, 4: Missing method docstring (missing-docstring)
+R: 61, 4: Method could be a function (no-self-use)
+C: 70, 4: Missing method docstring (missing-docstring)
+C: 98, 4: Missing method docstring (missing-docstring)
+W:102,16: Unused variable 'i' (unused-variable)
+R: 98, 4: Method could be a function (no-self-use)
+
+
+Report
+======
+68 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |6      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |75     |70.09 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |13     |12.15 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |3      |2.80  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |16     |14.95 |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |14     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |5      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |1      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------+------------+
+|message id        |occurrences |
++==================+============+
+|missing-docstring |6           |
++------------------+------------+
+|no-self-use       |5           |
++------------------+------------+
+|invalid-name      |5           |
++------------------+------------+
+|line-too-long     |3           |
++------------------+------------+
+|unused-variable   |1           |
++------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.06/10
+

@@ -1,0 +1,161 @@
+************* Module projects
+C:  4, 0: Line too long (115/100) (line-too-long)
+C:  7, 0: Line too long (117/100) (line-too-long)
+C: 16, 0: Line too long (117/100) (line-too-long)
+C: 25, 0: Line too long (117/100) (line-too-long)
+C: 38, 0: No space allowed around keyword argument assignment
+    def __init__(self, name, description, members = None, documents = None):
+                                                  ^ (bad-whitespace)
+C: 38, 0: No space allowed around keyword argument assignment
+    def __init__(self, name, description, members = None, documents = None):
+                                                                    ^ (bad-whitespace)
+C: 44, 0: Line too long (113/100) (line-too-long)
+C: 46, 0: Line too long (119/100) (line-too-long)
+C:110, 0: Line too long (106/100) (line-too-long)
+C:118, 0: Line too long (112/100) (line-too-long)
+C:132, 0: Line too long (110/100) (line-too-long)
+C:140, 0: Line too long (118/100) (line-too-long)
+C:202, 0: Line too long (102/100) (line-too-long)
+C:226, 0: Line too long (110/100) (line-too-long)
+C:228, 0: Line too long (113/100) (line-too-long)
+C:268, 0: Line too long (105/100) (line-too-long)
+C:285, 0: Line too long (118/100) (line-too-long)
+C:288, 0: Line too long (117/100) (line-too-long)
+C:301, 0: Line too long (111/100) (line-too-long)
+C:309, 0: Line too long (119/100) (line-too-long)
+C:325, 0: Line too long (103/100) (line-too-long)
+C:333, 0: Line too long (118/100) (line-too-long)
+C:336, 0: Line too long (110/100) (line-too-long)
+C:348, 0: Line too long (106/100) (line-too-long)
+C:356, 0: Line too long (118/100) (line-too-long)
+C:377, 0: Line too long (113/100) (line-too-long)
+C:379, 0: Line too long (102/100) (line-too-long)
+C:413, 0: Line too long (110/100) (line-too-long)
+C:423, 0: Line too long (110/100) (line-too-long)
+C:427, 0: Line too long (117/100) (line-too-long)
+C:436, 0: Line too long (118/100) (line-too-long)
+C:447, 0: Line too long (110/100) (line-too-long)
+C: 28, 0: Invalid constant name "module_logger" (invalid-name)
+W: 70,19: Unused argument 'value' (unused-argument)
+R: 70, 4: Method could be a function (no-self-use)
+W:108,22: Unused argument 'value' (unused-argument)
+R:108, 4: Method could be a function (no-self-use)
+W:130,24: Unused argument 'value' (unused-argument)
+R:130, 4: Method could be a function (no-self-use)
+W:207,24: Access to a protected member _user_manager of a client class (protected-access)
+W:253,23: Unused argument 'value' (unused-argument)
+R:253, 4: Method could be a function (no-self-use)
+W:273,27: Unused argument 'value' (unused-argument)
+R:273, 4: Method could be a function (no-self-use)
+W:319,16: No exception type(s) specified (bare-except)
+E:407,31: Method 'name' has no 'lower' member (no-member)
+
+
+Report
+======
+153 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |2      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |31     |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    iniformat 
+      \-reader (projects)
+      \-writer (projects)
+    storage_utils (projects)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |179    |39.96 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |224    |50.00 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |0.89  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |41     |9.15  |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |33     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |5      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |7      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |1      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++-----------------+------------+
+|message id       |occurrences |
++=================+============+
+|line-too-long    |30          |
++-----------------+------------+
+|unused-argument  |5           |
++-----------------+------------+
+|no-self-use      |5           |
++-----------------+------------+
+|bad-whitespace   |2           |
++-----------------+------------+
+|protected-access |1           |
++-----------------+------------+
+|no-member        |1           |
++-----------------+------------+
+|invalid-name     |1           |
++-----------------+------------+
+|bare-except      |1           |
++-----------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 6.73/10
+

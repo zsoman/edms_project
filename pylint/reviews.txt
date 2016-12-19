@@ -1,0 +1,218 @@
+************* Module reviews
+W:350, 0: TODO (fixme)
+W:354, 0: TODO (fixme)
+W:358, 0: TODO (fixme)
+W:362, 0: TODO (fixme)
+W:366, 0: TODO (fixme)
+W:370, 0: TODO (fixme)
+W:374, 0: TODO (fixme)
+W:378, 0: TODO (fixme)
+C:  5, 0: Line too long (117/100) (line-too-long)
+C: 11, 0: Line too long (117/100) (line-too-long)
+C: 20, 0: Line too long (117/100) (line-too-long)
+C: 36, 0: Line too long (116/100) (line-too-long)
+C: 67, 0: Line too long (110/100) (line-too-long)
+C: 91, 0: Line too long (116/100) (line-too-long)
+C: 98, 0: Line too long (104/100) (line-too-long)
+C:115, 0: Line too long (116/100) (line-too-long)
+C:122, 0: Line too long (104/100) (line-too-long)
+C:129, 0: Line too long (102/100) (line-too-long)
+C:139, 0: Line too long (119/100) (line-too-long)
+C:146, 0: Line too long (105/100) (line-too-long)
+C:153, 0: Line too long (102/100) (line-too-long)
+C:163, 0: Line too long (119/100) (line-too-long)
+C:170, 0: Line too long (105/100) (line-too-long)
+C:177, 0: Line too long (102/100) (line-too-long)
+C:194, 0: Line too long (105/100) (line-too-long)
+C:196, 0: Line too long (111/100) (line-too-long)
+C:196, 0: No space allowed around keyword argument assignment
+    def set_submission(self, submission_message, author = None, admin = None, date = datetime.utcnow().date()):
+                                                        ^ (bad-whitespace)
+C:196, 0: No space allowed around keyword argument assignment
+    def set_submission(self, submission_message, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                      ^ (bad-whitespace)
+C:196, 0: No space allowed around keyword argument assignment
+    def set_submission(self, submission_message, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                                   ^ (bad-whitespace)
+C:201, 0: Line too long (104/100) (line-too-long)
+C:203, 0: Line too long (108/100) (line-too-long)
+C:205, 0: Line too long (103/100) (line-too-long)
+C:218, 0: No space allowed around keyword argument assignment
+    def set_review_request_1(self, review_request_nessage, author = None, admin = None,
+                                                                  ^ (bad-whitespace)
+C:218, 0: No space allowed around keyword argument assignment
+    def set_review_request_1(self, review_request_nessage, author = None, admin = None,
+                                                                                ^ (bad-whitespace)
+C:219, 0: No space allowed around keyword argument assignment
+                             date = datetime.utcnow().date()):
+                                  ^ (bad-whitespace)
+C:224, 0: Line too long (104/100) (line-too-long)
+C:226, 0: Line too long (108/100) (line-too-long)
+C:228, 0: Line too long (103/100) (line-too-long)
+C:239, 0: No space allowed around keyword argument assignment
+    def set_review_request_2(self, review_request_nessage, author = None, admin = None,
+                                                                  ^ (bad-whitespace)
+C:239, 0: No space allowed around keyword argument assignment
+    def set_review_request_2(self, review_request_nessage, author = None, admin = None,
+                                                                                ^ (bad-whitespace)
+C:240, 0: No space allowed around keyword argument assignment
+                             date = datetime.utcnow().date()):
+                                  ^ (bad-whitespace)
+C:245, 0: Line too long (104/100) (line-too-long)
+C:247, 0: Line too long (108/100) (line-too-long)
+C:249, 0: Line too long (103/100) (line-too-long)
+C:253, 0: Line too long (107/100) (line-too-long)
+C:260, 0: Line too long (115/100) (line-too-long)
+C:260, 0: No space allowed around keyword argument assignment
+    def set_review_response_1(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                            ^ (bad-whitespace)
+C:260, 0: No space allowed around keyword argument assignment
+    def set_review_response_1(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                          ^ (bad-whitespace)
+C:260, 0: No space allowed around keyword argument assignment
+    def set_review_response_1(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                                       ^ (bad-whitespace)
+C:262, 0: Line too long (110/100) (line-too-long)
+C:266, 0: Line too long (104/100) (line-too-long)
+C:268, 0: Line too long (108/100) (line-too-long)
+C:270, 0: Line too long (103/100) (line-too-long)
+C:284, 0: Line too long (115/100) (line-too-long)
+C:284, 0: No space allowed around keyword argument assignment
+    def set_review_response_2(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                            ^ (bad-whitespace)
+C:284, 0: No space allowed around keyword argument assignment
+    def set_review_response_2(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                          ^ (bad-whitespace)
+C:284, 0: No space allowed around keyword argument assignment
+    def set_review_response_2(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                                       ^ (bad-whitespace)
+C:286, 0: Line too long (108/100) (line-too-long)
+C:290, 0: Line too long (104/100) (line-too-long)
+C:292, 0: Line too long (108/100) (line-too-long)
+C:294, 0: Line too long (103/100) (line-too-long)
+C:298, 0: Line too long (103/100) (line-too-long)
+C:308, 0: Line too long (119/100) (line-too-long)
+C:308, 0: No space allowed around keyword argument assignment
+    def set_evaluation_result(self, evaluation_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                ^ (bad-whitespace)
+C:308, 0: No space allowed around keyword argument assignment
+    def set_evaluation_result(self, evaluation_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                              ^ (bad-whitespace)
+C:308, 0: No space allowed around keyword argument assignment
+    def set_evaluation_result(self, evaluation_response, author = None, admin = None, date = datetime.utcnow().date()):
+                                                                                           ^ (bad-whitespace)
+C:310, 0: Line too long (109/100) (line-too-long)
+C:315, 0: Line too long (104/100) (line-too-long)
+C:317, 0: Line too long (108/100) (line-too-long)
+C:319, 0: Line too long (103/100) (line-too-long)
+C: 28, 0: Invalid constant name "module_logger" (invalid-name)
+C:348, 4: Missing method docstring (missing-docstring)
+C:352, 4: Missing method docstring (missing-docstring)
+C:356, 4: Missing method docstring (missing-docstring)
+C:360, 4: Missing method docstring (missing-docstring)
+C:364, 4: Missing method docstring (missing-docstring)
+C:368, 4: Missing method docstring (missing-docstring)
+C:372, 4: Missing method docstring (missing-docstring)
+C:376, 4: Missing method docstring (missing-docstring)
+
+
+Report
+======
+124 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |2      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |28     |NC         |NC         |71.43       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    messenger 
+      \-messenger (reviews)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |157    |41.42 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |173    |45.65 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |12     |3.17  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |37     |9.76  |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |71     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |8      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------+------------+
+|message id        |occurrences |
++==================+============+
+|line-too-long     |44          |
++------------------+------------+
+|bad-whitespace    |18          |
++------------------+------------+
+|missing-docstring |8           |
++------------------+------------+
+|fixme             |8           |
++------------------+------------+
+|invalid-name      |1           |
++------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 3.63/10
+

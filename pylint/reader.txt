@@ -1,0 +1,99 @@
+************* Module iniformat.reader
+C: 10, 0: Line too long (117/100) (line-too-long)
+C: 13, 0: Line too long (117/100) (line-too-long)
+C: 22, 0: Line too long (117/100) (line-too-long)
+C: 24, 0: Invalid constant name "module_logger" (invalid-name)
+C: 27, 0: Missing function docstring (missing-docstring)
+C: 42, 0: Missing function docstring (missing-docstring)
+C: 48, 0: Missing function docstring (missing-docstring)
+C: 52, 0: Missing function docstring (missing-docstring)
+C: 58, 0: Missing function docstring (missing-docstring)
+
+
+Report
+======
+39 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |5      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |41     |62.12 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |7      |10.61 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |6.06  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |14     |21.21 |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |9      |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------+------------+
+|message id        |occurrences |
++==================+============+
+|missing-docstring |5           |
++------------------+------------+
+|line-too-long     |3           |
++------------------+------------+
+|invalid-name      |1           |
++------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.69/10
+

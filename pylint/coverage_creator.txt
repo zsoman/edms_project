@@ -1,0 +1,114 @@
+************* Module coverage_creator
+C:  5, 0: Line too long (117/100) (line-too-long)
+C: 11, 0: Line too long (117/100) (line-too-long)
+C: 20, 0: Line too long (117/100) (line-too-long)
+C: 22, 0: No space allowed around keyword argument assignment
+cov = coverage.coverage(branch = True)
+                               ^ (bad-whitespace)
+C: 25, 0: No space allowed around keyword argument assignment
+unittest.TextTestRunner(verbosity = 2).run(tests)
+                                  ^ (bad-whitespace)
+C: 30, 0: No space allowed around keyword argument assignment
+cov.html_report(directory = covdir)
+                          ^ (bad-whitespace)
+C: 22, 0: Invalid constant name "cov" (invalid-name)
+C: 24, 0: Invalid constant name "tests" (invalid-name)
+C: 28, 0: Invalid constant name "basedir" (invalid-name)
+C: 29, 0: Invalid constant name "covdir" (invalid-name)
+
+
+Report
+======
+20 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    coverage (coverage_creator)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |20     |62.50 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |2      |6.25  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |4      |12.50 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |6      |18.75 |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |10     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++---------------+------------+
+|message id     |occurrences |
++===============+============+
+|invalid-name   |4           |
++---------------+------------+
+|line-too-long  |3           |
++---------------+------------+
+|bad-whitespace |3           |
++---------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 5.00/10
+
