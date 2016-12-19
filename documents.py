@@ -367,6 +367,14 @@ class DocumentManager(object):
         write_ini_file(path.join(new_document_folder, '{}_document_metadata.edd'.format(new_document_id)), data)
 
     def load_document(self, document_id, user_manager = None):
+        """
+        Loads a document to the memory.
+
+        :param document_id: The ID of the :py:class:Document.
+        :param user_manager: The user manager object of the :py:UserManager class.
+        :exception DocumentDoesntExistsError is raised when the document is missing from the filesystem,
+        :return: :py:class:Document object.
+        """
         document_path = path.join(self._location, str(document_id))
         if not path.exists(document_path):
             raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
@@ -411,6 +419,14 @@ class DocumentManager(object):
             return document
 
     def add_document(self, document, new_document_folder = None):
+        """
+        This method adds a :py:class:Document object to the :py:class:ClassRepository. In addition to do this the
+        :py:func:save_document function is calls to save a document to the filesystem.
+
+        :return: :py:class:Document object.
+        :param new_document_folder: :py:class:Document object.
+        :return: The ID of the new document.
+        """
         new_document_id = get_next_id(self._location)
         if not new_document_folder:
             new_document_folder = self.create_structure_for_document(new_document_id)
@@ -418,11 +434,25 @@ class DocumentManager(object):
         return new_document_id
 
     def create_structure_for_document(self, new_document_id):
+        """
+        Creates the directories necessary directories.
+
+        :param new_document_id: The ID of a new :py:class:Document.
+        :return: The path of the new document directory.
+        """
         new_document_folder = path.join(self._location, str(new_document_id))
         makedirs(new_document_folder)
         return new_document_folder
 
     def update_document(self, document_id, document):
+        """
+        Updates a :py:class:Document object, searches for the directory by ID
+
+        :param document_id: The ID of :py:class:Document object to update.
+        :param document: New :py:class:Document object which contains the data to update the old :py:class:Document.
+        :exception ValueError is raised if no document is found by the ``document_id``,
+        :return:
+        """
         if document_id not in self.find_all_documents():
             raise ValueError("The document with {} can't be updated because doesn't exists!".format(document_id))
         else:
