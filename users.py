@@ -331,13 +331,19 @@ class RoleManager(object):
 
 
     def read_roles(self):
-        """Read roles from the file."""
+        """Read roles from the file.
+
+        :return: The roles file data.
+        """
         return RoleManager.parse_roles_file(path.join(self._location, RoleManager.get_roles_file(self._location)))
 
 
     def write_roles(self, users_roles):
-        """Write roles to the file."""
+        """Write roles to the file. The type of the roles file can be: TXT, XML, JSON.
 
+        :param users_roles: A :py:class:User object's roles defined by the :py:class:Roles object.
+        :return:
+        """
         roles_file = path.join(self._location, RoleManager.get_roles_file(self._location))
         if roles_file.endswith('txt'):
             with open(roles_file, 'w') as file_obj:
@@ -375,6 +381,12 @@ class RoleManager(object):
 
     @classmethod
     def get_roles_file(cls, folder_path):
+        """
+        Determines the path and the file name of the roles file added to a :py:class:Repository object.
+
+        :param folder_path: The path of the :py:class:Repository object.
+        :return: The path and the file name of the roles file concatenated.
+        """
         number_of_role_files = 0
         for file in listdir(folder_path):
             if file.startswith('roles'):
@@ -390,6 +402,14 @@ class RoleManager(object):
 
     @classmethod
     def parse_roles_file(cls, roles_file):
+        """
+        Reds the data in the roles file linked to a :py:class:Repository object.
+
+        :param roles_file: The path and the name of the roles file.
+        :exception WrongFileTypeError is raised if the roles file type is not TXT, XML or JSON.
+        :return: A dictionary that contains the datam the key is a :py:class:User ID and the value is a list of the
+        roles linked to the :py:class:User ID.
+        """
         with open(roles_file) as file_obj:
             if file_obj.readline() == '':
                 return dict()
