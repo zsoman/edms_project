@@ -302,6 +302,12 @@ class ProjectManager(object):
         makedirs(self._location)
 
     def load_projects_ids(self):
+        """
+        Loads the IDs of the :py:class:Project objects in the :py:class:ProjectManager object's :py:attr:_location path
+         to a list of IDs.
+
+        :return: The list of the available :py:class:Project IDs.
+        """
         projects = []
         for file_or_folder in listdir(self.location):
             if path.isdir(file_or_folder):
@@ -312,9 +318,21 @@ class ProjectManager(object):
         return projects
 
     def count_projects(self):
+        """
+        Counts the available projects in the :py:class:ProjectManager object;s :py:attr:_location path.
+
+        :return: An integer.
+        """
         return len(self._projects)
 
     def save_project(self, project, next_id):
+        """
+        Saves a :py:class:Project object to the filesystem by creating the directory and the necessary metadata files.
+
+        :param project: :py:class:Project object to save.
+        :param next_id: Integer the ID of the :py:class:Project object, this is the name of the directory too.
+        :return: ``next_id`` the ID of the project.
+        """
         data = {
             'project': {
                 'name': project.name,
