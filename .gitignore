@@ -104,3 +104,4 @@ coverage/
 /tmp/tmp_repository/
 /semmi.py
 !/doc/
+!/doc/build/html/index.html

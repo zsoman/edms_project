@@ -1,19 +1,19 @@
-edms_project
+Edms_project
 ============
 
 .. toctree::
-:maxdepth: 4
+    :maxdepth: 4
 
-       docgen
-       documents
-       iniformat
-       manage
-       messenger
-       projects
-       reports
-       repository
-       reviews
-       storage_utils
-       usergen
-       users
-       web_application
+    docgen
+    documents
+    iniformat
+    manage
+    messenger
+    projects
+    reports
+    repository
+    reviews
+    storage_utils
+    usergen
+    users
+    web_application

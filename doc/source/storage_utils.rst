@@ -1,7 +1,7 @@
-storage_utils module
+Storage_utils module
 ====================
 
 .. automodule:: storage_utils
-:members:
-        :undoc-members:
-            :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

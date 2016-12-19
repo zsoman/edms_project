@@ -1,7 +1,7 @@
-reviews module
+Reviews module
 ==============
 
 .. automodule:: reviews
-:members:
-        :undoc-members:
-            :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

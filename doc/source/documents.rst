@@ -1,7 +1,7 @@
-documents module
+Documents module
 ================
 
 .. automodule:: documents
-:members:
-        :undoc-members:
-            :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,7 +1,7 @@
-repository module
+Repository module
 =================
 
 .. automodule:: repository
-:members:
-        :undoc-members:
-            :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,7 +1,7 @@
-projects module
+Projects module
 ===============
 
 .. automodule:: projects
-:members:
-        :undoc-members:
-            :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
