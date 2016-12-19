@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""This file contains the implementation of Documents and DocumentManager classes.
+"""This file contains the implementation of :py:class:Documents and :py:class:DocumentManager classes.
 
 The documents are represented as a directory which name is a number, ID. This directory includes the files that are
 represented in the document's abstraction level. The document manager operates on documents: count, save, add, load etc.
@@ -45,7 +45,7 @@ class Document(object):
 
     def __init__(self, title, description, author, files, doc_format):
         """
-        Initialisation of a new Document object.
+        Initialisation of a new :py:class:Document object.
 
         :param title: New title of the document.
         :param description: New description of the document.

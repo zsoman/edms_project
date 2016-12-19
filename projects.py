@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+"""This file contains the implementation of :py:class:Project class.
+
+The :py:class:Project is represented of name, description, :py:class:Document and :py:class:User (members) objects.
+"""
+
+# Imports -----------------------------------------------------------------------------------------------------------
 from os import path, makedirs, listdir
 from shutil import rmtree
 
@@ -5,14 +12,47 @@ from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
 from storage_utils import get_next_id
 
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanely - Training 360 Project"
+__credits__ = "Zsolt Bokor Levente"
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+# -------------------------------------------------------------------------------------------------------------------
+
 PROJECT_METADATA_FILE_NAME_FORMAT = '{}_project_metadata.edd'
 
 class Project(object):
-    def __init__(self, name, description, members = [], documents = []):
+    """
+    The :py:class:Project class of the :py:class:Repository.
+
+    It has name, description, members (:py:class:User list) and documents (:py:class:Document list).
+    """
+
+    def __init__(self, name, description, members = None, documents = None):
+        """
+        Initialisation of a new :py:class:Project object.
+
+        :param name: Name of the :py:class:Project.
+        :param description: Description of the :py:class:Project.
+        :param members: The author(s) (:py:class:User) of the :py:class:Project. If only one member is passed the
+        :py:attr:_members is converted to list.
+        :param documents: The document(s) (:py:class:Document) of the :py:class:Project. If only one document is passed
+        the :py:attr:_documents is converted to list.
+        """
         self._name = name
         self._description = description
-        self._members = members
-        self._documents = documents
+        if not members:
+            self._members = []
+        else:
+            self._members = members
+        if not documents:
+            self._documents = []
+        else:
+            self._documents = documents
 
     @property
     def name(self):
