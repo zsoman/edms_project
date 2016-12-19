@@ -219,7 +219,19 @@ class Project(object):
 
 
 class ProjectManager(object):
+    """
+    The :py:class:ProjectManager class of the :py:class:Repository. This class manages the :py:class:Projects.
+
+    The :py:class:ProjectManager is represented by location, :py:class:UserManager and list of :py:class:Project.
+    """
+
     def __init__(self, project_path, user_manager):
+        """
+        Initialisation of a new :py:class:ProjectManager object.
+
+        :param project_path: The path of the :py:class:Project object.
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
+        """
         self._location = project_path
         self._user_manager = user_manager
         self._projects = []
@@ -227,22 +239,53 @@ class ProjectManager(object):
 
     @property
     def location(self):
+        """
+        The property of the :py:attr:_location attribute.
+
+        :return: The location of the :py:class:Project object :py:attr:_location.
+        """
         return self._location
 
     @location.setter
     def location(self, value):
+        """
+        The setter of the :py:attr:_location. The :py:attr:location can't be changed.
+
+        :param value: New location.
+        :exception AttributeError is raised every time the :py:attr:location is changed.
+        :return:
+        """
         raise AttributeError("The location of a project can't be changed!")
 
     @property
     def user_manager(self):
+        """
+        The :py:class:UserManager object of the :py:attr:_user_manager attribute.
+
+        :return: The :py:class:UserManager object of the :py:class:Project object :py:attr:_user_manager.
+        """
         return self._user_manager
 
     @user_manager.setter
     def user_manager(self, value):
+        """
+        The setter of the :py:attr:_user_manager. The :py:attr:user_manager can't be changed.
+
+        :param value: New :py:class:UserManager object.
+        :exception AttributeError is raised every time the :py:attr:user_manager is changed.
+        :return:
+        """
         raise AttributeError("The user manager of a project can't be changed!")
 
     def load(self):
-        """Try to load an existing repository"""
+        """
+        Loads a :py:class:Project from the :py:class:ProjectManager object :py:attr:location path. If the path aleardy
+        exists it will call the :py:meth:initialize method to initialize the :py:class:Project.
+
+        :exception ValueError is raised if the :py:class:ProjectManager object's :py:attr:location attribute is not a
+        directory.
+        :return:
+        """
         if path.exists(self._location):
             if not path.isdir(self._location):
                 raise ValueError('The repository should be a directory!')
@@ -251,7 +294,11 @@ class ProjectManager(object):
             self.initialize()
 
     def initialize(self):
-        """Initialize a new repository"""
+        """
+        Initializes the :py:class:ProjectManager by creating the directory in the :py:attr:_location attribute.
+
+        :return:
+        """
         makedirs(self._location)
 
     def load_projects_ids(self):

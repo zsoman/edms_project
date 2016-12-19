@@ -362,7 +362,7 @@ class DocumentManager(object):
         Loads a document to the memory.
 
         :param document_id: The ID of the :py:class:Document.
-        :param user_manager: The user manager object of the :py:UserManager class.
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
         :exception DocumentDoesntExistsError is raised when the document is missing from the filesystem,
         :return: :py:class:Document object.
         """
