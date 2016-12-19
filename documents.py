@@ -27,7 +27,6 @@ __maintainer__ = "Zsolt Bokor Levente"
 __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
-
 # -------------------------------------------------------------------------------------------------------------------
 
 class DocumentDoesntExistsError(Exception):
