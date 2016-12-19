@@ -264,10 +264,18 @@ class User(object):
 
 
 class Role(object):
-    """Represents the roles of the users"""
+    """Represents the roles of the users.
 
+    The :py:class:Role is defined by a :py:attr:role string attribute.
+    """
 
     def __init__(self, role):
+        """
+        Initialisation of a new :py:class:Role object.
+
+        :param role: The :py:class:Role object's name.
+        :exception ValueError is raised if the ``role`` is not valid.
+        """
         if role in ['admin', 'manager', 'author', 'reviewer', 'visitor', '']:
             self._role = role
         else:
@@ -276,24 +284,48 @@ class Role(object):
 
     @property
     def role(self):
+        """
+        The property of the :py:attr:_role attribute.
+
+        :return: The role of the :py:class:Role object :py:attr:_role.
+        """
         return self._role
 
 
     def __eq__(self, other):
+        """
+        Two :py:class:Role objects are equal when the :py:attr:role attributes of the objects are equal.
+
+        :param other: The other :py:clss:Role object.
+        :return: Bool, TRUE if the two :py:attr:role attributes are equal.
+        """
         if isinstance(other, self.__class__):
             return self._role == other._role
         return False
 
 
     def __str__(self):
+        """
+        The string representation of the :py:class:Role object is the :py:attr:role attribute.
+        :return: The :py:attr:role attribute of the object.
+        """
         return self._role
 
 
 class RoleManager(object):
-    """Manage the user roles which are stored in a text file."""
+    """Manage the user roles which are stored in a text file.
 
+    The :py:class:RoleManager is defined by a :py:attr:_location path attribute. This equals to the :py:class:Repository
+    object's users directory.
+    """
 
     def __init__(self, repository_location, paths_file):
+        """
+        Initialisation of a new :py:class:RoleManager object.
+
+        :param repository_location: The path of the users directory linked to the :py:class:Repository object.
+        :param paths_file: Tbe paths file path of the :py:class:Repository object.
+        """
         metadata_data = read_ini_file(paths_file)
         self._location = path.join(repository_location, metadata_data['directories']['users'])
 
