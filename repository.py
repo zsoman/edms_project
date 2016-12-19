@@ -20,10 +20,12 @@ The roles.txt contains the user names and the list of assigned roles.
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 import webbrowser
 from datetime import datetime
-from os import makedirs, path, utime, listdir, remove
+from os import makedirs, path, utime, listdir, remove, environ
 from shutil import copytree, rmtree, copy2, make_archive
+from warnings import filterwarnings
 from zipfile import ZipFile
 
 import schedule
@@ -43,13 +45,18 @@ __maintainer__ = __author__
 __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
+# Setting up the logger # ________________________________________________________________________________________________________________ #
+environ["NLS_LANG"] = ".AL32UTF8"
+logger = logging.getLogger('repository')
+logger.setLevel(logging.DEBUG)
+filterwarnings("ignore")
+
 # Parameters --------------------------------------------------------------------------------------------------------
 ROLES_FILE = 'roles'
 PATHS_FILE = 'paths.ini'
 FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects',
                 'reports': 'reports', 'users': 'users'}
 BACKUP_FREQUENCY = 7
-
 
 # -------------------------------------------------------------------------------------------------------------------
 
@@ -81,6 +88,8 @@ class Repository(object):
         self._user_manager = UserManager(self._location, self._paths_file)
         self._document_manager = DocumentManager(self._location, self._paths_file)
         schedule.every(BACKUP_FREQUENCY).days.at('4:00').do(self.create_backup)
+        self.initialize_logger(self.location)
+        logger.info("The repository is initialized.")
 
     @property
     def name(self):
@@ -280,6 +289,7 @@ class Repository(object):
             'repository': {'name': self._name}
         }
         write_ini_file(self._paths_file, data)
+        logger.info("The path file is created and the data is written intto it.")
 
     def create_repo_metadata_file(self, date_obj, backup_date_obj):
         """
@@ -305,6 +315,7 @@ class Repository(object):
                 'day': backup_date_obj.day}
         }
         write_ini_file(self._metadata_file, data)
+        logger.info("The repository's metadata file is created and the data is written into it.")
 
     def read_date(self, type_of_date):
         """
@@ -315,6 +326,7 @@ class Repository(object):
         """
         metadata_data = read_ini_file(self._metadata_file)
         if type_of_date == 'creation_date':
+            logger.info("The creation date is read form the repository's metadata file.")
             return datetime.strptime('{} {} {} {} {} {} {}'.format(
                 metadata_data[type_of_date]['year'],
                 metadata_data[type_of_date]['month'],
@@ -322,14 +334,13 @@ class Repository(object):
                 metadata_data[type_of_date]['hour'],
                 metadata_data[type_of_date]['minute'],
                 metadata_data[type_of_date]['second'],
-                metadata_data[type_of_date]['microsecond']
-            ), '%Y %m %d %H %M %S %f')
+                metadata_data[type_of_date]['microsecond']), '%Y %m %d %H %M %S %f')
         elif type_of_date == 'last_backup_date':
+            logger.info("The last backup date is read form the repository's metadata file.")
             return datetime.strptime('{:0>4} {} {}'.format(
                 metadata_data[type_of_date]['year'],
                 metadata_data[type_of_date]['month'],
-                metadata_data[type_of_date]['day']
-            ), '%Y %m %d').date()
+                metadata_data[type_of_date]['day']), '%Y %m %d').date()
 
     @classmethod
     def find_all_documents_in_path(cls, from_path):
@@ -344,8 +355,9 @@ class Repository(object):
             if path.isdir(path.join(from_path, file_or_folder)):
                 try:
                     all_available_documents.append(int(file_or_folder))
+                    logger.info("The {} directory is a repository document.".format(file_or_folder))
                 except:
-                    pass
+                    logger.debug("The {} file/directory is not a repository document.".format(file_or_folder))
         return all_available_documents
 
     def import_documents(self, from_path):
@@ -361,33 +373,45 @@ class Repository(object):
         """
         if path.exists(from_path):
             all_documents = Repository.find_all_documents_in_path(from_path)
+            logger.debug("All documents are loaded form the {} path.".format(from_path))
             metadata_data = read_ini_file(self._paths_file)
+            logger.debug("The content repositories metadata file is loaded.")
             to_path = path.join(self._location, metadata_data['directories']['documents'])
             if len(all_documents) > 0:
                 for document_id in all_documents:
                     new_path = reduce(path.join, [to_path, str(document_id)])
                     old_path = path.join(from_path, str(document_id))
                     copytree(old_path, new_path)
+                    logger.info("The {} directory's content is copied to {} path.".format(old_path, new_path))
                     try:
                         document_files_existence = self._document_manager.document_files_exist(document_id,
                                                                                                user_manager = self._user_manager)
                         for file_name_key, exists_value in document_files_existence.iteritems():
                             if not exists_value:
+                                logger.exception("The {} file doesn't exists in the {} ID document!".format(
+                                    file_name_key, document_id))
                                 raise RuntimeError("The {} file doesn't exists in the {} ID document!".format(
                                     file_name_key, document_id))
+                        logger.info("All the directory's files exist.")
                         document = self._document_manager.load_document(document_id, self._user_manager)
+                        logger.debug("The document with {} ID is loaded into the memory".format(document_id))
                         if not isinstance(document.author, list):
                             doc_author = [document.author]
                         else:
                             doc_author = document.author
                         if len(doc_author) == 0:
+                            logger.exception("No author related to document!")
                             raise ValueError("No author related to document!")
                     except Exception as e:
                         rmtree(new_path)
+                        logger.exception("An {} exception is raised when importing the document with {} ID.".format(
+                            e.__class__.__name__, document_id))
                         raise e
             else:
+                logger.exception("No document to import from the '{}' path!".format(from_path))
                 raise ValueError("No document to import from the '{}' path!".format(from_path))
         else:
+            logger.exception("The '{}' doesn't exists!".format(from_path))
             raise ValueError("The '{}' doesn't exists!".format(from_path))
 
     def export_documents(self, list_of_documents_id, path_to):
@@ -402,16 +426,24 @@ class Repository(object):
         """
         if not path.exists(path_to):
             makedirs(path_to)
+            logger.info("The {} path is created.".format(path_to))
         for document_id in list_of_documents_id:
             document = self._document_manager.load_document(document_id)
+            logger.debug("The document with {} ID is loaded into the memory.".format(document_id))
             if document.state == 'accepted' and document.is_public():
+                logger.debug("The document with {} id is in accepted state and is public.".format(document_id))
                 exported_document_path = path.join(self._document_manager._location, str(document_id))
                 for file_name in listdir(exported_document_path):
                     if file_name != '{}_document_metadata.edd'.format(document_id):
                         copy2(path.join(exported_document_path, file_name), path_to)
+                        logger.info("The {} ID document's {} file is copied to {}.".format(
+                            document_id, path.join(exported_document_path, file_name), path_to))
                 existing_metadata_file = '{}_document_metadata.edd'.format(document_id)
                 remove(path.join(exported_document_path, existing_metadata_file))
+                logger.debug("The {} metadata file is deleted.".format(
+                    path.join(exported_document_path, existing_metadata_file)))
                 user = self._user_manager.find_user_by_id(document.author)
+                logger.debug("The {} ID user (author of the document) is loaded.".format(document.author))
                 data = {
                     'document': {
                         'title': document.title,
@@ -425,9 +457,11 @@ class Repository(object):
                 for key, value in data['document'].iteritems():
                     data['document'][key] = str(value)
                 write_ini_file(path.join(path_to, '{}.edd'.format(document_id)), data)
+                logger.info("The document's metadata file is written to the filesystem.")
             else:
-                raise TypeError(
-                    "The docuement must be accepted and public to export, not {} and {}!".format(
+                logger.exception("The docuement must be accepted and public to export, not {} and {}!".format(
+                        document.state, 'Private' if not document.is_public() else 'Public'))
+                raise TypeError("The docuement must be accepted and public to export, not {} and {}!".format(
                         document.state, 'Private' if not document.is_public() else 'Public'))
 
     def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
@@ -661,3 +695,21 @@ class Repository(object):
             return True
         else:
             return False
+
+    def initialize_logger(self, repository_path):
+        debug_file_logger = logging.FileHandler(reduce(path.join, [repository_path, 'logs', 'debug_log.log']))
+        debug_file_logger.setLevel(logging.DEBUG)
+        info_file_logger = logging.FileHandler(reduce(path.join, [repository_path, 'logs', '_log.log']))
+        info_file_logger.setLevel(logging.INFO)
+        console_logger = logging.StreamHandler()
+        console_logger.setLevel(logging.INFO)
+
+        formatter = logging.Formatter(
+            '%(asctime)s - %(processName)s / %(threadName)s - %(name)s - %(levelname)s - %(message)s')
+        debug_file_logger.setFormatter(formatter)
+        info_file_logger.setFormatter(formatter)
+        console_logger.setFormatter(formatter)
+
+        logger.addHandler(debug_file_logger)
+        logger.addHandler(info_file_logger)
+        logger.addHandler(console_logger)

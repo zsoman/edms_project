@@ -106,3 +106,4 @@ coverage/
 !/doc/
 !/doc/build/html/index.html
 !/coverage/
+!/database/
