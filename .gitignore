@@ -102,3 +102,4 @@ coverage/
 /tmp/Backups/
 !/tmp/tmp_repository/
 /tmp/tmp_repository/
+/semmi.py

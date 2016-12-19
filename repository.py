@@ -225,8 +225,8 @@ class Repository(object):
         """
         if path.exists(self._location):
             if path.isdir(self._location):
-                self._creation_date = self.read_creation_date('creation_date')
-                self._last_backup_date = self.read_creation_date('last_backup_date')
+                self._creation_date = self.read_date('creation_date')
+                self._last_backup_date = self.read_date('last_backup_date')
                 self.create_repo_metadata_file(self._creation_date, self._last_backup_date)
                 if self.is_backup_needed():
                     self._last_backup_date = datetime.utcnow().date()
@@ -306,7 +306,13 @@ class Repository(object):
         }
         write_ini_file(self._metadata_file, data)
 
-    def read_creation_date(self, type_of_date):
+    def read_date(self, type_of_date):
+        """
+        Reds the :py:attr:_creation_date or :py:attr:_last_backup_date attribute.
+
+        :param type_of_date: 'creation_date' or 'last_backup_date'.
+        :return: A datetime.datetime object or a datetime.date object in function of the ``type_of_date``.
+        """
         metadata_data = read_ini_file(self._metadata_file)
         if type_of_date == 'creation_date':
             return datetime.strptime('{} {} {} {} {} {} {}'.format(
@@ -327,6 +333,12 @@ class Repository(object):
 
     @classmethod
     def find_all_documents_in_path(cls, from_path):
+        """
+        Finds all :py:class:Document objects in a path.
+
+        :param from_path: The path where to search for :py:class:Document objects.
+        :return: A list of available :py:class:Document IDs.
+        """
         all_available_documents = []
         for file_or_folder in listdir(from_path):
             if path.isdir(path.join(from_path, file_or_folder)):
@@ -337,6 +349,16 @@ class Repository(object):
         return all_available_documents
 
     def import_documents(self, from_path):
+        """
+        Imports all :py:class:Document objects from a path to the :py:class:Repository.
+
+        :param from_path: The path where to search for :py:class:Document objects.
+        :exception RuntimeError is raised if the :py:class:Document object doesn't contains the referenced file.
+        :exception ValueError is raised if the :py:class:Document object has no author.
+        :exception ValueError is raised if there is no available :py:class:Document objects on the ``from_path`` path.
+        :exception ValueError is raised if the ``from_path`` doesn't exists.
+        :return:
+        """
         if path.exists(from_path):
             all_documents = Repository.find_all_documents_in_path(from_path)
             metadata_data = read_ini_file(self._paths_file)
@@ -351,9 +373,8 @@ class Repository(object):
                                                                                                user_manager = self._user_manager)
                         for file_name_key, exists_value in document_files_existence.iteritems():
                             if not exists_value:
-                                raise RuntimeError(
-                                    "The {} file doesn't exists in the {} ID document!".format(file_name_key,
-                                                                                               document_id))
+                                raise RuntimeError("The {} file doesn't exists in the {} ID document!".format(
+                                    file_name_key, document_id))
                         document = self._document_manager.load_document(document_id, self._user_manager)
                         if not isinstance(document.author, list):
                             doc_author = [document.author]
@@ -370,6 +391,15 @@ class Repository(object):
             raise ValueError("The '{}' doesn't exists!".format(from_path))
 
     def export_documents(self, list_of_documents_id, path_to):
+        """
+        Exports all :py:class:Document objects in the ``list_of_documents_id`` from the :py:class:Repository object
+        to the ``path_to`` path.
+
+        :param list_of_documents_id: List of :py:class:Document object IDs to export.
+        :param path_to: The path to export the :py:class:Document objects.
+        :exception TypeError is raised if a not accepted and private :py:class:Document object is exported.
+        :return:
+        """
         if not path.exists(path_to):
             makedirs(path_to)
         for document_id in list_of_documents_id:
@@ -397,12 +427,32 @@ class Repository(object):
                 write_ini_file(path.join(path_to, '{}.edd'.format(document_id)), data)
             else:
                 raise TypeError(
-                    "The docuement must be accepted and public to export, "
-                    "not {} and {}!".format(document.state, 'Private' if not document.is_public() else 'Public'))
+                    "The docuement must be accepted and public to export, not {} and {}!".format(
+                        document.state, 'Private' if not document.is_public() else 'Public'))
 
     def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
                       date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
                       backup_projects = True, backup_reports = True, backup_users = True):
+        """
+        Creates a backup of the :py:class:Repository object to the ``backup_path`` with ``backup_file_name``.
+
+        :param backup_file_name: The backup files name of the :py:class:Repository object, the default value is 'backup'.
+        :param backup_path: The backup path where the ``backup_file_name`` is saved, the default value is './Backups'
+        :param verbose: Bool, if it's True it will print out some information about the backup process, default value
+        is False.
+        :param date_format: The date format in which the date are printed out if the ``verbose`` parameter is True,
+        the default value is '%Y/%m/%d %H:%M:%S'.
+        :param backup_documents: Bool, determines if to back up the :py:class:Document objects of the
+        :py:class:Repository.
+        :param backup_logs: Bool, determines if to back up the log files of the :py:class:Repository.
+        :param backup_projects: Bool, determines if to back up the :py:class:Project objects of the
+        :py:class:Repository.
+        :param backup_reports: Bool, determines if to back up the :py:class:Report objects of the
+        :py:class:Repository.
+        :param backup_users: Bool, determines if to back up the :py:class:User objects of the
+        :py:class:Repository.
+        :return:
+        """
         start_time = datetime.utcnow()
         if verbose:
             print("The backup of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
@@ -442,12 +492,18 @@ class Repository(object):
             rmtree(new_location)
         if verbose:
             end_time = datetime.utcnow()
-            print("The backup is completed on UTC {}, please check the {} file".format(end_time.strftime(date_format),
-                                                                                       path.join(backup_path,
-                                                                                                 backup_file_name)))
+            print("The backup is completed on UTC {}, please check the {} file".format(
+                end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def determine_export_file_name(self, backup_file_name, backup_path):
+        """
+        Determines based on the :py:meth:create_backup methods ``backup_file_name`` parameter the backup files name.
+
+        :param backup_file_name: The :py:meth:create_backup methods ``backup_file_name``.
+        :param backup_path: :py:meth:create_backup methods ``backup_path``.
+        :return: The new backup files name.
+        """
         if path.exists(path.join(backup_path, backup_file_name + '.zip')):
             new_backup_file_name = backup_file_name
             number = 1
@@ -471,6 +527,24 @@ class Repository(object):
     def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
                 date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
                 backup_projects = True, backup_reports = True, backup_users = True):
+        """
+        Restores a :py:class:Repository object from the filesystem and deletes the old :py:class:Repository object.
+
+        :param backup_file_name: The backup files name of the :py:class:Repository object, the default value is 'backup'.
+        :param backup_path: The backup path from where the ``backup_file_name`` will be restored, the default value
+        is './Backups'
+        :param verbose: Bool, if it's True it will print out some information about the restore process, default value
+        is False.
+        :param date_format: The date format in which the date are printed out if the ``verbose`` parameter is True,
+        the default value is '%Y/%m/%d %H:%M:%S'.
+        :param backup_documents: Bool, determines if to restore the :py:class:Document objects of the
+        :py:class:Repository.
+        :param backup_logs: Bool, determines if to restpre the log files of the :py:class:Repository.
+        :param backup_projects: Bool, determines if to restore the :py:class:Project objects of the
+        :py:class:Repository.
+        :param backup_reports: Bool, determines if to restore the :py:class:Report objects of the :py:class:Repository.
+        :param backup_users: Bool, determines if to restore the :py:class:User objects of the :py:class:Repository.
+        """
         start_time = datetime.utcnow()
         if verbose:
             print("The restore of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
@@ -512,11 +586,22 @@ class Repository(object):
             end_time = datetime.utcnow()
             print(
                 "The restore is completed on UTC {}, please check the {} repository".format(
-                    end_time.strftime(date_format),
-                    self._location))
+                    end_time.strftime(date_format), self._location))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def show_repository_info(self, name = ''):
+        """
+        Shows some information about the :py:class:Repository object in an index.html file.
+
+        The following information is getherd in the HTML file: :py:class:Repository object :py:attr:name,
+        :py:attr:_creation_date, :py:attr:_last_backup_date, the :py:attr:path_file meta data, number and all
+        :py:class:User objects, all :py:class:Roles object and the number and all :py:class:Document objects.
+
+        :param name: This attribute is not used to show information about an actual :py:class:Repository, because the
+        information is printed into the index.html file, but we can prin out information about an archived
+        :py:class:Repository too, and for those this parameter is the name of the backup file.
+        :return:
+        """
         paths = read_ini_file(self._paths_file)
         users = dict()
         documents = dict()
@@ -541,6 +626,15 @@ class Repository(object):
         webbrowser.open(path.join(abs_path, "index{}.html".format('_' + name)))
 
     def show_backup_info(self, backup_file):
+        """
+        It will print into an HTML file the information of a backed up :py:class:Repository object with the help of the
+        :py:meth:show_repository_info method.
+
+        The HTML file will be like: index_[name_of_the_backup_file].HTML.
+
+        :param backup_file: The backed up :py:class:Repository file, path and file name.
+        :return:
+        """
         if '.zip' not in backup_file:
             full_backup_file = backup_file + '.zip'
         else:
@@ -557,6 +651,12 @@ class Repository(object):
             raise TypeError("The {} backup doesn't exists!".format(full_backup_file))
 
     def is_backup_needed(self):
+        """
+        This metod is called every time a :py:class:Repository object is loaded with the :py:meth:load method. If the
+        :py:attr:_last_backup_date is older than the :py:const:BACKUP_FREQUENCY in days.
+
+        :return: Bool.
+        """
         if (datetime.utcnow().date() - self._last_backup_date).days > BACKUP_FREQUENCY:
             return True
         else:
