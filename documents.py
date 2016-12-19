@@ -460,6 +460,13 @@ class DocumentManager(object):
             self.save_document(document_path, document_id, document)
 
     def remove_document(self, document_id):
+        """
+        Removes a :py:class:Document object from the :py:class:Repository and it deletes the document's directory too.
+
+        :param document_id: The ID of the :py:class:Document object to remove.
+        :exception ValueError is raised if no document id found by the ``document_id``
+        :return:
+        """
         document_path = path.join(self._location, str(document_id))
         if path.exists(document_path):
             rmtree(document_path)
@@ -467,6 +474,12 @@ class DocumentManager(object):
             raise ValueError("The document with the {} ID doesn't exists, it can't be removed!".format(document_id))
 
     def find_all_documents(self):
+        """
+        Searches for all :py:class:Document object in the :py:class:Repository.
+
+        :return: A list of :py:class:Document objects found in the :py:class:Repository. If no :py:class:Document was
+        found an empty list is returned.
+        """
         all_available_documents = []
         for file_or_folder in listdir(self._location):
             if path.isdir(path.join(self._location, file_or_folder)):
@@ -477,6 +490,10 @@ class DocumentManager(object):
         return all_available_documents
 
     def count_documents(self):
+        """
+
+        :return:
+        """
         return len(self.find_all_documents())
 
     def load_all_documents(self, user_manager = None):
