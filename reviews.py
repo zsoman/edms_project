@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+"""This file contains the implementation of :py:class:Review and :py:class:ReviewManager classes.
+"""
+
+# Imports -----------------------------------------------------------------------------------------------------------
 from datetime import datetime
 
 from messenger.messenger import save_message
@@ -8,6 +13,18 @@ RESPONSE_TRUE = True
 RESPONSE_FALSE = False
 EVALUATION_TRUE = True
 EVALUATION_FALSE = False
+
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
+__version__ = "1.0.0"
+__maintainer__ = __author__
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+
+# -------------------------------------------------------------------------------------------------------------------
 
 
 class Review(object):

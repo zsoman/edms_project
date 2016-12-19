@@ -20,10 +20,10 @@ AFTER_PENDING_STATE = ['accepted', 'rejected']
 
 # Authorship information  -------------------------------------------------------------------------------------------
 __author__ = "Zsolt Bokor Levente"
-__copyright__ = "Copyright 2016, Morgan Stanely - Training 360 Project"
-__credits__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
 __version__ = "1.0.0"
-__maintainer__ = "Zsolt Bokor Levente"
+__maintainer__ = __author__
 __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
