@@ -23,12 +23,22 @@ __maintainer__ = __author__
 __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
-
 # -------------------------------------------------------------------------------------------------------------------
 
 
 class Review(object):
+    """
+    Represents the review of :py:class:Document objects.
+
+    The :py:class:Review object is defined by: :py:attr:submission, :py:attr:review_request_1,
+    :py:attr:review_request_2, :py:attr:review_response_1, :py:attr:review_response_2 and :py:attr:evaluation_result
+     attributes.
+    """
     def __init__(self):
+        """
+        Initialisation of a new :py:class:Review object.
+
+        """
         self._submission = NOT_SENT
         self._review_request_1 = NOT_SENT
         self._review_request_2 = NOT_SENT
@@ -38,10 +48,23 @@ class Review(object):
 
     @property
     def submission(self):
+        """
+        The property of the :py:attr:_submission attribute.
+
+        :return: The submission of the :py:class:Repository object :py:attr:_submission.
+        """
         return self._submission
 
     @submission.setter
     def submission(self, value):
+        """
+        The setter of the :py:attr:_submission.
+
+        :param value: New submission.
+        :exception AttributeError is raised if the :py:attr:_submission attribute is not :py:const:NOT_SENT or
+        :py:const:SENT.
+        :return:
+        """
         if value in [NOT_SENT, SENT]:
             self.submission = value
         else:
@@ -49,10 +72,23 @@ class Review(object):
 
     @property
     def review_request_1(self):
+        """
+        The property of the :py:attr:_review_request_1 attribute.
+
+        :return: The review_request_1 of the :py:class:Repository object :py:attr:_review_request_1.
+        """
         return self._review_request_1
 
     @review_request_1.setter
     def review_request_1(self, value):
+        """
+        The setter of the :py:attr:_review_request_1.
+
+        :param value: New review_request_1.
+        :exception AttributeError is raised if the :py:attr:_review_request_1 attribute is not :py:const:NOT_SENT or
+        :py:const:SENT.
+        :return:
+        """
         if value in [NOT_SENT, SENT]:
             self.submission = value
         else:
@@ -60,10 +96,23 @@ class Review(object):
 
     @property
     def review_request_2(self):
+        """
+        The property of the :py:attr:_review_request_2 attribute.
+
+        :return: The review_request_2 of the :py:class:Repository object :py:attr:_review_request_2.
+        """
         return self._review_request_2
 
     @review_request_2.setter
     def review_request_2(self, value):
+        """
+        The setter of the :py:attr:_review_request_2.
+
+        :param value: New review_request_2.
+        :exception AttributeError is raised if the :py:attr:_review_request_2 attribute is not :py:const:NOT_SENT or
+        :py:const:SENT.
+        :return:
+        """
         if value in [NOT_SENT, SENT]:
             self.submission = value
         else:
@@ -71,10 +120,23 @@ class Review(object):
 
     @property
     def review_response_1(self):
+        """
+        The property of the :py:attr:_review_response_1 attribute.
+
+        :return: The review_response_1 of the :py:class:Repository object :py:attr:_review_response_1.
+        """
         return self._review_response_1
 
     @review_response_1.setter
     def review_response_1(self, value):
+        """
+        The setter of the :py:attr:_review_response_1.
+
+        :param value: New review_response_1.
+        :exception AttributeError is raised if the :py:attr:_review_response_1 attribute is not :py:const:RESPONSE_TRUE
+        or :py:const:RESPONSE_FALSE.
+        :return:
+        """
         if value in [RESPONSE_TRUE, RESPONSE_FALSE]:
             self.submission = value
         else:
@@ -82,10 +144,23 @@ class Review(object):
 
     @property
     def review_response_2(self):
+        """
+        The property of the :py:attr:_review_response_2 attribute.
+
+        :return: The review_response_2 of the :py:class:Repository object :py:attr:_review_response_2.
+        """
         return self._review_response_2
 
     @review_response_2.setter
     def review_response_2(self, value):
+        """
+        The setter of the :py:attr:_review_response_2.
+
+        :param value: New review_response_2.
+        :exception AttributeError is raised if the :py:attr:_review_response_2 attribute is not :py:const:RESPONSE_TRUE
+        or :py:const:RESPONSE_FALSE.
+        :return:
+        """
         if value in [RESPONSE_TRUE, RESPONSE_FALSE]:
             self.submission = value
         else:
@@ -93,10 +168,23 @@ class Review(object):
 
     @property
     def evaluation_result(self):
+        """
+        The property of the :py:attr:_evaluation_result attribute.
+
+        :return: The evaluation_result of the :py:class:Repository object :py:attr:_evaluation_result.
+        """
         return self._evaluation_result
 
     @evaluation_result.setter
     def evaluation_result(self, value):
+        """
+        The setter of the :py:attr:_evaluation_result.
+
+        :param value: New evaluation_result.
+        :exception AttributeError is raised if the :py:attr:_evaluation_result attribute is not
+        :py:const:EVALUATION_TRUE or :py:const:EVALUATION_FALSE.
+        :return:
+        """
         if value in [EVALUATION_TRUE, EVALUATION_FALSE]:
             self.submission = value
         else:
