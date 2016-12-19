@@ -195,6 +195,12 @@ class Project(object):
             AttributeError("The document_id must be a number!")
 
     def has_required_roles(self, repository):
+        """
+        Determines if the :py:class:Project has the required :py:class:Role in :py:class:User objects.
+
+        :param repository: Object of :py:class:Repository class.
+        :return: Bool
+        """
         users_by_role = repository._user_manager.list_users_by_role()
         administrators = users_by_role['admin']
         managers = users_by_role['manager']
@@ -205,7 +211,7 @@ class Project(object):
                 is_adminstrator = True
                 break
 
-        for user_idin in self.members:
+        for user_id in self.members:
             if user_id in managers:
                 is_manager = False
                 break
