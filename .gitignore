@@ -107,3 +107,4 @@ coverage/
 !/doc/build/html/index.html
 !/coverage/
 !/database/
+!/index_.html
