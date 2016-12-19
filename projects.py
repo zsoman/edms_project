@@ -56,35 +56,83 @@ class Project(object):
 
     @property
     def name(self):
+        """
+        The property of the :py:attr:_name attribute.
+
+        :return: The title of the :py:class:Project object :py:attr:_name.
+        """
         return self._name
 
     @name.setter
     def name(self, value):
+        """
+        The setter of the :py:attr:_name.
+
+        :param value: New name.
+        :return:
+        """
         raise AttributeError("The name of a project can't be changed!")
 
     @property
     def description(self):
+        """
+        The property of the :py:attr:_description attribute.
+
+        :return: The title of the :py:class:Project object :py:attr:_description.
+        """
         return self._description
 
     @description.setter
     def description(self, value):
+        """
+        The setter of the :py:attr:_description.
+
+        :param value: New description.
+        :return:
+        """
         self._description = value
 
     @property
     def members(self):
+        """
+        The property of the :py:attr:_members attribute.
+
+        :return: The title of the :py:class:Project object :py:attr:_members.
+        """
         return self._members
 
     @members.setter
     def members(self, value):
+        """
+        The setter of the :py:attr:_members. The :py:attr:members can't be changed like this only with the
+        :py:meth:add_member and :py:meth:remove_member method.
+
+        :param value: New members.
+        :exception AttributeError is raised every time the :py:attr:members is changed.
+        :return:
+        """
         raise AttributeError(
             "The members of a project can't be changed like this, use the add_member or remove_member methods!")
 
     @property
     def documents(self):
+        """
+        The property of the :py:attr:_documents attribute.
+
+        :return: The title of the :py:class:Project object :py:attr:_documents.
+        """
         return self._documents
 
     @documents.setter
     def documents(self, value):
+        """
+        The setter of the :py:attr:_documents. The :py:attr:documents can't be changed like this only with the
+        :py:meth:add_document and :py:meth:remove_document method.
+
+        :param value: New documents.
+        :exception AttributeError is raised every time the :py:attr:documents is changed.
+        :return:
+        """
         raise AttributeError(
             "The documents of a project can't be changed like this, use the add_document or remove_document methods!")
 

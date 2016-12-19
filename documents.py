@@ -90,7 +90,7 @@ class Document(object):
         """
         The property of the :py:attr:_description attribute.
 
-        :return: The description of the Document object :py:attr:_description.
+        :return: The description of the :py:class:Document object :py:attr:_description.
         """
         return self._description
 
@@ -109,7 +109,7 @@ class Document(object):
         """
         The property of the :py:attr:_author attribute.
 
-        :return: The author(s) of the Document object :py:attr:_author.
+        :return: The author(s) of the  :py:class:Document object :py:attr:_author.
         """
         if len(self._author) == 1:
             return int(self._author[0])
@@ -131,7 +131,7 @@ class Document(object):
         """
         The property of the :py:attr:_files attribute.
 
-        :return: The file(s) of the Document object :py:attr:_files.
+        :return: The file(s) of the :py:class:Document object :py:attr:_files.
         """
         return self._files
 
@@ -151,7 +151,7 @@ class Document(object):
         The property of the :py:attr:_creation_date attribute.
 
         :return: String representation of a date in the following format: YEAR/MONTH/DAY HOUR:MINUTES:SECONDS
-        MILLISECONDS. The creation date of the Document object :py:attr:_creation_date.
+        MILLISECONDS. The creation date of the :py:class:Document object :py:attr:_creation_date.
         """
         d = self._creation_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
@@ -177,7 +177,7 @@ class Document(object):
         The property of the :py:attr:_modification_date attribute.
 
         :return: String representation of a date in the following format: YEAR/MONTH/DAY HOUR:MINUTES:SECONDS
-        MILLISECONDS. The modification date of the Document object :py:attr:_modification_date.
+        MILLISECONDS. The modification date of the :py:class:Document object :py:attr:_modification_date.
         """
         d = self._modification_date
         return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
@@ -202,7 +202,7 @@ class Document(object):
         """
         The property of the :py:attr:_state attribute.
 
-        :return: The state of the Document object :py:attr:_state.
+        :return: The state of the :py:class:Document object :py:attr:_state.
         """
         return self._state
 
@@ -227,7 +227,7 @@ class Document(object):
         """
         The property of the :py:attr:_doc_format attribute.
 
-        :return: The document format of the Document object :py:attr:_doc_format.
+        :return: The document format of the :py:class:Document object :py:attr:_doc_format.
         """
         return self._doc_format
 
@@ -291,7 +291,7 @@ class Document(object):
         """
         String representation of the :py:class:Document.
 
-        :return: Document represented by a string in the following format: :py:attr:title - :py:attr:author :
+        :return: :py:class:Document represented by a string in the following format: :py:attr:title - :py:attr:author :
         :py:attr:description ; :py:attr:files ; :py:attr:doc_format.
         """
         document_string = ''
@@ -312,7 +312,7 @@ class DocumentManager(object):
 
     def __init__(self, repository_location, paths_file = None):
         """
-        Initialisation of a new DocumentManager object.
+        Initialisation of a new :py:class:DocumentManager object.
 
         :param repository_location: The path of the repository for which is working.
         :param paths_file: The path where the repositorie's paths_file is, this is a metadata file of the repository.
