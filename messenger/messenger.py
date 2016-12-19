@@ -1,7 +1,23 @@
+#!/usr/bin/env python
+""" """
+# Imports -----------------------------------------------------------------------------------------------------------
+import logging
 import os
+
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Impre Piller"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+# -------------------------------------------------------------------------------------------------------------------
 
 # You should set to the appropriate path!
 MESSAGE_DIRECTORY = '/tmp/messages'
+module_logger = logging.getLogger('repository.messenger')
 
 
 def get_new_message_id():

@@ -1,13 +1,22 @@
-#
-# Generate random document metadata and content.
-#
+"""Generate random document metadata and content.
+"""
 
+# Imports -----------------------------------------------------------------------------------------------------------
+import logging
 import random
 import string
 
-# from documents import DocumentManager
-# from iniformat.reader import read_ini_file
-# from repository import Repository
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Impre Piller"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+# -------------------------------------------------------------------------------------------------------------------
+
 
 document_types = ['general', 'office', 'image']
 
@@ -25,15 +34,14 @@ filename_parts = {
     'office': ['summary', 'report', 'notes', 'meeting'],
     'image': ['photo', 'img', 'image', 'scan', 'picture', 'graph', 'copy']
 }
+module_logger = logging.getLogger('repository.document_generator')
 
 
 class DocumentGenerator(object):
     """Generate various types of documents."""
 
-
     def select_document_type(self):
         return random.choice(document_types)
-
 
     def generate_filename(self, keyword):
         transform_id = random.randint(0, 2)
@@ -47,10 +55,8 @@ class DocumentGenerator(object):
             filename = filename + str(random.randint(1, 10000))
         return filename
 
-
     def generate_title(self, keyword, topic):
         return '{} {}'.format(topic.capitalize(), keyword)
-
 
     def generate_description(self, keyword):
         version = random.randint(1, 3)
@@ -60,7 +66,6 @@ class DocumentGenerator(object):
             return '{} details'.format(keyword.capitalize())
         else:
             return 'Some information about {}'.format(keyword)
-
 
     def generate_metadata(self, document_type):
         keyword = random.choice(filename_parts[document_type])
@@ -90,7 +95,6 @@ class DocumentGenerator(object):
             'description': description
         }
 
-
     def generate_random_file(self, path):
         with open(path, 'w') as random_file:
             random_file.write('The file has created by the document generator.\n\n')
@@ -98,5 +102,5 @@ class DocumentGenerator(object):
             for i in range(n_lines):
                 row_length = random.randint(3, 70)
                 row = ''.join(
-                        [random.choice(string.ascii_letters) for i in range(row_length)])
+                    [random.choice(string.ascii_letters) for i in range(row_length)])
                 random_file.write(row + '\n')

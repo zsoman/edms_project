@@ -1,11 +1,29 @@
-#
-# Read data from an ini file.
-#
-# - The ini file can contains sections and properties.
-# - The section and property names are arbitrary without restrictions.
-# - The section denoted by leading [ and trailing ] as the first non-whitespace characters.
-# - The duplicated section or property definition causes error.
-#
+#!/usr/bin/env python
+""" Read data from an ini file.
+
+ - The ini file can contains sections and properties.
+ - The section and property names are arbitrary without restrictions.
+ - The section denoted by leading [ and trailing ] as the first non-whitespace characters.
+ - The duplicated section or property definition causes error.
+"""
+
+# Imports -----------------------------------------------------------------------------------------------------------
+import logging
+
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Imre Piller"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+# -------------------------------------------------------------------------------------------------------------------
+
+module_logger = logging.getLogger('repository.reader')
+
+
 def read_ini_file(path):
     content = {}
     section_name = ''
