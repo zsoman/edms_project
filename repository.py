@@ -488,39 +488,56 @@ class Repository(object):
         :return:
         """
         start_time = datetime.utcnow()
+        logger.info("The backup of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
+            date_format)))
         if verbose:
             print("The backup of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
                 date_format)))
         if not path.exists(backup_path):
             makedirs(backup_path)
+            logger.info("The {} backup path structure is created.".format(backup_path))
             if verbose:
                 print("The {} backup path structure is created.".format(backup_path))
         else:
+            logger.info("The {} backup path exists.".format(backup_path))
             if verbose:
                 print("The {} backup path exists.".format(backup_path))
         backup_file_name = self.determine_export_file_name(backup_file_name, backup_path)
+        logger.info("The name of the backup file is: {}.zip.".format(backup_file_name))
         if verbose:
             print("The name of the backup file is: {}.zip.".format(backup_file_name))
         new_location = self._location
         if not (backup_documents and backup_logs and backup_projects and backup_reports and backup_users):
             pats_file = read_ini_file(self._paths_file)
             copytree(new_location, './{}'.format(backup_file_name))
+            logger.debug("The backup file is copied from to {} with {} name.".format(new_location,
+                                                                                     './{}'.format(backup_file_name)))
             new_location = './{}'.format(backup_file_name)
             if not backup_documents:
                 rmtree(path.join(self._location, pats_file['directories']['documents']))
                 makedirs(path.join(self._location, pats_file['directories']['documents']))
+                logger.debug("The {} directory is removed.".format(
+                    path.join(self._location, pats_file['directories']['documents'])))
             if not backup_logs:
                 rmtree(path.join(self._location, pats_file['directories']['logs']))
                 makedirs(path.join(self._location, pats_file['directories']['logs']))
+                logger.debug(
+                    "The {} directory is removed.".format(path.join(self._location, pats_file['directories']['logs'])))
             if not backup_projects:
                 rmtree(path.join(self._location, pats_file['directories']['projects']))
                 makedirs(path.join(self._location, pats_file['directories']['projects']))
+                logger.debug("The {} directory is removed.".format(
+                    path.join(self._location, pats_file['directories']['projects'])))
             if not backup_reports:
                 rmtree(path.join(self._location, pats_file['directories']['reports']))
                 makedirs(path.join(self._location, pats_file['directories']['reports']))
+                logger.debug("The {} directory is removed.".format(
+                    path.join(self._location, pats_file['directories']['reports'])))
             if not backup_users:
                 rmtree(path.join(self._location, pats_file['directories']['users']))
                 makedirs(path.join(self._location, pats_file['directories']['users']))
+                logger.debug(
+                    "The {} directory is removed.".format(path.join(self._location, pats_file['directories']['users'])))
         make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose)  # logger =
         if new_location == './{}'.format(backup_file_name) and path.exists(new_location):
             rmtree(new_location)
@@ -529,6 +546,9 @@ class Repository(object):
             print("The backup is completed on UTC {}, please check the {} file".format(
                 end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
+            logger.info("The backup is completed on UTC {}, please check the {} file".format(
+                end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
+            logger.info("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def determine_export_file_name(self, backup_file_name, backup_path):
         """
