@@ -381,9 +381,10 @@ class ProjectManager(object):
 
     def find_project_by_id(self, project_id):
         """
-        Finds a :py:class:Project if it's available in the filesystem.
+        Finds a :py:class:Project by ID if it's available in the filesystem.
 
         :param project_id: The ID of the :py:class:Project object to search for.
+        :exception ValueError raised if no project was found with ``project_id``.
         :return: :py:class:Project object found with the ``project_id``.
         """
         try:
@@ -392,6 +393,12 @@ class ProjectManager(object):
             raise ValueError("The project with {} ID doesn't exists!".format(project_id))
 
     def find_projects_by_name(self, name):
+        """
+        Finds :py:class:Project objects by name if it's available in the filesystem.
+
+        :param name: The :py:attr:name of the :py:class:Project object to search for.
+        :return: A list of :py:class:Project objects found with the ``name``.
+        """
         found_projects = []
         for project_id in self._projects:
             project = self.find_project_by_id(project_id)
@@ -400,17 +407,39 @@ class ProjectManager(object):
         return found_projects
 
     def update_project(self, project_id, project):
+        """
+        Updates a :py:class:Project with ``project_id`` in the filesystem with a new :py:class:Project object.
+
+        :param project_id: The ID of the :py:class:Project to update.
+        :param project: :py:class:Project object to save instead of the old :py:class:Project.
+        :exception ValueError is raised if no :py:class:Project is found with ``project_id``.
+        :return:
+        """
         if project_id in self._projects:
             self.save_project(project, project_id)
         else:
             raise ValueError("The project with {} ID doesn't exists, it can't be updated!".format(project_id))
 
-    def delet_project_in_file_system(self, project_id):
+    def delete_project_in_file_system(self, project_id):
+        """
+        Deletes a :py:class:Project from the filesystem, by deleting the project's directory and all of it's content.
+
+        :param project_id: The ID of the :py:class:Project object to delete.
+        :return:
+        """
         rmtree(path.join(self.location, str(project_id)))
 
     def remove_project(self, project_id):
+        """
+        Removes a :py:class:Project object from the :py:class:ProjectManager :py:attr:_documents attribute and deletes
+        it from the filesystem too by calling the :py:meth:delete_project_in_file_system method.
+
+        :param project_id: The ID of the :py:class:Project object to remove.
+        :exception ValueError is raised if no :py:class:Project was found with ``project_id`` ID.
+        :return:
+        """
         if project_id in self._projects:
             self._projects.remove(project_id)
-            self.delet_project_in_file_system(project_id)
+            self.delete_project_in_file_system(project_id)
         else:
             raise ValueError("The project with {} ID doesn't exists, it can't be removed!".format(project_id))
