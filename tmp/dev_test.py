@@ -19,7 +19,7 @@ if path.exists(path.join(abs_path, 'Documents')):
     rmtree(path.join(abs_path, 'Documents'))
 # if path.exists(path.join(abs_path, 'Repositories')):
 #     rmtree(path.join(abs_path, 'Repositories'))
-repo = Repository()  # Create repo
+repo = Repository('/tmp/edms')  # Create repo
 gen = UserGenerator()  # Create user_gerenerator
 # # # Create user_manager
 # # user_manager = UserManager(repo)
