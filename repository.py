@@ -58,6 +58,7 @@ FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects'
                 'reports': 'reports', 'users': 'users'}
 BACKUP_FREQUENCY = 7
 
+
 # -------------------------------------------------------------------------------------------------------------------
 
 
@@ -223,7 +224,6 @@ class Repository(object):
         :return:
         """
         raise AttributeError("The repository object's document_manager object can't be changed!")
-
 
     def load(self):
         """
@@ -460,9 +460,9 @@ class Repository(object):
                 logger.info("The document's metadata file is written to the filesystem.")
             else:
                 logger.exception("The docuement must be accepted and public to export, not {} and {}!".format(
-                        document.state, 'Private' if not document.is_public() else 'Public'))
+                    document.state, 'Private' if not document.is_public() else 'Public'))
                 raise TypeError("The docuement must be accepted and public to export, not {} and {}!".format(
-                        document.state, 'Private' if not document.is_public() else 'Public'))
+                    document.state, 'Private' if not document.is_public() else 'Public'))
 
     def create_backup(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
                       date_format = '%Y/%m/%d %H:%M:%S', backup_documents = True, backup_logs = True,
@@ -538,7 +538,7 @@ class Repository(object):
                 makedirs(path.join(self._location, pats_file['directories']['users']))
                 logger.debug(
                     "The {} directory is removed.".format(path.join(self._location, pats_file['directories']['users'])))
-        make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose)  # logger =
+        make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose, logger = logger)
         if new_location == './{}'.format(backup_file_name) and path.exists(new_location):
             rmtree(new_location)
         end_time = datetime.utcnow()

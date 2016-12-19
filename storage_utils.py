@@ -3,6 +3,7 @@
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 import os
 
 # Authorship information  -------------------------------------------------------------------------------------------
@@ -14,8 +15,10 @@ __maintainer__ = "Zsolt Bokor Levente"
 __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
-
 # -------------------------------------------------------------------------------------------------------------------
+
+module_logger = logging.getLogger('repository.storage_utils')
+
 
 def get_next_id(storage_path):
     """Calculate the next available identifier.

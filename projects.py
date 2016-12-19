@@ -5,6 +5,7 @@ The :py:class:Project is represented of name, description, :py:class:Document an
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 from os import path, makedirs, listdir
 from shutil import rmtree
 
@@ -24,6 +25,8 @@ __status__ = "Development"
 # -------------------------------------------------------------------------------------------------------------------
 
 PROJECT_METADATA_FILE_NAME_FORMAT = '{}_project_metadata.edd'
+module_logger = logging.getLogger('repository.projects')
+
 
 class Project(object):
     """
@@ -347,7 +350,6 @@ class ProjectManager(object):
             makedirs(project_path)
         write_ini_file(project_metadata_path, data)
         return next_id
-
 
     def add_project(self, project):
         """

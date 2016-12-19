@@ -18,6 +18,7 @@ The fields of a user object stored in the text file line-by-line as:
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, date
@@ -42,6 +43,7 @@ __status__ = "Development"
 
 DELIMITER_CHAR = ':'
 ROLE_DELIMITER_CHAR = ','
+module_logger = logging.getLogger('repository.users')
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -139,13 +141,12 @@ class User(object):
             self._email = email
         else:
             raise ValueError(
-                    "The {} email address is not a valid email address!".format(email))
+                "The {} email address is not a valid email address!".format(email))
 
         if User.is_valid_password(password):
             self._password = password
         else:
             raise TypeError("The {} password is not a valid string!".format(password))
-
 
     @classmethod
     def is_valid_name(cls, name):
@@ -155,7 +156,6 @@ class User(object):
         :return: Bool, TRUE if the ``name`` is alphanumerical.
         """
         return name.isalnum()
-
 
     @classmethod
     def is_valid_date(cls, date_obj):
@@ -167,7 +167,6 @@ class User(object):
         """
         return isinstance(date_obj, date)
 
-
     @classmethod
     def is_valid_email(cls, email):
         """
@@ -177,7 +176,6 @@ class User(object):
         :return: Bool, TRUE if the regex mathes the ``email``.
         """
         return match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
-
 
     @classmethod
     def is_valid_password(cls, password):
@@ -192,7 +190,6 @@ class User(object):
                 return False
         return True
 
-
     @property
     def first_name(self):
         """
@@ -201,7 +198,6 @@ class User(object):
         :return: The first_name of the :py:class:User object :py:attr:_first_name.
         """
         return self._first_name
-
 
     @property
     def family_name(self):
@@ -212,7 +208,6 @@ class User(object):
         """
         return self._family_name
 
-
     @property
     def full_name(self):
         """
@@ -221,7 +216,6 @@ class User(object):
         :return: The full_name of the :py:class:User object.
         """
         return self._first_name + ' ' + self._family_name
-
 
     @property
     def birth(self):
@@ -232,7 +226,6 @@ class User(object):
         """
         return self._birth
 
-
     @property
     def email(self):
         """
@@ -242,7 +235,6 @@ class User(object):
         """
         return self._email
 
-
     @property
     def password(self):
         """
@@ -251,7 +243,6 @@ class User(object):
         :return: The password of the :py:class:User object :py:attr:_password.
         """
         return self._password
-
 
     def __str__(self):
         """
@@ -281,7 +272,6 @@ class Role(object):
         else:
             raise ValueError("The '{}' is an invalid role!".format(role))
 
-
     @property
     def role(self):
         """
@@ -290,7 +280,6 @@ class Role(object):
         :return: The role of the :py:class:Role object :py:attr:_role.
         """
         return self._role
-
 
     def __eq__(self, other):
         """
@@ -302,7 +291,6 @@ class Role(object):
         if isinstance(other, self.__class__):
             return self._role == other._role
         return False
-
 
     def __str__(self):
         """
@@ -329,14 +317,12 @@ class RoleManager(object):
         metadata_data = read_ini_file(paths_file)
         self._location = path.join(repository_location, metadata_data['directories']['users'])
 
-
     def read_roles(self):
         """Read roles from the file.
 
         :return: The roles file data.
         """
         return RoleManager.parse_roles_file(path.join(self._location, RoleManager.get_roles_file(self._location)))
-
 
     def write_roles(self, users_roles):
         """Write roles to the file. The type of the roles file can be: TXT, XML, JSON.
@@ -378,7 +364,6 @@ class RoleManager(object):
             tree = ET.ElementTree(root)
             tree.write(roles_file)
 
-
     @classmethod
     def get_roles_file(cls, folder_path):
         """
@@ -394,11 +379,10 @@ class RoleManager(object):
                     raise RuntimeError("Multiple roles file in the repository!")
                 elif file.split('.')[1] not in ['txt', 'json', 'xml']:
                     raise TypeError(
-                            "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(
-                                    file))
+                        "Inappropriate file extinsion of {} file, it should be TXT, JSON or XML!".format(
+                            file))
                 else:
                     return file
-
 
     @classmethod
     def parse_roles_file(cls, roles_file):
@@ -451,7 +435,7 @@ class RoleManager(object):
 
         else:
             raise WrongFileTypeError(
-                    "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
+                "The {} file's type is inappropriate it should be TXT, JSON or XML!".format(roles_file))
 
 
 class UserManager(object):
@@ -474,7 +458,6 @@ class UserManager(object):
         metadata_data = read_ini_file(self.paths_file)
         self._location = path.join(self.repository_location, metadata_data['directories']['users'])
 
-
     def save_user(self, user_id, user):
         """Save user to file.
 
@@ -488,7 +471,6 @@ class UserManager(object):
             user_file.write(str(user.birth) + '\n')
             user_file.write(user.email + '\n')
             user_file.write(''.join(user.password) + '\n')
-
 
     def load_user(self, user_id):
         """Load user from file.
@@ -505,7 +487,6 @@ class UserManager(object):
         user = User(first_name, family_name, birth, email, password)
         return user
 
-
     def add_user(self, user):
         """
         Add user to the :py:class:UserManager object and saves it to the filesystem.
@@ -517,7 +498,6 @@ class UserManager(object):
         self.save_user(user_id, user)
         return user_id
 
-
     def update_user(self, user_id, user):
         """
         Updates a :py:class:User object in the filesystem.
@@ -528,7 +508,6 @@ class UserManager(object):
         """
         self.remove_user(user_id)
         self.save_user(user_id, user)
-
 
     def remove_user(self, user_id):
         """
@@ -544,7 +523,6 @@ class UserManager(object):
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
 
-
     def find_user_by_id(self, user_id):
         """
         Find :py:class:User object by ID.
@@ -559,7 +537,6 @@ class UserManager(object):
             return user
         else:
             raise ValueError('The user id {} does not exist!'.format(user_id))
-
 
     def find_users_by_name(self, name):
         """
@@ -579,7 +556,6 @@ class UserManager(object):
                     found_users.append(user_file)
         return found_users
 
-
     def find_users_by_email(self, email):
         """
         Find :py:class:User objects by email address.
@@ -595,7 +571,6 @@ class UserManager(object):
                     if i + 1 == 4 and email.lower() in line.strip().lower():
                         found_users.append(user_file)
         return found_users
-
 
     def find_users_by_role(self, role):
         """
@@ -613,7 +588,6 @@ class UserManager(object):
                 if role == role_obj.role:
                     found_users.append(self.find_user_by_id(id_key))
         return found_users
-
 
     def add_role(self, user_id, role):
         """
@@ -634,7 +608,6 @@ class UserManager(object):
                 users_roles[user_id].append(role)
         role_manager.write_roles(users_roles)
 
-
     def remove_role(self, user_id, role):
         """
         Remove role from a :py:class:User object.
@@ -648,14 +621,13 @@ class UserManager(object):
         _ = self.find_user_by_id(user_id)
         if user_id not in users_roles:
             raise RuntimeError(
-                    "The user with {} user ID has no roles, can't remove {} role!".format(user_id, Role(role)))
+                "The user with {} user ID has no roles, can't remove {} role!".format(user_id, Role(role)))
         else:
             if Role(role) in users_roles[user_id]:
                 users_roles[user_id] = users_roles[user_id].remove(Role(role))
             if not users_roles[user_id]:
                 users_roles[user_id] = []
         role_manager.write_roles(users_roles)
-
 
     def has_role(self, user_id, role):
         """
@@ -671,7 +643,6 @@ class UserManager(object):
             raise RuntimeError("No user with {} ID!".format(user_id))
         else:
             return Role(role) in users_roles[user_id]
-
 
     def list_users_by_role(self):
         """
@@ -691,8 +662,7 @@ class UserManager(object):
                     users_by_roles[role.role] = [id_key]
         return users_by_roles
 
-
-    def check_role_file(self, roles_file=None):
+    def check_role_file(self, roles_file = None):
         """
         Checks the role file for any errors in the content of the file. The role file type can be TXT, XML and JSON.
 
@@ -711,7 +681,7 @@ class UserManager(object):
                         raise ValueError("In the role file's {}th line has no user identifier!".format(i + 1))
                     elif DELIMITER_CHAR not in line or line.count(DELIMITER_CHAR) > 1:
                         raise ValueError(
-                                "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
+                            "Missing or too many '{}' character in the {}th line!".format(DELIMITER_CHAR, i + 1))
 
                     roles = []
                     for role in line.split(DELIMITER_CHAR)[1].split(ROLE_DELIMITER_CHAR):
@@ -724,7 +694,7 @@ class UserManager(object):
                         role = role.strip()
                         if role.isspace() or role == '':
                             raise ValueError(
-                                    "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
+                                "Too many '{}' characters in the {}th line!".format(ROLE_DELIMITER_CHAR, i + 1))
                         Role(role)
 
                     user_ids.append(line.split(DELIMITER_CHAR)[0])
@@ -741,30 +711,30 @@ class UserManager(object):
             for id_key, roles_value in data.iteritems():
                 if not isinstance(id_key, unicode):
                     raise MissingUserIdentifierError(
-                            "In the role file has no user identifier!")
+                        "In the role file has no user identifier!")
                 else:
                     try:
                         int(id_key)
                     except ValueError:
                         MissingUserIdentifierError(
-                                "In the role file the {} key should be a number!".format(
-                                        id_key))
+                            "In the role file the {} key should be a number!".format(
+                                id_key))
                 if not isinstance(roles_value, list):
                     raise InvalidRoleNameError(
-                            "The roles should be stored in a list, not in a {}!".format(
-                                    type(roles_value).__name__))
+                        "The roles should be stored in a list, not in a {}!".format(
+                            type(roles_value).__name__))
                 else:
                     for role in roles_value:
                         try:
                             Role(role)
                         except ValueError:
                             raise InvalidRoleNameError(
-                                    "The {} role name is invalid!".format(role))
+                                "The {} role name is invalid!".format(role))
                     roles_count = Counter(roles_value)
                     for key, value in roles_count.iteritems():
                         if value > 1:
                             raise DuplicatedRolesError(
-                                    "The {} role is duplicated!".format(key))
+                                "The {} role is duplicated!".format(key))
             return True
 
         elif RoleManager.get_roles_file(self._location).endswith('xml'):
@@ -773,21 +743,21 @@ class UserManager(object):
             users_list = []
             if users_root.tag != 'users':
                 raise MissingUserIdentifierError(
-                        "In the role file the root tag must be 'users' not {}!".format(
-                                users_root.tag))
+                    "In the role file the root tag must be 'users' not {}!".format(
+                        users_root.tag))
             for user in users_root:
                 if user.tag != 'user':
                     raise MissingUserIdentifierError(
-                            "In the role file the root's child tags must be 'user' not {}!".format(
-                                    user.tag))
+                        "In the role file the root's child tags must be 'user' not {}!".format(
+                            user.tag))
                 try:
                     users_list.append(int(user.attrib['id']))
                 except KeyError:
                     raise MissingUserIdentifierError("The user tag must have an 'id' attribute!")
                 except ValueError:
                     raise MissingUserIdentifierError(
-                            "The user tag must have an 'id' attribute which is a number, not a {}!".format(
-                                    type(user.attrib['id']).__name__))
+                        "The user tag must have an 'id' attribute which is a number, not a {}!".format(
+                            type(user.attrib['id']).__name__))
                 user_roles = []
                 for role in user:
                     try:
@@ -805,9 +775,8 @@ class UserManager(object):
         else:
             raise WrongFileTypeError("The roles file's type is inappropriate it should be TXT, JSON or XML!")
 
-
     @classmethod
-    def all_files_in_folder(cls, file_path, file_format=''):
+    def all_files_in_folder(cls, file_path, file_format = ''):
         """
         Searches for all the :py:class:User objects representation in the filesystem.
 
@@ -826,7 +795,6 @@ class UserManager(object):
                     all_files.append(item)
         return all_files
 
-
     def find_all_users(self):
         """
         Finds all available :py:class:User objects IDs.
@@ -842,7 +810,6 @@ class UserManager(object):
                     pass
         return all_available_users
 
-
     def count_users(self):
         """
         Counts the :py:class:User objects.
@@ -850,7 +817,6 @@ class UserManager(object):
         :return: Integer.
         """
         return len(self.find_all_users())
-
 
     def set_role_file(self, new_row_file_path):
         """

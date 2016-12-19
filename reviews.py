@@ -3,16 +3,10 @@
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 from datetime import datetime
 
 from messenger.messenger import save_message
-
-NOT_SENT = 'not_sent'
-SENT = 'sent'
-RESPONSE_TRUE = True
-RESPONSE_FALSE = False
-EVALUATION_TRUE = True
-EVALUATION_FALSE = False
 
 # Authorship information  -------------------------------------------------------------------------------------------
 __author__ = "Zsolt Bokor Levente"
@@ -25,6 +19,14 @@ __status__ = "Development"
 
 # -------------------------------------------------------------------------------------------------------------------
 
+NOT_SENT = 'not_sent'
+SENT = 'sent'
+RESPONSE_TRUE = True
+RESPONSE_FALSE = False
+EVALUATION_TRUE = True
+EVALUATION_FALSE = False
+module_logger = logging.getLogger('repository.documents')
+
 
 class Review(object):
     """
@@ -34,6 +36,7 @@ class Review(object):
     :py:attr:review_request_2, :py:attr:review_response_1, :py:attr:review_response_2 and :py:attr:evaluation_result
      attributes.
     """
+
     def __init__(self):
         """
         Initialisation of a new :py:class:Review object.
@@ -336,11 +339,11 @@ class ReviewManager(object):
     The :py:class:ReviewManager object is defined by: location, :py:class:UserManager object and
     :py:class:DocumentManager object.
     """
+
     def __init__(self, review_manager_path, user_manager, document_manager):
         self._location = review_manager_path
         self._user_manager = user_manager
         self._document_manager = document_manager
-
 
     def select_document(self, submission_id):
         pass

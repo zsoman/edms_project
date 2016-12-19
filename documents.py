@@ -6,6 +6,7 @@ represented in the document's abstraction level. The document manager operates o
 """
 
 # Imports -----------------------------------------------------------------------------------------------------------
+import logging
 from datetime import datetime
 from os import path, makedirs, listdir, remove
 from shutil import move, rmtree
@@ -13,10 +14,6 @@ from shutil import move, rmtree
 from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
 from storage_utils import get_next_id
-
-VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
-AFTER_NEW_STATE = ['pending']
-AFTER_PENDING_STATE = ['accepted', 'rejected']
 
 # Authorship information  -------------------------------------------------------------------------------------------
 __author__ = "Zsolt Bokor Levente"
@@ -28,6 +25,12 @@ __email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
 __status__ = "Development"
 
 # -------------------------------------------------------------------------------------------------------------------
+
+VALID_DOCUMENT_STATES = ['new', 'pending', 'accepted', 'rejected']
+AFTER_NEW_STATE = ['pending']
+AFTER_PENDING_STATE = ['accepted', 'rejected']
+module_logger = logging.getLogger('repository.documents')
+
 
 class DocumentDoesntExistsError(Exception):
     """This exception is raised when a document doesn't exists.
@@ -65,6 +68,7 @@ class Document(object):
         self._modification_date = self._creation_date
         self._state = 'new'
         self._is_public = False
+        module_logger.info("Document object is initialized.")
 
     @property
     def title(self):
