@@ -136,17 +136,63 @@ class Project(object):
         raise AttributeError(
             "The documents of a project can't be changed like this, use the add_document or remove_document methods!")
 
-    def add_member(self, user):
-        self._members.append(user)
+    def add_member(self, user_id):
+        """
+        Adds a :py:class:User object's ID to the :py:attr:members (list).
 
-    def remove_member(self, user):
-        self._members.remove(user)
+        :param user_id: ID of a new :py:class:User object.
+        :exception AttributeError is raised if the ``user_id`` is not an instance of integer.
+        :return:
+        """
+        if isinstance(user_id, int):
+            self._members.append(user_id)
+        else:
+            raise AttributeError("The user_id must be a number!")
 
-    def add_document(self, document):
-        self._documents.append(document)
+    def remove_member(self, user_id):
+        """
+        Removes a :py:class:User object's ID to the :py:attr:members (list).
 
-    def remove_document(self, document):
-        self._members.remove(document)
+        :param user_id: ID of a new :py:class:User object.
+        :exception AttributeError is raised if the ``user_id`` is not an instance of integer.
+        :return:
+        """
+        if isinstance(user_id, int):
+            try:
+                self._members.remove(user_id)
+            except ValueError:
+                pass
+        else:
+            AttributeError("The user_id must be a number!")
+
+    def add_document(self, document_id):
+        """
+        Adds a :py:class:Document object's ID to the :py:attr:documents (list).
+
+        :param document_id: ID of a new :py:class:Document object.
+        :exception AttributeError is raised if the ``document_id`` is not an instance of integer.
+        :return:
+        """
+        if isinstance(document_id, int):
+            self._documents.append(document_id)
+        else:
+            raise AttributeError("The document_id must be a number!")
+
+    def remove_document(self, document_id):
+        """
+        Removes a :py:class:Document object's ID to the :py:attr:_documents (list).
+
+        :param document_id: ID of a new :py:class:Document object.
+        :exception AttributeError is raised if the ``document_id`` is not an instance of integer.
+        :return:
+        """
+        if isinstance(document_id, int):
+            try:
+                self._documents.remove(document_id)
+            except ValueError:
+                pass
+        else:
+            AttributeError("The document_id must be a number!")
 
     def has_required_roles(self, repository):
         users_by_role = repository._user_manager.list_users_by_role()
