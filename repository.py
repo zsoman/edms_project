@@ -217,7 +217,12 @@ class Repository(object):
 
 
     def load(self):
-        """Try to load an existing repository"""
+        """
+        Try to load a :py:class:Repository object. If the :py:attr:_location path already exists then it tries to load
+        it, but if not it will create a new :py:class:Repository object by calling the :py:meth:initialize method.
+        :exception ValueError is raised if the path is not a directory.
+        :return:
+        """
         if path.exists(self._location):
             if path.isdir(self._location):
                 self._creation_date = self.read_creation_date('creation_date')
@@ -235,7 +240,10 @@ class Repository(object):
             self.initialize()
 
     def initialize(self):
-        """Initialize a new repository"""
+        """
+        Initialize a :py:class:Repository object on the :py:attr:_location path.
+        :return:
+        """
         makedirs(self._location)
         for name_key, dir_name_value in FOLDERS_PATH.iteritems():
             makedirs(path.join(self._location, dir_name_value))
@@ -248,12 +256,22 @@ class Repository(object):
         self.create_repo_metadata_file(self._creation_date, self._last_backup_date)
 
     def absolute_path(self):
+        """
+        Determines the absolute path of the :py:class:Repository object.
+
+        :return: The absolute path of the :py:class:Repository object.
+        """
         if path.isabs(self._location):
             return self._location
         else:
             return path.abspath(self._location)
 
     def create_default_path_file(self):
+        """
+        Creates the paths file metadata file for the :py:class:Repository object and writes the data to file too.
+
+        :return:
+        """
         data = {
             'directories': FOLDERS_PATH,
             'files': {'repo_main_folder': path.basename(self._location),
@@ -264,6 +282,13 @@ class Repository(object):
         write_ini_file(self._paths_file, data)
 
     def create_repo_metadata_file(self, date_obj, backup_date_obj):
+        """
+        Creates the :py:class:Repository object's metadata file and writes the data into it.
+
+        :param date_obj: :py:attr:_cration_date attribute of the :py:class:Repository object.
+        :param backup_date_obj: :py:attr:_last_backup_date attribute of the :py:class:Repository object.
+        :return:
+        """
         data = {
             'creation_date': {
                 'year': date_obj.year,
