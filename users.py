@@ -455,10 +455,20 @@ class RoleManager(object):
 
 
 class UserManager(object):
-    """Manage user objects"""
+    """
+    Manage user objects.
 
+    The :py:class:UserManager object is defined by paths file, repository location and a location of the :py:class:User
+    objects.
+    """
 
     def __init__(self, repository_location, paths_file):
+        """
+        Initialisation of a new :py:class:UserManager object.
+
+        :param repository_location: The path of the linked to :py:class:Repository object.
+        :param paths_file: The paths file of the :py:class:Repository object.
+        """
         self.paths_file = paths_file
         self.repository_location = repository_location
         metadata_data = read_ini_file(self.paths_file)
@@ -466,7 +476,12 @@ class UserManager(object):
 
 
     def save_user(self, user_id, user):
-        """Save user to file"""
+        """Save user to file.
+
+        :param user_id: :py:class:User object's ID.
+        :param user: :py:class:User object.
+        :return:
+        """
         with open(path.join(self._location, str(user_id)), 'w') as user_file:
             user_file.write(user.first_name + '\n')
             user_file.write(user.family_name + '\n')
@@ -476,7 +491,11 @@ class UserManager(object):
 
 
     def load_user(self, user_id):
-        """Load user from file"""
+        """Load user from file.
+
+        :param user_id: :py:class:User object's ID.
+        :return: :py:class:User object.
+        """
         with open(path.join(self._location, str(user_id))) as user_file:
             first_name = user_file.readline().rstrip('\n')
             family_name = user_file.readline().rstrip('\n')
@@ -488,17 +507,37 @@ class UserManager(object):
 
 
     def add_user(self, user):
+        """
+        Add user to the :py:class:UserManager object and saves it to the filesystem.
+
+        :param user: :py:class:User object
+        :return: :py:class:User object's ID.
+        """
         user_id = storage_utils.get_next_id(self._location)
         self.save_user(user_id, user)
         return user_id
 
 
     def update_user(self, user_id, user):
+        """
+        Updates a :py:class:User object in the filesystem.
+
+        :param user_id: :py:class:User object's ID
+        :param user: :py:class:User object.
+        :return:
+        """
         self.remove_user(user_id)
         self.save_user(user_id, user)
 
 
     def remove_user(self, user_id):
+        """
+        Remove a :py:class:User object form the :py:class:UserManager object and from the filesystem.
+
+        :param user_id: :py:class:User object's ID.
+        :exception ValueError is raised if :py:class:User object with the ``user_id`` ID doesn't exists.
+        :return:
+        """
         user_file_path = path.join(self._location, str(user_id))
         if path.exists(user_file_path):
             remove(user_file_path)
@@ -507,6 +546,13 @@ class UserManager(object):
 
 
     def find_user_by_id(self, user_id):
+        """
+        Find :py:class:User object by ID.
+
+        :param user_id: :py:class:User object's ID.
+        :exception ValueError is raised if :py:class:User object with the ``user_id`` ID doesn't exists.
+        :return: :py:class:User object.
+        """
         user_file_path = path.join(self._location, str(user_id))
         if path.exists(user_file_path):
             user = self.load_user(user_id)
@@ -516,23 +562,31 @@ class UserManager(object):
 
 
     def find_users_by_name(self, name):
+        """
+        Find :py:class:User objects by name, the name is the concatenation of :py:attr:first_name and
+        :py:attr:family_name.
+
+        :param name: A string to search for in the :py:attr:first_name and :py:attr:family_name.
+        :return: :py:class:User objects in a list.
+        """
         all_files = UserManager.all_files_in_folder(self._location)
         found_users = []
         for user_file in all_files:
             with open(path.join(self._location, user_file)) as file_obj:
                 first_name = file_obj.readline().strip()
                 family_name = file_obj.readline().strip()
-                if name.lower() in '{} {}'.format(first_name.lower(),
-                                                  family_name.lower()):
+                if name.lower() in '{} {}'.format(first_name.lower(), family_name.lower()):
                     found_users.append(user_file)
-        # if len(found_users) == 0:
-        #     raise UserNotFoundError(
-        #             "No user found with the {} name in the repository!".format(name))
-        # else:
         return found_users
 
 
     def find_users_by_email(self, email):
+        """
+        Find :py:class:User objects by email address.
+
+        :param email: The email address to search for.
+        :return: :py:class:User objects in a list.
+        """
         all_files = UserManager.all_files_in_folder(self._location)
         found_users = []
         for user_file in all_files:
@@ -540,14 +594,16 @@ class UserManager(object):
                 for i, line in enumerate(file_obj):
                     if i + 1 == 4 and email.lower() in line.strip().lower():
                         found_users.append(user_file)
-        # if len(found_users) == 0:
-        #     raise UserNotFoundError(
-        #             "No user found with the {} email in the repository!".format(email))
-        # else:
         return found_users
 
 
     def find_users_by_role(self, role):
+        """
+        Find :py:class:User objects by role.
+
+        :param role: Role string.
+        :return: :py:class:User objects in a list.
+        """
         role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         found_users = []
@@ -556,13 +612,17 @@ class UserManager(object):
             for role_obj in roles_value:
                 if role == role_obj.role:
                     found_users.append(self.find_user_by_id(id_key))
-        # if len(found_users) == 0:
-        #     raise UserNotFoundError("No user found with the {} role in the repository!".format(role))
-        # else:
         return found_users
 
 
     def add_role(self, user_id, role):
+        """
+        Add role to a :py:class:User object.
+
+        :param user_id: :py:class:User object's ID.
+        :param role: Role string to add to the :py:class:User object.
+        :return:
+        """
         role = Role(role)
         _ = self.find_user_by_id(user_id)
         role_manager = RoleManager(self.repository_location, self.paths_file)
@@ -576,6 +636,13 @@ class UserManager(object):
 
 
     def remove_role(self, user_id, role):
+        """
+        Remove role from a :py:class:User object.
+
+        :param user_id: :py:class:User object's ID.
+        :param role: Role string to remove from the :py:class:User object.
+        :return:
+        """
         role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         _ = self.find_user_by_id(user_id)
@@ -591,6 +658,13 @@ class UserManager(object):
 
 
     def has_role(self, user_id, role):
+        """
+        Checks if a :py:class:User object has a given role.
+
+        :param user_id: :py:class:User object's ID.
+        :param role: Role string to search for within the :py:class:User object.
+        :return: Bool, TRUE if the :py:class:User object has a ``role``.
+        """
         role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         if user_id not in users_roles:
@@ -600,6 +674,12 @@ class UserManager(object):
 
 
     def list_users_by_role(self):
+        """
+        Lists :py:class:User objects by role.
+
+        :return: A dictionary whithin the key of the distinct roles and the value of the :py:class:User objects ID in a
+        list.
+        """
         role_manager = RoleManager(self.repository_location, self.paths_file)
         users_roles = role_manager.read_roles()
         users_by_roles = dict()
@@ -613,6 +693,12 @@ class UserManager(object):
 
 
     def check_role_file(self, roles_file=None):
+        """
+        Checks the role file for any errors in the content of the file. The role file type can be TXT, XML and JSON.
+
+        :param roles_file: The path of the role file.
+        :return: Bool, TRUE if no errors was found in the content of the file.
+        """
         role_manager = RoleManager(self.repository_location, self.paths_file)
         user_roles = role_manager.read_roles()
         if not roles_file:
@@ -722,6 +808,13 @@ class UserManager(object):
 
     @classmethod
     def all_files_in_folder(cls, file_path, file_format=''):
+        """
+        Searches for all the :py:class:User objects representation in the filesystem.
+
+        :param file_path: The path of the users directory.
+        :param file_format: The format of the :py:class:User objects file representation.
+        :return: A list of the files names with :py:class:User object data in it.
+        """
         files_and_folders = listdir(file_path)
         all_files = []
         for item in files_and_folders:
@@ -735,6 +828,11 @@ class UserManager(object):
 
 
     def find_all_users(self):
+        """
+        Finds all available :py:class:User objects IDs.
+
+        :return: A list of the available :py:class:User object IDs.
+        """
         all_available_users = []
         for file_or_folder in listdir(self._location):
             if path.isfile(path.join(self._location, file_or_folder)):
@@ -746,10 +844,22 @@ class UserManager(object):
 
 
     def count_users(self):
+        """
+        Counts the :py:class:User objects.
+
+        :return: Integer.
+        """
         return len(self.find_all_users())
 
 
     def set_role_file(self, new_row_file_path):
+        """
+        Moves the role file to a new path.
+
+        :param new_row_file_path: The path to were to move the roles file.
+        :exception TypeError is raised if the new path doesn't exists.
+        :return:
+        """
         if path.exists(path.dirname(new_row_file_path)):
             role_file = path.join(self._location, RoleManager.get_roles_file(self._location))
             move(role_file, new_row_file_path)
