@@ -155,8 +155,7 @@ class Document(object):
         MILLISECONDS. The creation date of the Document object :py:attr:_creation_date.
         """
         d = self._creation_date
-        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
-                                             d.second, d.microsecond)
+        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
 
     @creation_date.setter
     def creation_date(self, new_datetime):
@@ -171,8 +170,7 @@ class Document(object):
         if isinstance(new_datetime, datetime):
             self._creation_date = new_datetime
         else:
-            raise TypeError("The new date must be a datetime object and not {}!".format(
-                type(new_datetime).__name__))
+            raise TypeError("The new date must be a datetime object and not {}!".format(type(new_datetime).__name__))
 
     @property
     def modification_date(self):
@@ -183,8 +181,7 @@ class Document(object):
         MILLISECONDS. The modification date of the Document object :py:attr:_modification_date.
         """
         d = self._modification_date
-        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute,
-                                             d.second, d.microsecond)
+        return '{}/{}/{} {}:{}:{} {}'.format(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)
 
     @modification_date.setter
     def modification_date(self, new_datetime):
@@ -199,8 +196,7 @@ class Document(object):
         if isinstance(new_datetime, datetime):
             self._modification_date = new_datetime
         else:
-            raise TypeError("The new date must be a datetime object and not {}!".format(
-                type(new_datetime).__name__))
+            raise TypeError("The new date must be a datetime object and not {}!".format(type(new_datetime).__name__))
 
     @property
     def state(self):
@@ -286,15 +282,11 @@ class Document(object):
                 self.state = new_state
             else:
                 if self.state == 'new':
-                    raise ValueError(
-                        "Because the current state is 'new' the new state must be "
-                        "{}, can't be {}!".format(', '.join(AFTER_NEW_STATE),
-                                                  new_state))
+                    raise ValueError("Because the current state is 'new' the new state must be {}, can't be {}!".format(
+                        ', '.join(AFTER_NEW_STATE), new_state))
                 elif self.state == 'pending':
-                    raise ValueError(
-                        "Because the current state is 'pending' the new state must "
-                        "be {}, can't be {}!".format(', '.join(AFTER_PENDING_STATE),
-                                                     new_state))
+                    raise ValueError("Because the current state is 'pending' the new state must be {}, can't be {}!".
+                                     format(', '.join(AFTER_PENDING_STATE), new_state))
 
     def __str__(self):
         """
@@ -377,8 +369,8 @@ class DocumentManager(object):
         """
         document_path = path.join(self._location, str(document_id))
         if not path.exists(document_path):
-            raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded"
-                                            "!".format(document_path, document_id))
+            raise DocumentDoesntExistsError("The {} path doesn't exists, so the document with {} id can't be loaded!".
+                                            format(document_path, document_id))
         else:
             metadata_file = reduce(path.join,
                                    [self._location, str(document_id), '{}_document_metadata.edd'.format(document_id)])
@@ -477,7 +469,7 @@ class DocumentManager(object):
         """
         Searches for all :py:class:Document object in the :py:class:Repository.
 
-        :return: A list of :py:class:Document objects found in the :py:class:Repository. If no :py:class:Document was
+        :return: A list of :py:class:Document IDs found in the :py:class:Repository. If no :py:class:Document was
         found an empty list is returned.
         """
         all_available_documents = []
@@ -491,25 +483,48 @@ class DocumentManager(object):
 
     def count_documents(self):
         """
+        Count's all available :py:class:Document objects.
 
-        :return:
+        :return: Number of available :py:class:Document objects.
         """
         return len(self.find_all_documents())
 
     def load_all_documents(self, user_manager = None):
+        """
+        Searches for all :py:class:Document object in the :py:class:Repository.
+
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
+        :return: A list of :py:class:Document objects found in the :py:class:Repository in a dictionary. The key of the
+        dictionary is the ID of the :py:class:Document and the value is a :py:class:Document object. If no document was
+        found an empty dictionary is returned.
+        """
         all_documents = dict()
         for document_id in self.find_all_documents():
             all_documents[document_id] = self.load_document(document_id, user_manager = user_manager)
         return all_documents
 
     def find_document_by_id(self, document_id, user_manager = None):
+        """
+        Searches for a :py:class:Document object by ID.
+
+        :param document_id: The ID of the :py:class:Document to search for.
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
+        :exception ValueError is raised if no :py:class:Document object was found with ``document_id`` ID.
+        :return: A :py:class:Document object with ``document_id``.
+        """
         if document_id not in self.find_all_documents():
-            raise ValueError(
-                "The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
+            raise ValueError("The document with {} ID doesn't exists, it can't be loaded!".format(document_id))
         else:
             return self.load_all_documents(user_manager = user_manager)[document_id]
 
     def find_documents_by_title(self, title):
+        """
+        Searches for a :py:class:Document object by :py:attr:title.
+
+        :param title: The :py:attr:title of the :py:class:Document to search for.
+        :exception ValueError is raised if no :py:class:Document object was found with ``title`` :py:attr:title.
+        :return: A list of :py:class:Document objects with ``title``.
+        """
         documents_by_title = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
             if doc_value.title.lower() == title.lower():
