@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Managing of user data
 
 The data of the users are stored in the users directory (by default).
@@ -16,6 +17,7 @@ The fields of a user object stored in the text file line-by-line as:
 
 """
 
+# Imports -----------------------------------------------------------------------------------------------------------
 import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, date
@@ -27,47 +29,97 @@ from shutil import move
 import storage_utils
 from iniformat.reader import read_ini_file
 
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanley - Training 360 Project"
+__credits__ = __author__
+__version__ = "1.0.0"
+__maintainer__ = __author__
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
+
+# Parameters --------------------------------------------------------------------------------------------------------
+
 DELIMITER_CHAR = ':'
 ROLE_DELIMITER_CHAR = ','
 
 
+# -------------------------------------------------------------------------------------------------------------------
+
 class UserNotFoundError(Exception):
+    """
+    This exception is raised when a :py:class:User object is not found.
+    """
     pass
 
 
 class WrongFileTypeError(Exception):
+    """
+    This exception is raised when a file's type is not correct.
+    """
     pass
 
 
 class MissingUserIdentifierError(Exception):
+    """
+    This exception is raised when a :py:class:User object ID is missing.
+    """
     pass
 
 
 class MissingDelimiterCharacterError(Exception):
+    """
+    This exception is raised when a the :py:const:DELIMITER_CHAR or the :py:const:ROLE_CELIMITER_CHAR is missing from
+    the :py:class:User object's roles file.
+    """
     pass
 
 
 class InvalidRoleNameError(Exception):
+    """
+    This exception is raised when a :py:class:Role object's :py:attr:name is wrong.
+    """
     pass
 
 
 class InconsistentUseOfRoleDelimiterError(Exception):
+    """
+    This exception is raised when a the :py:const:DELIMITER_CHAR or the :py:const:ROLE_CELIMITER_CHAR is missing from
+    the :py:class:User object's roles file.
+    """
     pass
 
 
 class DuplicateUserIdentifierError(Exception):
+    """
+    This exception is raised when a :py:class:User object's ID is duplicated in the users file.
+    """
     pass
 
 
 class DuplicatedRolesError(Exception):
+    """
+    This exception is raised when a :py:class:Role object is duplicated in the roles file.
+    """
     pass
 
 
 class User(object):
-    """User of the document repository"""
+    """User of the document repository.
 
+    The :py:class:User object is defined by: first name, family name, birth date, email address and a password.
+    """
 
     def __init__(self, first_name, family_name, birth, email, password):
+        """
+        Initialisation of a new :py:class:User object.
+
+        :param first_name: The :py:class:User object's first name.
+        :param family_name: The :py:class:User object's family name
+        :param birth: The :py:class:User object's birth date.
+        :param email: The :py:class:User object's email address.
+        :param password: The :py:class:User object's password.
+        """
         if User.is_valid_name(first_name):
             self._first_name = first_name
         else:
@@ -97,23 +149,44 @@ class User(object):
 
     @classmethod
     def is_valid_name(cls, name):
+        """
+        Determines if the ``name`` is valid.
+        :param name: String.
+        :return: Bool, TRUE if the ``name`` is alphanumerical.
+        """
         return name.isalnum()
 
 
     @classmethod
     def is_valid_date(cls, date_obj):
+        """
+        Determines if the ``date_obj`` is a valid date, is instance of date.
+
+        :param date_obj: Date object.
+        :return: Bool, TRUE if ``date_obj`` is instance of date.
+        """
         return isinstance(date_obj, date)
 
 
     @classmethod
     def is_valid_email(cls, email):
-        return match(
-                '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
-                email)
+        """
+        Determines if the ``email`` is a valid email address.
+
+        :param email: String email address.
+        :return: Bool, TRUE if the regex mathes the ``email``.
+        """
+        return match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
 
 
     @classmethod
     def is_valid_password(cls, password):
+        """
+        Determines if the ``password`` is a valid password.
+
+        :param password: String, password.
+        :return: Bool, TRUE if the ``password`` is instanceo of string.
+        """
         for char in password:
             if not isinstance(char, str):
                 return False
@@ -122,35 +195,71 @@ class User(object):
 
     @property
     def first_name(self):
+        """
+        The property of the :py:attr:_first_name attribute.
+
+        :return: The first_name of the :py:class:User object :py:attr:_first_name.
+        """
         return self._first_name
 
 
     @property
     def family_name(self):
+        """
+        The property of the :py:attr:_family_name attribute.
+
+        :return: The family_name of the :py:class:User object :py:attr:_family_name.
+        """
         return self._family_name
 
 
     @property
     def full_name(self):
+        """
+        The property of the :py:attr:_first_name and :py:attr:_family_name attributes concatanation.
+
+        :return: The full_name of the :py:class:User object.
+        """
         return self._first_name + ' ' + self._family_name
 
 
     @property
     def birth(self):
+        """
+        The property of the :py:attr:_birth attribute.
+
+        :return: The birth of the :py:class:User object :py:attr:_birth.
+        """
         return self._birth
 
 
     @property
     def email(self):
+        """
+        The property of the :py:attr:_first_email attribute.
+
+        :return: The email of the :py:class:User object :py:attr:_first_email.
+        """
         return self._email
 
 
     @property
     def password(self):
+        """
+        The property of the :py:attr:_password attribute.
+
+        :return: The password of the :py:class:User object :py:attr:_password.
+        """
         return self._password
 
 
     def __str__(self):
+        """
+        String representation of the :py:class:User.
+
+        :return: :py:class:User represented by a string in the following format: :py:attr:full_name :py:attr:birth
+        :py:attr:email :py:attr:password.
+        """
         return '{} {} {} {}'.format(self.full_name, self.birth, self.email, self.password)
 
 
@@ -594,4 +703,4 @@ class UserManager(object):
             move(role_file, new_row_file_path)
             self._location = path.dirname(new_row_file_path)
         else:
-            raise TypeError("The {} path doesn't exists!".format(path.dirnam(new_row_file_path)))
+            raise TypeError("The {} path doesn't exists!".format(path.dirname(new_row_file_path)))
