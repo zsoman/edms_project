@@ -604,9 +604,19 @@ class DocumentManager(object):
         return existence_of_document_files
 
     def unreferenced_document_files(self, document_id):
+        """
+        Determines if a :py:class:Document object contains files not listed in it's :py:attr:files attribute.
+
+        :param document_id: The ID of the :py:class:Document object to examine.
+        :exception ValueError is raised if the :py:class:Document object is not found with the ID equal
+        to ``document_id``
+        :exception RuntimeError is raised if the :py:class:Document object doesn't contains files.
+        :return: A dictionary with the key of the :py:attr:files name and the value of a bool. If the file is not
+        referenced within the document the value is True if not it's False.
+        """
         unreferenced_document_files = dict()
         if document_id not in self.find_all_documents():
-            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+            raise ValueError("The docuement with {} ID doesn't exists!".format(document_id))
         else:
             document_path = path.join(self._location, str(document_id))
             document = self.find_document_by_id(document_id)
@@ -621,8 +631,15 @@ class DocumentManager(object):
         return unreferenced_document_files
 
     def remove_document_files(self, document_id):
+        """
+        Removes the files of a :py:class:Document with ID of ``document_id``.
+
+        :param document_id: The ID of the :py:class:Document object to examine.
+        :exception ValueError is raised if no :py:class:Document object is found.
+        :return:
+        """
         if document_id not in self.find_all_documents():
-            raise DocumentDoesntExistsError("The docuement with {} ID doesn't exists!".format(document_id))
+            raise ValueError("The docuement with {} ID doesn't exists!".format(document_id))
         else:
             document_path = path.join(self._location, str(document_id))
             for file_name_key, exist_value in self.unreferenced_document_files(document_id).iteritems():
