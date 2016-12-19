@@ -190,7 +190,19 @@ class Review(object):
         else:
             raise AttributeError("The submission can't be set just by the set_evaluation_result method!")
 
-    def set_submission(self, submission_message, author = None, admin = None, date = datetime.now().date()):
+    def set_submission(self, submission_message, author = None, admin = None, date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:_submission to SENT.
+
+        :param submission_message: The message of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the submission is not valid, because of various reasons.
+        :return:
+        """
         if self.review_request_1 == NOT_SENT and self.review_request_2 == NOT_SENT \
                 and self.review_response_1 == NOT_SENT and self.review_response_2 == NOT_SENT \
                 and self.evaluation_result == NOT_SENT:
@@ -200,7 +212,20 @@ class Review(object):
         else:
             raise ValueError("Submission request can't be sent!")
 
-    def set_review_request_1(self, review_request_nessage, author = None, admin = None, date = datetime.now().date()):
+    def set_review_request_1(self, review_request_nessage, author = None, admin = None,
+                             date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:_review_request_1 to SENT.
+
+        :param review_request_nessage: The message of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the review request is not valid, because of various reasons.
+        :return:
+        """
         if self.submission == SENT and self.review_request_1 == NOT_SENT:
             self._review_request_1 = SENT
             if author and admin:
@@ -208,7 +233,20 @@ class Review(object):
         else:
             raise ValueError("Review request can't be sent until a submission is not placed!")
 
-    def set_review_request_2(self, review_request_nessage, author = None, admin = None, date = datetime.now().date()):
+    def set_review_request_2(self, review_request_nessage, author = None, admin = None,
+                             date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:_review_request_2 to SENT.
+
+        :param review_request_nessage: The message of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the review request is not valid, because of various reasons.
+        :return:
+        """
         if self.submission == SENT and self.review_request_2 == NOT_SENT and self.review_request_1 == SENT:
             self._review_request_2 = SENT
             if author and admin:
@@ -216,7 +254,20 @@ class Review(object):
         else:
             raise ValueError("Review request can't be sent until a submission is not placed!")
 
-    def set_review_response_1(self, review_response, author = None, admin = None, date = datetime.now().date()):
+    def set_review_response_1(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:_review_response_1 to :py:const:RESPONSE_TRUE if the ``review_response`` is TRUE and
+        to :py:const:RESPONSE_FALSE if the ``review_response`` is FALSE.
+
+        :param review_response: The response of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the review response is not valid, because of various reasons.
+        :return:
+        """
         if self.review_request_1 == SENT and self.review_request_2 == SENT:
             if review_response:
                 self._review_response_1 = RESPONSE_TRUE
@@ -227,7 +278,20 @@ class Review(object):
         else:
             raise ValueError("Review response can't be set until a review is not sent!")
 
-    def set_review_response_2(self, review_response, author = None, admin = None, date = datetime.now().date()):
+    def set_review_response_2(self, review_response, author = None, admin = None, date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:review_request_2 to :py:const:RESPONSE_TRUE if the ``review_response`` is TRUE and
+        to :py:const:RESPONSE_FALSE if the ``review_response`` is FALSE.
+
+        :param review_response: The response of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the review response is not valid, because of various reasons.
+        :return:
+        """
         if self.review_request_2 == SENT and self.review_response_1 in [RESPONSE_TRUE, RESPONSE_FALSE]:
             if review_response:
                 self._review_response_2 = RESPONSE_TRUE
@@ -238,7 +302,21 @@ class Review(object):
         else:
             raise ValueError("Review response can't be set until a review is not sent!")
 
-    def set_evaluation_result(self, evaluation_response, author = None, admin = None, date = datetime.now().date()):
+    def set_evaluation_result(self, evaluation_response, author = None, admin = None, date = datetime.utcnow().date()):
+        """
+        Sets the :py:attr:_evaluation_result to :py:const:EVALUATION_TRUE if the :py:attr:review_request_1 is
+        :py:const:RESPONSE_TRUE and the :py:attr:review_request_2 is :py:const:RESPONSE_TRUE and to
+        to :py:const:EVALUATION_FALSE if one of the review request is to :py:const:RESPONSE_FALSE.
+
+        :param evaluation_response: The response of the :py:class:Review object.
+        :param author: The author(s) (:py:class:User) of the :py:class:Document and the requester of the
+        :py:class:Review object, the default value is None.
+        :param admin: The admin(s) (:py:class:User) of the :py:class:Project and the administrator(s) of the
+        :py:class:Review object, the default value is None.
+        :param date: The :py:class:Review object's date, the default value is datetime.utcnow().date().
+        :exception ValueError if the evaluation response is not valid, because of various reasons.
+        :return:
+        """
         if self.review_response_1 in [RESPONSE_TRUE, RESPONSE_FALSE] and \
                         self.review_response_2 in [RESPONSE_TRUE, RESPONSE_FALSE]:
             if self.review_request_1 == RESPONSE_TRUE and self.review_request_2 == RESPONSE_TRUE:
@@ -252,6 +330,12 @@ class Review(object):
 
 
 class ReviewManager(object):
+    """
+    Represents the review manager of :py:class:Review objects.
+
+    The :py:class:ReviewManager object is defined by: location, :py:class:UserManager object and
+    :py:class:DocumentManager object.
+    """
     def __init__(self, review_manager_path, user_manager, document_manager):
         self._location = review_manager_path
         self._user_manager = user_manager
