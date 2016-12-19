@@ -541,14 +541,14 @@ class Repository(object):
         make_archive(path.join(backup_path, backup_file_name), 'zip', new_location, verbose = verbose)  # logger =
         if new_location == './{}'.format(backup_file_name) and path.exists(new_location):
             rmtree(new_location)
+        end_time = datetime.utcnow()
         if verbose:
-            end_time = datetime.utcnow()
             print("The backup is completed on UTC {}, please check the {} file".format(
                 end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
-            logger.info("The backup is completed on UTC {}, please check the {} file".format(
-                end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
-            logger.info("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
+        logger.info("The backup is completed on UTC {}, please check the {} file".format(
+            end_time.strftime(date_format), path.join(backup_path, backup_file_name)))
+        logger.info("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def determine_export_file_name(self, backup_file_name, backup_path):
         """
@@ -608,7 +608,7 @@ class Repository(object):
             print("The restore of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
                 date_format)))
         rmtree(self._location)
-        print("The old repository is deleted on {} path.".format(self._location))
+        logger.info("The old repository is deleted on {} path.".format(self._location))
         if verbose:
             print("The old repository is deleted on {} path.".format(self._location))
 
@@ -621,32 +621,45 @@ class Repository(object):
             if not backup_documents:
                 rmtree(path.join(self._location, pats_file['directories']['documents']))
                 makedirs(path.join(self._location, pats_file['directories']['documents']))
+                logger.debug("The {} directory is removed.".format(
+                    path.join(self._location, pats_file['directories']['documents'])))
                 unimported.append('documents')
             if not backup_logs:
                 rmtree(path.join(self._location, pats_file['directories']['logs']))
                 makedirs(path.join(self._location, pats_file['directories']['logs']))
+                logger.debug("The {} directory is removed.".format(
+                    (path.join(self._location, pats_file['directories']['logs']))))
                 unimported.append('logs')
             if not backup_projects:
                 rmtree(path.join(self._location, pats_file['directories']['projects']))
                 makedirs(path.join(self._location, pats_file['directories']['projects']))
+                logger.debug("The {} directory is removed.".format(
+                    (path.join(self._location, pats_file['directories']['projects']))))
                 unimported.append('projects')
             if not backup_reports:
                 rmtree(path.join(self._location, pats_file['directories']['reports']))
                 makedirs(path.join(self._location, pats_file['directories']['reports']))
+                logger.debug("The {} directory is removed.".format(
+                    (path.join(self._location, pats_file['directories']['reports']))))
                 unimported.append('reports')
             if not backup_users:
                 rmtree(path.join(self._location, pats_file['directories']['users']))
                 makedirs(path.join(self._location, pats_file['directories']['users']))
+                logger.debug("The {} directory is removed.".format(
+                    (path.join(self._location, pats_file['directories']['users']))))
                 unimported.append('users')
             if len(unimported) > 0:
                 print("The {} were not imported.".format(', '.join(unimported)))
+                logger.debug("The {} were not imported.".format(', '.join(unimported)))
 
+        end_time = datetime.utcnow()
         if verbose:
-            end_time = datetime.utcnow()
-            print(
-                "The restore is completed on UTC {}, please check the {} repository".format(
-                    end_time.strftime(date_format), self._location))
+            print("The restore is completed on UTC {}, please check the {} repository".format(
+                end_time.strftime(date_format), self._location))
             print("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
+        logger.info("The restore is completed on UTC {}, please check the {} repository".format(
+            end_time.strftime(date_format), self._location))
+        logger.info("The process lasted {} seconds.".format((end_time - start_time).total_seconds()))
 
     def show_repository_info(self, name = ''):
         """
@@ -673,16 +686,18 @@ class Repository(object):
         for role_key, user_ids_value in self._user_manager.list_users_by_role().iteritems():
             roles[role_key] = ', '.join([str(i) for i in user_ids_value])
         abs_path = path.dirname(path.abspath(__file__))
-
+        logger.info("All data is collected to show in HTML.")
         env = Environment(loader = FileSystemLoader(path.join(abs_path, 'templates')))
         template = env.get_template('rep_info.html')
         output_from_parsed_template = template.render(repository_name = self._name, creation_date = self._creation_date,
                                                       backup_date = self._last_backup_date, paths = paths,
                                                       users = users, roles = roles, documents = documents)
-
+        logger.info("The template is rendered.")
         with open(path.join(abs_path, "index{}.html".format('_' + name)), "wb") as fh:
             fh.write(output_from_parsed_template)
+        logger.info("The template is written to {} file.".format("index{}.html".format('_' + name)))
         webbrowser.open(path.join(abs_path, "index{}.html".format('_' + name)))
+        logger.info("The {} file is opened in the browser.".format("index{}.html".format('_' + name)))
 
     def show_backup_info(self, backup_file):
         """
@@ -703,10 +718,13 @@ class Repository(object):
             tmp_location = abs_path + '/tmp/tmp_repository'
             with ZipFile(full_backup_file, "r") as z:
                 z.extractall(tmp_location)
+            logger.debug("The temporary repository is extracted.")
             tmp_repo = Repository(location = tmp_location)
             tmp_repo.show_repository_info(name = path.basename(backup_file))
             rmtree(tmp_location)
+            logger.debug("The temporary repository is deleted.")
         else:
+            logger.exception("The {} backup doesn't exists!".format(full_backup_file))
             raise TypeError("The {} backup doesn't exists!".format(full_backup_file))
 
     def is_backup_needed(self):
