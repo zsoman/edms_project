@@ -523,7 +523,7 @@ class DocumentManager(object):
 
         :param title: The :py:attr:title of the :py:class:Document to search for.
         :exception ValueError is raised if no :py:class:Document object was found with ``title`` :py:attr:title.
-        :return: A list of :py:class:Document objects with ``title``.
+        :return: A dictionary of :py:class:Document objects with ``title``.
         """
         documents_by_title = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
@@ -535,6 +535,15 @@ class DocumentManager(object):
             return documents_by_title.values()
 
     def find_documents_by_author(self, author, user_manager = None):
+        """
+        Searches for a :py:class:Document object by :py:attr:author.
+
+        :param author: The :py:attr:author of the :py:class:Document to search for.
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
+        :exception ValueError is raised if no :py:class:Document object was found with ``author`` equal
+        to :py:attr:author.
+        :return: A dictionary of :py:class:Document objects with ``author`` :py:attr:author.
+        """
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents(user_manager = user_manager).iteritems():
             if isinstance(doc_value.author, list):
@@ -549,6 +558,14 @@ class DocumentManager(object):
             return documents_by_author.values()
 
     def find_documents_by_format(self, format):
+        """
+        Searches for a :py:class:Document object by :py:attr:doc_format.
+
+        :param format: The :py:attr:doc_format of the :py:class:Document to search for.
+        :exception ValueError is raised if no :py:class:Document object was found with ``format`` to equal
+        to :py:attr:doc_format.
+        :return: A dictionary of :py:class:Document objects with ``format``.
+        """
         documents_by_author = dict()
         for doc_id_key, doc_value in self.load_all_documents().iteritems():
             if format == doc_value.doc_format:
@@ -559,6 +576,17 @@ class DocumentManager(object):
             return documents_by_author.values()
 
     def document_files_exist(self, document_id, user_manager = None):
+        """
+        Determines if a :py:class:Document object contains all files listed in it's :py:attr:files attribute.
+
+        :param document_id: The ID of the :py:class:Document object to examine.
+        :param user_manager: The :py:class:UserManager of the :py:class:Repository.
+        :exception ValueError is raised if the :py:class:Document object is not found with the ID equal
+        to ``document_id``
+        :exception RuntimeError is raised if the :py:class:Document object doesn't contains files.
+        :return: A dictionary with the key of the :py:attr:files name and the value of a bool. If the file exists within
+        the document the value is True if not it's False.
+        """
         existence_of_document_files = dict()
         if document_id not in self.find_all_documents():
             raise ValueError("The docuement with {} ID doesn't exists!".format(document_id))
