@@ -574,8 +574,10 @@ class Repository(object):
                 if new_backup_file_name.format(number) + '.zip' in listdir(backup_path):
                     number += 1
                 else:
+                    logger.info("The export file name is {}.".format(new_backup_file_name.format(number)))
                     return new_backup_file_name.format(number)
         else:
+            logger.info("The export file name is {}.".format(backup_file_name))
             return backup_file_name
 
     def restore(self, backup_file_name = 'backup', backup_path = './Backups', verbose = False,
@@ -600,10 +602,13 @@ class Repository(object):
         :param backup_users: Bool, determines if to restore the :py:class:User objects of the :py:class:Repository.
         """
         start_time = datetime.utcnow()
+        logger.info("The restore of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
+            date_format)))
         if verbose:
             print("The restore of the {} repository has started on UTC {}.".format(self._name, start_time.strftime(
                 date_format)))
         rmtree(self._location)
+        print("The old repository is deleted on {} path.".format(self._location))
         if verbose:
             print("The old repository is deleted on {} path.".format(self._location))
 
@@ -717,9 +722,13 @@ class Repository(object):
             return False
 
     def initialize_logger(self, repository_path):
-        debug_file_logger = logging.FileHandler(reduce(path.join, [repository_path, 'logs', 'debug_log.log']))
+        base_path = path.dirname(repository_path)
+        full_path = path.join(base_path, 'logs')
+        if not path.exists(full_path):
+            makedirs(full_path)
+        debug_file_logger = logging.FileHandler(path.join(full_path, '{}_debug_log.log'.format(self.name)))
         debug_file_logger.setLevel(logging.DEBUG)
-        info_file_logger = logging.FileHandler(reduce(path.join, [repository_path, 'logs', '_log.log']))
+        info_file_logger = logging.FileHandler(path.join(full_path, '{}_log.log'.format(self.name)))
         info_file_logger.setLevel(logging.INFO)
         console_logger = logging.StreamHandler()
         console_logger.setLevel(logging.INFO)
