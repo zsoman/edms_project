@@ -450,7 +450,7 @@ class DocumentManager(object):
 
         :param document_id: The ID of :py:class:Document object to update.
         :param document: New :py:class:Document object which contains the data to update the old :py:class:Document.
-        :exception ValueError is raised if no document is found by the ``document_id``,
+        :exception ValueError is raised if no document is found by the ``document_id``.
         :return:
         """
         if document_id not in self.find_all_documents():
