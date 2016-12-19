@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Repository
 
 The repository is in a dedicated directory. This directory contains the following subdirectories by default:
@@ -18,6 +19,7 @@ The paths.ini file contains the (relative or absolute) paths of mentioned subdir
 The roles.txt contains the user names and the list of assigned roles.
 """
 
+# Imports -----------------------------------------------------------------------------------------------------------
 import webbrowser
 from datetime import datetime
 from os import makedirs, path, utime, listdir, remove
@@ -32,8 +34,16 @@ from iniformat.reader import read_ini_file
 from iniformat.writer import write_ini_file
 from users import UserManager
 
-# from users import UserManager
+# Authorship information  -------------------------------------------------------------------------------------------
+__author__ = "Zsolt Bokor Levente"
+__copyright__ = "Copyright 2016, Morgan Stanely - Training 360 Project"
+__credits__ = "Zsolt Bokor Levente"
+__version__ = "1.0.0"
+__maintainer__ = "Zsolt Bokor Levente"
+__email__ = ["bokor.zsolt5@gmail.com", "bokorzsolt@yahoo.com"]
+__status__ = "Development"
 
+# Parameters --------------------------------------------------------------------------------------------------------
 ROLES_FILE = 'roles'
 PATHS_FILE = 'paths.ini'
 FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects',
@@ -41,19 +51,170 @@ FOLDERS_PATH = {'documents': 'documents', 'logs': 'logs', 'projects': 'projects'
 BACKUP_FREQUENCY = 7
 
 
+# -------------------------------------------------------------------------------------------------------------------
+
+
 class Repository(object):
-    """Represents the document management system as a repository"""
+    """Represents the document management system as a repository.
+
+    The :py:class:Repository is defined by: name, location, metadata file's location, paths metadata file's location,
+    roles file type, :py:class:UserManager object and :py:class:DocumentManagement object.
+    """
 
     def __init__(self, name = 'Repository', location = path.join('Repositories', 'repo_1'), roles_file_type = 'txt'):
+        """
+        Initialisation of a new :py:class:Repository object.
+
+        :param name: The name of the :py:class:Repository object, the default value is 'Repository'.
+        :param location: The path of the :py:class:Repository object, the default value is 'Repositories/repo_1'.
+        :param roles_file_type: The type of roles metadata file, it can be: TXT, XML, JSON.
+        """
         self._name = name
         self._location = location
         self._metadata_file = path.join(self._location, '{}_metadata.edd'.format(path.basename(name)))
         self._paths_file = path.join(self._location, PATHS_FILE)
-        self._roles_file_type = roles_file_type
+        if roles_file_type.lower() in ['txt', 'xml', 'json']:
+            self._roles_file_type = roles_file_type.lower()
+        else:
+            raise ValueError("The roles_file_type must be txt, xml or json, not {}!".format(roles_file_type))
         self.load()
         self._user_manager = UserManager(self._location, self._paths_file)
         self._document_manager = DocumentManager(self._location, self._paths_file)
         schedule.every(BACKUP_FREQUENCY).days.at('4:00').do(self.create_backup)
+
+    @property
+    def name(self):
+        """
+        The property of the :py:attr:_name attribute.
+
+        :return: The name of the :py:class:Repository object :py:attr:_name.
+        """
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        """
+        The setter of the :py:attr:_name.
+
+        :param value: New name.
+        :return:
+        """
+        raise AttributeError("The repository object's name can't be changed!")
+
+    @property
+    def location(self):
+        """
+        The property of the :py:attr:_location attribute.
+
+        :return: The location of the :py:class:Repository object :py:attr:_location`.
+        """
+        return self._location
+
+    @location.setter
+    def location(self, value):
+        """
+        The setter of the :py:attr:_location.
+
+        :param value: New location.
+        :return:
+        """
+        raise AttributeError("The repository object's location can't be changed!")
+
+    @property
+    def metadata_file(self):
+        """
+        The property of the :py:attr:_metadata_file attribute.
+
+        :return: The metadata_file of the :py:class:Repository object :py:attr:_metadata_file.
+        """
+        return self._metadata_file
+
+    @metadata_file.setter
+    def metadata_file(self, value):
+        """
+        The setter of the :py:attr:_metadata_file.
+
+        :param value: New metadata_file.
+        :return:
+        """
+        raise AttributeError("The repository object's metadata_file location can't be changed!")
+
+    @property
+    def paths_file(self):
+        """
+        The property of the :py:attr:_paths_file attribute.
+
+        :return: The paths_file of the :py:class:Repository object :py:attr:_paths_file.
+        """
+        return self._name
+
+    @paths_file.setter
+    def paths_file(self, value):
+        """
+        The setter of the :py:attr:_paths_file.
+
+        :param value: New paths_file.
+        :return:
+        """
+        raise AttributeError("The repository object's paths_file location can't be changed!")
+
+    @property
+    def roles_file_type(self):
+        """
+        The property of the :py:attr:_roles_file_type attribute.
+
+        :return: The roles_file_type of the :py:class:Repository object :py:attr:_roles_file_type.
+        """
+        return self._roles_file_type
+
+    @roles_file_type.setter
+    def roles_file_type(self, value):
+        """
+        The setter of the :py:attr:_roles_file_type.
+
+        :param value: New roles_file_type.
+        :return:
+        """
+        raise AttributeError("The repository object's roles_file_type can't be changed!")
+
+    @property
+    def user_manager(self):
+        """
+        The property of the :py:attr:_user_manager attribute.
+
+        :return: The user_manager of the :py:class:Repository object :py:attr:_user_manager.
+        """
+        return self._user_manager
+
+    @user_manager.setter
+    def user_manager(self, value):
+        """
+        The setter of the :py:attr:_user_manager.
+
+        :param value: New user_manager.
+        :return:
+        """
+        raise AttributeError("The repository object's user_manager object can't be changed!")
+
+    @property
+    def document_manager(self):
+        """
+        The property of the :py:attr:_document_manager attribute.
+
+        :return: The document_manager of the :py:class:Repository object :py:attr:_document_manager.
+        """
+        return self._document_manager
+
+    @document_manager.setter
+    def document_manager(self, value):
+        """
+        The setter of the :py:attr:_document_manager.
+
+        :param value: New document_manager.
+        :return:
+        """
+        raise AttributeError("The repository object's document_manager object can't be changed!")
+
 
     def load(self):
         """Try to load an existing repository"""
