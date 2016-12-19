@@ -350,11 +350,26 @@ class ProjectManager(object):
 
 
     def add_project(self, project):
+        """
+        Adds a :py:class:Project object to the :py:class:ProjectManager and saves it too the filesystem by calling the
+        :py:meth:save_project method.
+.
+
+        :param project: :py:class:Project object to add.
+        :return: The ID the of the :py:class:Project.
+        """
         new_project_id = self.save_project(project, get_next_id(self.location))
         self._projects.append(new_project_id)
         return new_project_id
 
     def load_project(self, project_id):
+        """
+        Loads a :py:class:Project object from the filesystem.
+
+        :param project_id: The ID of the :py:class:Project object to load.
+        :exception ValueError is raised if no :py:class:Project is found with the ``project_id``.
+        :return: :py:class:Project object loaded from the filesystem.
+        """
         project_path = path.join(self.location, str(project_id))
         if path.exists(project_path):
             project_metadata_path = path.join(project_path, PROJECT_METADATA_FILE_NAME_FORMAT.format(project_id))
@@ -365,6 +380,12 @@ class ProjectManager(object):
             raise ValueError("The {} path doesn't exists!".format(project_path))
 
     def find_project_by_id(self, project_id):
+        """
+        Finds a :py:class:Project if it's available in the filesystem.
+
+        :param project_id: The ID of the :py:class:Project object to search for.
+        :return: :py:class:Project object found with the ``project_id``.
+        """
         try:
             return self.load_project(project_id)
         except ValueError:
